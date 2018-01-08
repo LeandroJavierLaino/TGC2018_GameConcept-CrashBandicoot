@@ -1,5 +1,6 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.DirectInput;
+using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
@@ -39,6 +40,11 @@ namespace TGC.Group.Model
 
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
+
+        //Path a partir de un plano
+        private TgcPlane Path { get; set; }
+
+        private List<TgcPlane> Camino = new List<TgcPlane>();
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -80,9 +86,15 @@ namespace TGC.Group.Model
             //Quiero que la camara mire hacia el origen (0,0,0).
             var lookAt = Vector3.Empty;
             //Configuro donde esta la posicion de la camara y hacia donde mira.
+            //Camara = new TGC.Examples.Camara.TgcFpsCamera(Input);
             Camara.SetCamera(cameraPosition, lookAt);
             //Internamente el framework construye la matriz de view con estos dos vectores.
             //Luego en nuestro juego tendremos que crear una cámara que cambie la matriz de view con variables como movimientos o animaciones de escenas.
+
+            //Path basico
+            var texturaPasto = MediaDir + "grass.jpg";
+            Path = new TgcPlane(Vector3.Empty, new Vector3(10, 0, 10), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(texturaPasto), 2, 2);
+
         }
 
         /// <summary>
@@ -99,7 +111,7 @@ namespace TGC.Group.Model
             {
                 BoundingBox = !BoundingBox;
             }
-
+            
             //Capturar Input Mouse
             if (Input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
             {
@@ -141,11 +153,13 @@ namespace TGC.Group.Model
             //Finalmente invocamos al render de la caja
             Box.render();
 
+            Path.render();
+
             //Cuando tenemos modelos mesh podemos utilizar un método que hace la matriz de transformación estándar.
             //Es útil cuando tenemos transformaciones simples, pero OJO cuando tenemos transformaciones jerárquicas o complicadas.
-            Mesh.UpdateMeshTransform();
+            //Mesh.UpdateMeshTransform();
             //Render del mesh
-            Mesh.render();
+            //Mesh.render();
 
             //Render de BoundingBox, muy útil para debug de colisiones.
             if (BoundingBox)
