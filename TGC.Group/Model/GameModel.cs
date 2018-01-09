@@ -1,4 +1,5 @@
 using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System.Collections.Generic;
 using System.Drawing;
@@ -33,6 +34,8 @@ namespace TGC.Group.Model
             Name = Game.Default.Name;
             Description = Game.Default.Description;
         }
+        //Camara 3ra persona con efecto de resorte
+        private TGC.Examples.Camara.TgcSpringThirdPersonCamera camaraSpring;
 
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
@@ -41,10 +44,13 @@ namespace TGC.Group.Model
         private TgcPlane Path { get; set; }
         
         //Player
-        private TgcSkeletalMesh personaje;
+        private TgcSkeletalMesh character;
         private TgcBoundingSphere characterSphere;
 
         private List<TgcPlane> Camino = new List<TgcPlane>();
+
+        float velocity = 0.5f;
+        float rotationVelocity = 10;
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -65,18 +71,6 @@ namespace TGC.Group.Model
             //Es importante cargar texturas en Init, si se hace en el render loop podemos tener grandes problemas si instanciamos muchas.
             var texture = TgcTexture.createTexture(pathTexturaCaja);
 
-            //Suelen utilizarse objetos que manejan el comportamiento de la camara.
-            //Lo que en realidad necesitamos gráficamente es una matriz de View.
-            //El framework maneja una cámara estática, pero debe ser inicializada.
-            //Posición de la camara.
-            var cameraPosition = new Vector3(0, 0, 125);
-            //Quiero que la camara mire hacia el origen (0,0,0).
-            var lookAt = Vector3.Empty;
-            //Configuro donde esta la posicion de la camara y hacia donde mira.
-            
-            Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
-            
-            //Camara.SetCamera(cameraPosition, lookAt);
             //Internamente el framework construye la matriz de view con estos dos vectores.
             //Luego en nuestro juego tendremos que crear una cámara que cambie la matriz de view con variables como movimientos o animaciones de escenas.
 
@@ -86,36 +80,51 @@ namespace TGC.Group.Model
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
-            personaje =
+            //RobotTGC ok; Hunter ok; BasicHuman ok; Samus nope; Trooper nope;
+            character =
                 skeletalLoader.loadMeshAndAnimationsFromFile(
-                    MediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml",
-                    MediaDir + "SkeletalAnimations\\Robot\\",
+                    MediaDir + "SkeletalAnimations\\BasicHuman\\CS_Gign-TgcSkeletalMesh.xml",
+                    MediaDir + "SkeletalAnimations\\BasicHuman\\",
                     new[]
                     {
-                        MediaDir + "SkeletalAnimations\\Robot\\Caminando-TgcSkeletalAnim.xml",
-                        MediaDir + "SkeletalAnimations\\Robot\\Parado-TgcSkeletalAnim.xml"
+                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\StandBy-TgcSkeletalAnim.xml",
+                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\Jump-TgcSkeletalAnim.xml",
+                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\FlyingKick-TgcSkeletalAnim.xml",
+                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\LowKick-TgcSkeletalAnim.xml",
+                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\Walk-TgcSkeletalAnim.xml"
                     });
 
             //Configurar animacion inicial
-            personaje.playAnimation("Parado", true);
+            character.playAnimation("Walk", true);
 
             //Se utiliza autotransform, aunque este es un claro ejemplo de que no se debe usar autotransform,
             //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta
             //perdiendo el control de las transformaciones del personaje.
-
-            personaje.Scale = new Vector3(0.25f, 0.25f, 0.25f);
             //Escalarlo porque es muy grande
-            personaje.Position = new Vector3(0, 500, -100);
-            //Rotarlo 180° porque esta mirando para el otro lado
-            //personaje.RotateY(Geometry.DegreeToRadian(180f));
-            //Escalamos el personaje ya que sino la escalera es demaciado grande.
-            
-            
-            //personaje.UpdateMeshTransform();
+            character.Scale = new Vector3(0.2f, 0.2f, 0.2f);
+            //Lo ubicamos 
+            character.Position = new Vector3(0, 0, 0);
+            character.UpdateMeshTransform();
             //BoundingSphere que va a usar el personaje
-            personaje.AutoUpdateBoundingBox = false;
-            characterSphere = new TgcBoundingSphere(personaje.BoundingBox.calculateBoxCenter(),personaje.BoundingBox.calculateBoxRadius());
+            character.AutoUpdateBoundingBox = false;
+            characterSphere = new TgcBoundingSphere(character.BoundingBox.calculateBoxCenter(), character.BoundingBox.calculateBoxRadius());
 
+            //Suelen utilizarse objetos que manejan el comportamiento de la camara.
+            //Lo que en realidad necesitamos gráficamente es una matriz de View.
+            //El framework maneja una cámara estática, pero debe ser inicializada.
+            //Posición de la camara.
+            var cameraPosition = new Vector3(0, 0, 125);
+            //Quiero que la camara mire hacia el origen (0,0,0).
+            var lookAt = Vector3.Empty;
+            //Configuro donde esta la posicion de la camara y hacia donde mira.
+
+            //Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
+            camaraSpring = new Examples.Camara.TgcSpringThirdPersonCamera();
+            camaraSpring.setOrientation(new Vector3(0, FastMath.PI, 0));
+            
+            camaraSpring.setTargetOffset(character.Position, 100, 100);
+            
+            Camara = camaraSpring;
         }
 
         /// <summary>
@@ -126,9 +135,19 @@ namespace TGC.Group.Model
         public override void Update()
         {
             PreUpdate();
+           
+            //Capturar Input teclado
+            if (Input.keyPressed(Key.F))
+            {
+                BoundingBox = !BoundingBox;
+            }
 
-            personaje.Scale = new Vector3(0.25f, 0.25f, 0.25f);
-            personaje.Enabled = true;
+            //Calcular proxima posicion de personaje segun Input
+            var moveForward = 0f;
+            float rotate = 0;
+            var moving = false;
+            var rotating = false;
+            float jump = 0;
 
             //Capturar Input teclado
             if (Input.keyPressed(Key.F))
@@ -136,9 +155,52 @@ namespace TGC.Group.Model
                 BoundingBox = !BoundingBox;
             }
 
-            personaje.Enabled = true;
+            //Move forward
+            if (Input.keyDown(Key.W))
+            {
+                moveForward = -velocity;
+                moving = true;
+            }
 
-            Camara.UpdateCamera(ElapsedTime);
+            //Move backwards
+            if (Input.keyDown(Key.S))
+            {
+                moveForward = velocity;
+                moving = true;
+            }
+
+            //Rotate left
+            if (Input.keyDown(Key.A))
+            {
+                rotate = -rotationVelocity;
+                rotating = true;
+            }
+
+            //Rotate right
+            if (Input.keyDown(Key.D))
+            {
+                rotate = rotationVelocity;
+                rotating = true;
+            }
+            
+            if (rotating)
+            {
+                var rotAngle = rotate * ElapsedTime;
+                character.rotateY(rotAngle);
+            }
+
+            //Vector de movimiento
+            var movementVector = Vector3.Empty;
+            if (moving)
+            {
+                movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward,character.Position.Y,FastMath.Cos(character.Rotation.Y) * moveForward);
+            }
+
+            character.move(movementVector);
+            character.UpdateMeshTransform();
+
+            camaraSpring.Target = character.Position;
+            
         }
 
         /// <summary>
@@ -159,7 +221,7 @@ namespace TGC.Group.Model
 
             Path.render();
 
-            personaje.animateAndRender(ElapsedTime);
+            character.animateAndRender(ElapsedTime);
 
             //Cuando tenemos modelos mesh podemos utilizar un método que hace la matriz de transformación estándar.
             //Es útil cuando tenemos transformaciones simples, pero OJO cuando tenemos transformaciones jerárquicas o complicadas.
@@ -178,7 +240,7 @@ namespace TGC.Group.Model
         /// </summary>
         public override void Dispose()
         {
-            personaje.dispose();
+            character.dispose();
             Path.dispose();
         }
     }

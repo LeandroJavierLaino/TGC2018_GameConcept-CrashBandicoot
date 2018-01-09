@@ -84,7 +84,7 @@ namespace TGC.Examples.Camara
         /// </summary>
         public void setTargetOffset(Vector3 target, float offsetY, float offsetZ)
         {
-            Eye = new Vector3(target.X - 400, target.Y + offsetY, target.Z + offsetZ);
+            Eye = new Vector3(target.X, target.Y + offsetY, target.Z + offsetZ);
 
             Target = target;
 
