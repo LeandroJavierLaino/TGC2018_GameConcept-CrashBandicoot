@@ -1,12 +1,13 @@
-﻿using Microsoft.DirectX.DirectInput;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
+using Microsoft.DirectX;
+using Microsoft.DirectX.DirectInput;
 using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
-//using TGC.Core.Mathematica;
+using TGC.Core.Utils;
 
-namespace TGC.Examples.Camara
+namespace TGC.Group.Camera
 {
     /// <summary>
     ///     Camara en primera persona que utiliza matrices de rotacion, solo almacena las rotaciones en updown y costados.
@@ -14,105 +15,64 @@ namespace TGC.Examples.Camara
     ///     Autor: Rodrigo Garcia.
     /// </summary>
     public class TgcFpsCamera : TgcCamera
-    {/*
-        /// <summary>
-        ///  Centro del mouse 2D para ocultarlo
-        /// </summary>
-        private readonly Point mouseCenter;
+    {
+        private readonly Point mouseCenter; //Centro de mause 2D para ocultarlo.
 
-        /// <summary>
-        ///  Se mantiene la matriz rotacion para no hacer este calculo cada vez.
-        /// </summary>
+        //Se mantiene la matriz rotacion para no hacer este calculo cada vez.
         private Matrix cameraRotation;
 
-        /// <summary>
-        ///  Direction view se calcula a partir de donde se quiere ver con la camara inicialmente. por defecto se ve en -Z.
-        /// </summary>
-        private Vector3 directionView;
+        //Direction view se calcula a partir de donde se quiere ver con la camara inicialmente. por defecto se ve en -Z.
+        private Vector3 directionView;        
 
         //No hace falta la base ya que siempre es la misma, la base se arma segun las rotaciones de esto costados y updown.
         private float leftrightRot;
-
-        /// <summary>
-        /// 
-        /// </summary>
         private float updownRot;
-        
-        /// <summary>
-        ///  Se traba la camara, se utiliza para ocultar el puntero del mouse y manejar la rotacion de la camara.
-        /// </summary>
+
         private bool lockCam;
-
-        /// <summary>
-        ///     Posicion de la camara
-        /// </summary>
+        public bool playing;
+        private bool fixCamY;
         private Vector3 positionEye;
+        private bool collision = false;
+        private Vector3 lastMovPos;
 
-        /// <summary>
-        ///     Constructor de la camara a partir de un TgcD3dInput el cual ya tiene por default el positionEye (0,0,0), el mouseCenter a partir del centro del a pantalla, RotationSpeed 1.0f,
-        ///     MovementSpeed y JumpSpeed 500f, el directionView (0,0,-1)
-        /// </summary>
-        /// <param name="input"></param>
         public TgcFpsCamera(TgcD3dInput input)
         {
-            this.Input = input;
-            this.positionEye = new Vector3();
-            this.mouseCenter = new Point(D3DDevice.Instance.Device.Viewport.Width / 2, D3DDevice.Instance.Device.Viewport.Height / 2);
-            this.RotationSpeed = 0.2f;
-            this.MovementSpeed = 500f;
-            this.JumpSpeed = 500f;
-            this.directionView = new Vector3(0, 0, -1);
-            this.leftrightRot = FastMath.PI_HALF;
-            this.updownRot = -FastMath.PI / 10.0f;
-            this.cameraRotation = TGCMatrix.RotationX(updownRot) * TGCMatrix.RotationY(leftrightRot);
+            Input = input;
+            positionEye = new Vector3();
+            mouseCenter = new Point(
+                D3DDevice.Instance.Device.Viewport.Width / 2,
+                D3DDevice.Instance.Device.Viewport.Height / 2);
+            RotationSpeed = 0.05f;
+            MovementSpeed = 500f;
+            JumpSpeed = 500f;
+            directionView = new Vector3(0, 0, -1);
+            leftrightRot = FastMath.PI_HALF;
+            updownRot = -FastMath.PI / 10.0f;
+            cameraRotation = Matrix.RotationX(updownRot) * Matrix.RotationY(leftrightRot);
         }
 
-        /// <summary>
-        ///     Constructor de la camara a partir de un TgcD3dInput y un positionEye. Los atributos mouseCenter a partir del centro del a pantalla, RotationSpeed 1.0f,
-        ///     MovementSpeed y JumpSpeed 500f, el directionView (0,0,-1)
-        /// </summary>
-        /// <param name="positionEye"></param>
-        /// <param name="input"></param>
-        public TgcFpsCamera(TGCVector3 positionEye, TgcD3dInput input) : this(input)
+        public TgcFpsCamera(Vector3 positionEye, TgcD3dInput input) : this(input)
         {
             this.positionEye = positionEye;
         }
 
-        /// <summary>
-        ///  Constructor de la camara a partir de un TgcD3dInput y un positionEye, moveSpeed y jumpSpeed. Los atributos mouseCenter a partir del centro del a pantalla, RotationSpeed 1.0f,
-        ///  el directionView (0,0,-1)
-        /// </summary>
-        /// <param name="positionEye"></param>
-        /// <param name="moveSpeed"></param>
-        /// <param name="jumpSpeed"></param>
-        /// <param name="input"></param>
-        public TgcFpsCamera(TGCVector3 positionEye, float moveSpeed, float jumpSpeed, TgcD3dInput input)
+        public TgcFpsCamera(Vector3 positionEye, float moveSpeed, float jumpSpeed, TgcD3dInput input)
             : this(positionEye, input)
         {
-            this.MovementSpeed = moveSpeed;
-            this.JumpSpeed = jumpSpeed;
+            MovementSpeed = moveSpeed;
+            JumpSpeed = jumpSpeed;
         }
 
-        /// <summary>
-        /// Constructor de la camara a partir de un TgcD3dInput y un positionEye, moveSpeed, jumpSpeed y rotationSpeed. Los atributos mouseCenter a partir del centro del a pantalla, 
-        ///  el directionView (0,0,-1)
-        /// </summary>
-        /// <param name="positionEye"></param>
-        /// <param name="moveSpeed"></param>
-        /// <param name="jumpSpeed"></param>
-        /// <param name="rotationSpeed"></param>
-        /// <param name="input"></param>
-        public TgcFpsCamera(TGCVector3 positionEye, float moveSpeed, float jumpSpeed, float rotationSpeed, TgcD3dInput input)
+        public TgcFpsCamera(Vector3 positionEye, float moveSpeed, float jumpSpeed, bool fixcam,
+            TgcD3dInput input)
             : this(positionEye, moveSpeed, jumpSpeed, input)
         {
-            this.RotationSpeed = rotationSpeed;
+            fixCamY = fixcam;
+            playing = false;
         }
 
         private TgcD3dInput Input { get; }
 
-        /// <summary>
-        ///  Condicion para trabar y destrabar la camara y ocultar el puntero de mouse.
-        /// </summary>
         public bool LockCam
         {
             get { return lockCam; }
@@ -126,23 +86,14 @@ namespace TGC.Examples.Camara
                 }
                 if (lockCam && !value)
                     Cursor.Show();
-                this.lockCam = value;
+                lockCam = value;
             }
         }
 
-        /// <summary>
-        ///  Velocidad de movimiento
-        /// </summary>
         public float MovementSpeed { get; set; }
 
-        /// <summary>
-        ///  Velocidad de rotacion
-        /// </summary>
         public float RotationSpeed { get; set; }
 
-        /// <summary>
-        ///  Velocidad de Salto
-        /// </summary>
         public float JumpSpeed { get; set; }
 
         /// <summary>
@@ -153,92 +104,126 @@ namespace TGC.Examples.Camara
             LockCam = false;
         }
 
-        /// <summary>
-        ///     Realiza un update de la camara a partir del elapsedTime, actualizando Position,LookAt y UpVector.
-        ///     Presenta movimientos basicos a partir de input de teclado W, A, S, D, Espacio, Control y rotraciones con el mouse.
-        /// </summary>
-        /// <param name="elapsedTime"></param>
         public override void UpdateCamera(float elapsedTime)
         {
-            var moveVector = TGCVector3.Empty;
+            var moveVector = new Vector3(0, 0, 0);
             //Forward
             if (Input.keyDown(Key.W))
             {
-                moveVector += new TGCVector3(0, 0, -1) * MovementSpeed;
+                moveVector += new Vector3(0, 0, -1) * MovementSpeed;
             }
 
             //Backward
             if (Input.keyDown(Key.S))
             {
-                moveVector += new TGCVector3(0, 0, 1) * MovementSpeed;
+                moveVector += new Vector3(0, 0, 1) * MovementSpeed;
             }
 
             //Strafe right
             if (Input.keyDown(Key.D))
             {
-                moveVector += new TGCVector3(-1, 0, 0) * MovementSpeed;
+                moveVector += new Vector3(-1, 0, 0) * MovementSpeed;
             }
 
             //Strafe left
             if (Input.keyDown(Key.A))
             {
-                moveVector += new TGCVector3(1, 0, 0) * MovementSpeed;
+                moveVector += new Vector3(1, 0, 0) * MovementSpeed;
             }
 
             //Jump
             if (Input.keyDown(Key.Space))
             {
-                moveVector += TGCVector3.Up * JumpSpeed;
+                moveVector += new Vector3(0, 1, 0) * JumpSpeed;
             }
 
             //Crouch
             if (Input.keyDown(Key.LeftControl))
             {
-                moveVector += TGCVector3.Down * JumpSpeed;
+                moveVector += new Vector3(0, -1, 0) * JumpSpeed;
             }
 
-            if (Input.keyPressed(Key.L) || Input.keyPressed(Key.Escape))
+            if (Input.keyPressed(Key.Escape) && playing)
             {
                 LockCam = !lockCam;
             }
-
+            var cameraRotationPos = new Matrix();
             //Solo rotar si se esta aprentando el boton izq del mouse
-            if (lockCam || Input.buttonDown(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (!lockCam )
             {
                 leftrightRot -= -Input.XposRelative * RotationSpeed;
+                var prevupRot = updownRot;
                 updownRot -= Input.YposRelative * RotationSpeed;
+                if (updownRot > 10.5 || updownRot < -10.5)
+                {
+                    updownRot = prevupRot;
+                }
                 //Se actualiza matrix de rotacion, para no hacer este calculo cada vez y solo cuando en verdad es necesario.
-                cameraRotation = TGCMatrix.RotationX(updownRot) * TGCMatrix.RotationY(leftrightRot);
+                cameraRotation = Matrix.RotationX(updownRot * 0.1f) * Matrix.RotationY(leftrightRot * 0.1f);
+                //se crea una camera rotation auxiliar para fijar la camara en una unica posicion Y
+                if (fixCamY) {
+                    cameraRotationPos = Matrix.RotationY(leftrightRot);
+                    //se elimina la dimension Y del moveVector para fijar la posicion de la camara en una unica dimension Y
+                    moveVector = new Vector3(moveVector.X, 0, moveVector.Z);
+
+                }
             }
 
             if (lockCam)
                 Cursor.Position = mouseCenter;
 
             //Calculamos la nueva posicion del ojo segun la rotacion actual de la camara.
-            var cameraRotatedPositionEye = TGCVector3.TransformNormal(moveVector * elapsedTime, cameraRotation);
+            var cameraRotatedPositionEye = new Vector3();
+            if (fixCamY)
+            {
+                cameraRotatedPositionEye = Vector3.TransformNormal(moveVector * elapsedTime, cameraRotationPos);
+            }
+            else {
+                cameraRotatedPositionEye = Vector3.TransformNormal(moveVector * elapsedTime, cameraRotation);
+            }
             positionEye += cameraRotatedPositionEye;
 
             //Calculamos el target de la camara, segun su direccion inicial y las rotaciones en screen space x,y.
-            var cameraRotatedTarget = TGCVector3.TransformNormal(directionView, cameraRotation);
+            var cameraRotatedTarget = Vector3.TransformNormal(directionView, cameraRotation);
             var cameraFinalTarget = positionEye + cameraRotatedTarget;
 
             var cameraOriginalUpVector = DEFAULT_UP_VECTOR;
-            var cameraRotatedUpVector = TGCVector3.TransformNormal(cameraOriginalUpVector, cameraRotation);
+            var cameraRotatedUpVector = Vector3.TransformNormal(cameraOriginalUpVector, cameraRotation);
+
+            if (collision) positionEye = lastMovPos;
 
             base.SetCamera(positionEye, cameraFinalTarget, cameraRotatedUpVector);
+            
         }
 
         /// <summary>
-        ///     Setea el Position y el LookAt de la camara
+        ///     se hace override para actualizar las posiones internas, estas seran utilizadas en el proximo update.
         /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="lookAt"></param>
-        public override void SetCamera(TGCVector3 pos, TGCVector3 lookAt)
+        /// <param name="position"></param>
+        /// <param name="directionView"> debe ser normalizado.</param>
+        public override void SetCamera(Vector3 position, Vector3 directionView)
         {
-            this.positionEye = pos;
-            //TODO: calcular el UpVector efectivo a partir de LookFrom y LookAt ya que esta "hardcode" como el vector (0,1,0).
-            //El upVector debe ser perpendicular al vector que forman el LookFrom y el LookAt. Es por este motivo que la camara sufre
-            //inconcistencias al momento de moverse y rotar.
+            positionEye = position;
+            this.directionView = directionView;
         }
-    */}
+
+        public void UpdateCollision(bool value, Vector3 lastpos)
+        {
+            collision = value;
+            lastMovPos = lastpos;
+        }
+
+        public void GodMode()
+        {
+            if (fixCamY)
+            {
+                fixCamY = false;
+            }else
+            {
+                positionEye.Y = 200;
+                fixCamY = true;
+            }
+        }
+
+    }
 }
