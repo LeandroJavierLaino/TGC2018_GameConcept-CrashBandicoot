@@ -47,7 +47,9 @@ namespace TGC.Group.Model
         private TgcSkeletalMesh character;
         private TgcBoundingSphere characterSphere;
 
-        private List<TgcPlane> Camino = new List<TgcPlane>();
+        private List<TgcPlane> FullCouse = new List<TgcPlane>();
+
+        private TgcBox Box;
 
         float velocity = 0.5f;
         float rotationVelocity = 10;
@@ -83,25 +85,22 @@ namespace TGC.Group.Model
             //RobotTGC ok; Hunter ok; BasicHuman ok; Samus nope; Trooper nope;
             character =
                 skeletalLoader.loadMeshAndAnimationsFromFile(
-                    MediaDir + "SkeletalAnimations\\BasicHuman\\CS_Gign-TgcSkeletalMesh.xml",
-                    MediaDir + "SkeletalAnimations\\BasicHuman\\",
+                    MediaDir + "SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml",
+                    MediaDir + "SkeletalAnimations\\Robot\\",
                     new[]
                     {
-                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\StandBy-TgcSkeletalAnim.xml",
-                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\Jump-TgcSkeletalAnim.xml",
-                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\FlyingKick-TgcSkeletalAnim.xml",
-                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\LowKick-TgcSkeletalAnim.xml",
-                        MediaDir + "SkeletalAnimations\\BasicHuman\\Animations\\Walk-TgcSkeletalAnim.xml"
+                        MediaDir + "SkeletalAnimations\\Robot\\Caminando-TgcSkeletalAnim.xml",
+                        MediaDir + "SkeletalAnimations\\Robot\\Parado-TgcSkeletalAnim.xml"
                     });
 
             //Configurar animacion inicial
-            character.playAnimation("Walk", true);
+            character.playAnimation("Parado", true);
 
             //Se utiliza autotransform, aunque este es un claro ejemplo de que no se debe usar autotransform,
             //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta
             //perdiendo el control de las transformaciones del personaje.
             //Escalarlo porque es muy grande
-            character.Scale = new Vector3(0.2f, 0.2f, 0.2f);
+            character.Scale = new Vector3(0.1f, 0.1f, 0.1f);
             //Lo ubicamos 
             character.Position = new Vector3(0, 0, 0);
             character.UpdateMeshTransform();
@@ -122,9 +121,17 @@ namespace TGC.Group.Model
             camaraSpring = new Examples.Camara.TgcSpringThirdPersonCamera();
             camaraSpring.setOrientation(new Vector3(0, FastMath.PI, 0));
             
-            camaraSpring.setTargetOffset(character.Position, 100, 100);
+            camaraSpring.setTargetOffset(character.Position, 50, 50);
             
             Camara = camaraSpring;
+
+            //Cajas| objetivo es juntar una serie de cajas
+            var boxTexture = MediaDir + "cajaMadera2.jpg";
+            Box = new TgcBox();
+            Box.setTexture(TgcTexture.createTexture(boxTexture));
+            Box.Position = new Vector3(5,5,5);
+            Box.Size = new Vector3(3, 3, 3);
+            Box.updateValues();
         }
 
         /// <summary>
@@ -135,7 +142,9 @@ namespace TGC.Group.Model
         public override void Update()
         {
             PreUpdate();
-           
+
+            Box.Enabled = true;
+
             //Capturar Input teclado
             if (Input.keyPressed(Key.F))
             {
@@ -147,6 +156,7 @@ namespace TGC.Group.Model
             float rotate = 0;
             var moving = false;
             var rotating = false;
+            bool jumping = false;
             float jump = 0;
 
             //Capturar Input teclado
@@ -182,18 +192,42 @@ namespace TGC.Group.Model
                 rotate = rotationVelocity;
                 rotating = true;
             }
+
+            //Jump
+            if (Input.keyPressed(Key.Space))
+            {
+                jumping = true;
+                jump = 30;
+            }
             
             if (rotating)
             {
+                character.playAnimation("Caminando", true);
                 var rotAngle = rotate * ElapsedTime;
                 character.rotateY(rotAngle);
             }
 
             //Vector de movimiento
             var movementVector = Vector3.Empty;
+            if (jumping)
+            {
+                movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward, character.Position.Y + jump, FastMath.Cos(character.Rotation.Y) * moveForward);
+            }
             if (moving)
             {
+                character.playAnimation("Caminando", true);
                 movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward,character.Position.Y,FastMath.Cos(character.Rotation.Y) * moveForward);
+            }
+            else
+            {
+                if (rotating || jumping)
+                {
+                    character.playAnimation("Caminando", true);
+                }
+                else
+                {
+                    character.playAnimation("Parado", true);
+                }
             }
 
             character.move(movementVector);
@@ -220,6 +254,8 @@ namespace TGC.Group.Model
                 Color.OrangeRed);
 
             Path.render();
+
+            Box.render();
 
             character.animateAndRender(ElapsedTime);
 
