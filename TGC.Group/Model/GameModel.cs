@@ -52,8 +52,11 @@ namespace TGC.Group.Model
         private TgcBox Box;
         private float OriginalPosYBox;
 
-        float velocity = 0.2f;
-        float rotationVelocity = 10;
+        private float velocity = 0.2f;
+        private float rotationVelocity = 10;
+
+        private float acumTime;
+        private float dir;
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -237,14 +240,6 @@ namespace TGC.Group.Model
             character.move(movementVector);
             character.UpdateMeshTransform();
 
-            //movimiento de 1 caja
-            
-            Box.rotateY(rotationVelocity * ElapsedTime);
-           
-            Box.Position = new Vector3(Box.Position.X, OriginalPosYBox + 30 * FastMath.Sin(OriginalPosYBox * ElapsedTime), Box.Position.Z);
-
-            Box.updateValues();
-
             camaraSpring.Target = character.Position;
             
         }
@@ -266,6 +261,21 @@ namespace TGC.Group.Model
                 Color.OrangeRed);
 
             Path.render();
+
+            //movimiento de 1 caja
+            acumTime += ElapsedTime;
+            var speed = 20 * ElapsedTime;
+            if (acumTime > 5f)
+            {
+                acumTime = 0;
+                dir *= -1;
+            }
+
+            //Box.rotateY( - ElapsedTime/2);
+            //Box.updateValues();
+
+            Box.Position = new Vector3(Box.Position.X, OriginalPosYBox + dir * speed, Box.Position.Z);
+            Box.updateValues();
 
             Box.render();
             
