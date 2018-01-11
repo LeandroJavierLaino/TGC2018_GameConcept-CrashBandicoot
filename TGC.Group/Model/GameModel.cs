@@ -50,8 +50,9 @@ namespace TGC.Group.Model
         private List<TgcPlane> FullCouse = new List<TgcPlane>();
 
         private TgcBox Box;
+        private float OriginalPosYBox;
 
-        float velocity = 0.5f;
+        float velocity = 0.2f;
         float rotationVelocity = 10;
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace TGC.Group.Model
 
             //Path basico
             var texturaPasto = MediaDir + "grass.jpg";
-            Path = new TgcPlane(Vector3.Empty, new Vector3(10, 0, 10), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(texturaPasto), 2, 2);
+            Path = new TgcPlane(Vector3.Empty, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(texturaPasto), 4, 4);
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -129,8 +130,10 @@ namespace TGC.Group.Model
             var boxTexture = MediaDir + "cajaMadera2.jpg";
             Box = new TgcBox();
             Box.setTexture(TgcTexture.createTexture(boxTexture));
-            Box.Position = new Vector3(5,5,5);
             Box.Size = new Vector3(3, 3, 3);
+            Box.AutoTransformEnable = true;
+            OriginalPosYBox = 5;
+            Box.Position = new Vector3(15, OriginalPosYBox, 15);
             Box.updateValues();
         }
 
@@ -194,12 +197,19 @@ namespace TGC.Group.Model
             }
 
             //Jump
-            if (Input.keyPressed(Key.Space))
+            if (Input.keyPressed(Key.Space) && jump == 0 && !jumping)
             {
-                jumping = true;
                 jump = 30;
+                moving = true;
+                jumping = true;
             }
-            
+
+            if (character.Position.Y > 0)
+            {
+                moving = true;
+                jump -= 30 * ElapsedTime;
+            }
+
             if (rotating)
             {
                 character.playAnimation("Caminando", true);
@@ -209,29 +219,31 @@ namespace TGC.Group.Model
 
             //Vector de movimiento
             var movementVector = Vector3.Empty;
-            if (jumping)
-            {
-                movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward, character.Position.Y + jump, FastMath.Cos(character.Rotation.Y) * moveForward);
-            }
-            if (moving)
+
+            if (moving || rotating) 
             {
                 character.playAnimation("Caminando", true);
-                movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward,character.Position.Y,FastMath.Cos(character.Rotation.Y) * moveForward);
+                movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f,jump,FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
             }
             else
             {
-                if (rotating || jumping)
-                {
-                    character.playAnimation("Caminando", true);
-                }
-                else
-                {
-                    character.playAnimation("Parado", true);
-                }
+
+                character.playAnimation("Parado", true);
+
             }
+
+            if (FastMath.Floor(character.Position.Y) == 0) jumping = false;
 
             character.move(movementVector);
             character.UpdateMeshTransform();
+
+            //movimiento de 1 caja
+            
+            Box.rotateY(rotationVelocity * ElapsedTime);
+           
+            Box.Position = new Vector3(Box.Position.X, OriginalPosYBox + 30 * FastMath.Sin(OriginalPosYBox * ElapsedTime), Box.Position.Z);
+
+            Box.updateValues();
 
             camaraSpring.Target = character.Position;
             
@@ -256,6 +268,7 @@ namespace TGC.Group.Model
             Path.render();
 
             Box.render();
+            
 
             character.animateAndRender(ElapsedTime);
 
