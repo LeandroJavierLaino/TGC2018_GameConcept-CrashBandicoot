@@ -42,15 +42,18 @@ namespace TGC.Group.Model
 
         //Path a partir de un plano
         private TgcPlane Path { get; set; }
-        
+        private TgcPlane PathB { get; set; }
+
         //Player
         private TgcSkeletalMesh character;
         private TgcBoundingSphere characterSphere;
+        private TgcBoundingAxisAlignBox characterBox;
 
         private List<TgcPlane> FullCouse = new List<TgcPlane>();
 
         private TgcBox Box;
         private float OriginalPosYBox;
+        bool borrarCaja = false;
 
         private float velocity = 0.2f;
         private float rotationVelocity = 10;
@@ -83,6 +86,7 @@ namespace TGC.Group.Model
             //Path basico
             var texturaPasto = MediaDir + "grass.jpg";
             Path = new TgcPlane(Vector3.Empty, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(texturaPasto), 4, 4);
+            PathB = new TgcPlane(new Vector3(50,0,0), new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(texturaPasto), 4, 4);
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -106,11 +110,12 @@ namespace TGC.Group.Model
             //Escalarlo porque es muy grande
             character.Scale = new Vector3(0.1f, 0.1f, 0.1f);
             //Lo ubicamos 
-            character.Position = new Vector3(0, 0, 0);
+            character.Position = new Vector3(10, 0, 10);
             character.UpdateMeshTransform();
             //BoundingSphere que va a usar el personaje
-            character.AutoUpdateBoundingBox = false;
+            character.AutoUpdateBoundingBox = true;
             characterSphere = new TgcBoundingSphere(character.BoundingBox.calculateBoxCenter(), character.BoundingBox.calculateBoxRadius());
+            characterBox = character.BoundingBox.clone();            
 
             //Suelen utilizarse objetos que manejan el comportamiento de la camara.
             //Lo que en realidad necesitamos gráficamente es una matriz de View.
@@ -137,6 +142,7 @@ namespace TGC.Group.Model
             Box.AutoTransformEnable = true;
             OriginalPosYBox = 5;
             Box.Position = new Vector3(15, OriginalPosYBox, 15);
+            
             Box.updateValues();
         }
 
@@ -162,7 +168,6 @@ namespace TGC.Group.Model
             float rotate = 0;
             var moving = false;
             var rotating = false;
-            bool jumping = false;
             float jump = 0;
 
             //Capturar Input teclado
@@ -200,11 +205,10 @@ namespace TGC.Group.Model
             }
 
             //Jump
-            if (Input.keyPressed(Key.Space) && jump == 0 && !jumping)
+            if (Input.keyPressed(Key.Space) && jump == 0)
             {
                 jump = 30;
                 moving = true;
-                jumping = true;
             }
 
             if (character.Position.Y > 0)
@@ -226,22 +230,21 @@ namespace TGC.Group.Model
             if (moving || rotating) 
             {
                 character.playAnimation("Caminando", true);
-                movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f,jump,FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
+                //Colision mocha TODO: arregla esto hermano, solo permite caminar dentro de una parcela
+                if(Path.BoundingBox.PMax.X > character.Position.X || Path.BoundingBox.PMin.Z > character.Position.Z) movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f,jump,FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
             }
             else
             {
-
                 character.playAnimation("Parado", true);
-
             }
-
-            if (FastMath.Floor(character.Position.Y) == 0) jumping = false;
 
             character.move(movementVector);
             character.UpdateMeshTransform();
 
+            //Colision entre una caja y el personaje
+            if (TGC.Core.Collision.TgcCollisionUtils.testAABBAABB(characterBox, Box.BoundingBox)) Box.move(new Vector3(0,-15,0));                 
+
             camaraSpring.Target = character.Position;
-            
         }
 
         /// <summary>
@@ -261,27 +264,23 @@ namespace TGC.Group.Model
                 Color.OrangeRed);
 
             Path.render();
+            PathB.render();
 
             //movimiento de 1 caja
             acumTime += ElapsedTime;
-            var speed = 20 * ElapsedTime;
-            if (acumTime > 5f)
-            {
-                acumTime = 0;
-                dir *= -1;
-            }
-
-            //Box.rotateY( - ElapsedTime/2);
-            //Box.updateValues();
-
-            Box.Position = new Vector3(Box.Position.X, OriginalPosYBox + dir * speed, Box.Position.Z);
-            Box.updateValues();
-
-            Box.render();
             
+            Box.rotateY(ElapsedTime);
+            Box.Position = new Vector3(Box.Position.X, OriginalPosYBox + FastMath.Sin(acumTime * FastMath.PI), Box.Position.Z);
+            Box.updateValues();
+            
+            //Box.BoundingBox.render();
+            
+            if (TGC.Core.Collision.TgcCollisionUtils.testAABBAABB(character.BoundingBox, Box.BoundingBox)) borrarCaja = true;
+            if (!borrarCaja) Box.render();
 
             character.animateAndRender(ElapsedTime);
-
+            //character.BoundingBox.render();
+            
             //Cuando tenemos modelos mesh podemos utilizar un método que hace la matriz de transformación estándar.
             //Es útil cuando tenemos transformaciones simples, pero OJO cuando tenemos transformaciones jerárquicas o complicadas.
             //Mesh.UpdateMeshTransform();
@@ -300,6 +299,7 @@ namespace TGC.Group.Model
         public override void Dispose()
         {
             character.dispose();
+            Box.dispose();
             Path.dispose();
         }
     }
