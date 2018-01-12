@@ -54,12 +54,17 @@ namespace TGC.Group.Model
         //Caja
         private TgcBox Box;
         private float OriginalPosYBox;
+        private Caja BoxClass;
         bool borrarCaja = false;
 
-        //Parametros varios
-        private float velocity = 1.2f;
-        private float rotationVelocity = 10;
+        //Vegetacion
+        private TgcMesh Planta;
+        private TgcMesh PlantaB;
+        private TgcMesh PlantaC;
 
+        //Parametros varios
+        private float velocity = 0.2f;
+        private float rotationVelocity = 10;
         private float acumTime;
         private float dir;
 
@@ -146,8 +151,9 @@ namespace TGC.Group.Model
             Box.AutoTransformEnable = true;
             OriginalPosYBox = 5;
             Box.Position = new Vector3(15, OriginalPosYBox, 15);
-            
             Box.updateValues();
+
+            BoxClass = new Caja(new Vector3(30,5,30),boxTexture);
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
@@ -161,6 +167,22 @@ namespace TGC.Group.Model
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.Init();
+
+            //Crear Planta
+            Planta = new TgcSceneLoader().loadSceneFromFile(MediaDir + "Planta\\Planta-TgcScene.xml").Meshes[0];
+            Planta.Position = new Vector3(60,0,45);
+            Planta.Scale = new Vector3(0.5f, 0.5f, 0.5f);
+            Planta.Enabled = true;
+
+            PlantaB = Planta.clone("plantaB");
+            PlantaB.Position = new Vector3(30, 0, 45);
+            PlantaB.rotateY(30);
+            PlantaB.Enabled = true;
+
+            PlantaC = Planta.clone("plantaB");
+            PlantaC.Position = new Vector3(4, 0, 45);
+            PlantaC.rotateY(16);
+            PlantaC.Enabled = true;
         }
 
         /// <summary>
@@ -173,9 +195,7 @@ namespace TGC.Group.Model
             PreUpdate();
 
             Box.Enabled = true;
-            
-            //Box.Position = new Vector3(Box.Position.X, OriginalPosYBox + 8 * FastMath.Cos(acumTime * FastMath.PI), Box.Position.Z);
-            //Box.updateValues();
+    
             //Capturar Input teclado
             if (Input.keyPressed(Key.F))
             {
@@ -250,7 +270,7 @@ namespace TGC.Group.Model
             {
                 character.playAnimation("Caminando", true);
                 //Colision mocha TODO: arregla esto hermano, solo permite caminar dentro de una parcela
-                if(Path.BoundingBox.PMin.X < character.Position.X || Path.BoundingBox.PMin.Z > character.Position.Z) movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f,jump,FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
+                /*if(Path.BoundingBox.PMin.X < character.Position.X || Path.BoundingBox.PMin.Z > character.Position.Z)*/ movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f,jump,FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
             }
             else
             {
@@ -275,6 +295,7 @@ namespace TGC.Group.Model
         {
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
+
             acumTime += ElapsedTime;
             //Dibuja un texto por pantalla
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
@@ -288,23 +309,29 @@ namespace TGC.Group.Model
             PathB.render();
 
             //movimiento de 1 caja
-            
-            Box.rotateY(acumTime);
+            Box.rotateY( ElapsedTime);
+            Box.Position = new Vector3( Box.Position.X, OriginalPosYBox + 3 * FastMath.Sin( acumTime), Box.Position.Z);
             Box.updateValues();
             
-            //Box.BoundingBox.render();
+            Box.render();
             
-            if (TGC.Core.Collision.TgcCollisionUtils.testAABBAABB(character.BoundingBox, Box.BoundingBox)) borrarCaja = true;
-            if (!borrarCaja) Box.render();
+            //Clase Caja en funcionamiento
+            BoxClass.animateBox(ElapsedTime, acumTime);
+            BoxClass.takeBox(character.BoundingBox);
+            BoxClass.render();
 
             character.animateAndRender(ElapsedTime);
             //character.BoundingBox.render();
-            
+
             //Cuando tenemos modelos mesh podemos utilizar un método que hace la matriz de transformación estándar.
             //Es útil cuando tenemos transformaciones simples, pero OJO cuando tenemos transformaciones jerárquicas o complicadas.
             //Mesh.UpdateMeshTransform();
             //Render del mesh
             //Mesh.render();
+
+            Planta.render();
+            PlantaB.render();
+            PlantaC.render();
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
             PostRender();
@@ -322,6 +349,7 @@ namespace TGC.Group.Model
             Path.dispose();
             PathB.dispose();
             skyBox.dispose();
+            Planta.dispose();
         }
     }
 }

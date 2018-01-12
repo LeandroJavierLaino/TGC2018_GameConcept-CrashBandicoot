@@ -84,6 +84,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Game.settings</DependentUpon>
     </Compile>
+    <Compile Include="Model\Caja.cs" />
     <Compile Include="Model\GameModel.cs" />
     <Compile Include="Model\TgcFpsCamera.cs" />
     <Compile Include="Model\TgcSpringThirdPersonCamera.cs" />
