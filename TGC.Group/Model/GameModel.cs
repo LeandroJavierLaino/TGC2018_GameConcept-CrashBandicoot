@@ -10,6 +10,7 @@ using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
+using TGC.Core.Terrain;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
@@ -43,23 +44,26 @@ namespace TGC.Group.Model
         //Path a partir de un plano
         private TgcPlane Path { get; set; }
         private TgcPlane PathB { get; set; }
+        private List<TgcPlane> FullCouse = new List<TgcPlane>();
 
         //Player
         private TgcSkeletalMesh character;
         private TgcBoundingSphere characterSphere;
         private TgcBoundingAxisAlignBox characterBox;
 
-        private List<TgcPlane> FullCouse = new List<TgcPlane>();
-
+        //Caja
         private TgcBox Box;
         private float OriginalPosYBox;
         bool borrarCaja = false;
 
-        private float velocity = 0.2f;
+        //Parametros varios
+        private float velocity = 1.2f;
         private float rotationVelocity = 10;
 
         private float acumTime;
         private float dir;
+
+        private TgcSkyBox skyBox { get; set; }
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -144,6 +148,19 @@ namespace TGC.Group.Model
             Box.Position = new Vector3(15, OriginalPosYBox, 15);
             
             Box.updateValues();
+
+            //Crear SkyBox
+            skyBox = new TgcSkyBox();
+            skyBox.Center = new Vector3(0, 500, 0);
+            skyBox.Size = new Vector3(10000, 10000, 10000);
+            var texturesPath = MediaDir + "SkyBox1\\";
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
+            skyBox.Init();
         }
 
         /// <summary>
@@ -156,7 +173,9 @@ namespace TGC.Group.Model
             PreUpdate();
 
             Box.Enabled = true;
-
+            
+            //Box.Position = new Vector3(Box.Position.X, OriginalPosYBox + 8 * FastMath.Cos(acumTime * FastMath.PI), Box.Position.Z);
+            //Box.updateValues();
             //Capturar Input teclado
             if (Input.keyPressed(Key.F))
             {
@@ -231,7 +250,7 @@ namespace TGC.Group.Model
             {
                 character.playAnimation("Caminando", true);
                 //Colision mocha TODO: arregla esto hermano, solo permite caminar dentro de una parcela
-                if(Path.BoundingBox.PMax.X > character.Position.X || Path.BoundingBox.PMin.Z > character.Position.Z) movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f,jump,FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
+                if(Path.BoundingBox.PMin.X < character.Position.X || Path.BoundingBox.PMin.Z > character.Position.Z) movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f,jump,FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
             }
             else
             {
@@ -256,21 +275,21 @@ namespace TGC.Group.Model
         {
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
-
+            acumTime += ElapsedTime;
             //Dibuja un texto por pantalla
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
-            DrawText.drawText(
-                "Con clic izquierdo subimos la camara [Actual]: " + TgcParserUtils.printVector3(Camara.Position), 0, 30,
-                Color.OrangeRed);
+            DrawText.drawText("Con clic izquierdo subimos la camara [Actual]: " + TgcParserUtils.printVector3(Camara.Position), 0, 30, Color.OrangeRed);
+            DrawText.drawText("Tiempo Acumulado: " + acumTime, 0, 40, Color.OrangeRed);
+            //Renderizo cielo
+            skyBox.render();
 
+            //Renderizo camino
             Path.render();
             PathB.render();
 
             //movimiento de 1 caja
-            acumTime += ElapsedTime;
             
-            Box.rotateY(ElapsedTime);
-            Box.Position = new Vector3(Box.Position.X, OriginalPosYBox + FastMath.Sin(acumTime * FastMath.PI), Box.Position.Z);
+            Box.rotateY(acumTime);
             Box.updateValues();
             
             //Box.BoundingBox.render();
@@ -301,6 +320,8 @@ namespace TGC.Group.Model
             character.dispose();
             Box.dispose();
             Path.dispose();
+            PathB.dispose();
+            skyBox.dispose();
         }
     }
 }
