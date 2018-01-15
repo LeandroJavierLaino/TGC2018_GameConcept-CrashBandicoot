@@ -50,23 +50,25 @@ namespace TGC.Group.Model
         private TgcSkeletalMesh character;
         private TgcBoundingSphere characterSphere;
         private TgcBoundingAxisAlignBox characterBox;
+        private bool jumping = false;
 
         //Caja
-        private TgcBox Box;
-        private float OriginalPosYBox;
         private Caja BoxClass;
-        bool borrarCaja = false;
+
+        //Cajas a Juntar
+        private List<Caja> Boxes = new List<Caja>();
 
         //Vegetacion
         private TgcMesh Planta;
         private TgcMesh PlantaB;
         private TgcMesh PlantaC;
 
+        private List<TgcMesh> Plantas = new List<TgcMesh>();
+
         //Parametros varios
         private float velocity = 0.2f;
         private float rotationVelocity = 10;
         private float acumTime;
-        private float dir;
 
         private TgcSkyBox skyBox { get; set; }
 
@@ -80,7 +82,7 @@ namespace TGC.Group.Model
         {
             //Device de DirectX para crear primitivas.
             var d3dDevice = D3DDevice.Instance.Device;
-
+            
             //Textura de la carperta Media. Game.Default es un archivo de configuracion (Game.settings) util para poner cosas.
             //Pueden abrir el Game.settings que se ubica dentro de nuestro proyecto para configurar.
             var pathTexturaCaja = MediaDir + Game.Default.TexturaCaja;
@@ -145,15 +147,10 @@ namespace TGC.Group.Model
 
             //Cajas| objetivo es juntar una serie de cajas
             var boxTexture = MediaDir + "cajaMadera2.jpg";
-            Box = new TgcBox();
-            Box.setTexture(TgcTexture.createTexture(boxTexture));
-            Box.Size = new Vector3(3, 3, 3);
-            Box.AutoTransformEnable = true;
-            OriginalPosYBox = 5;
-            Box.Position = new Vector3(15, OriginalPosYBox, 15);
-            Box.updateValues();
+            var posYBox = 5;
 
-            BoxClass = new Caja(new Vector3(30,5,30),boxTexture);
+            BoxClass = new Caja(new Vector3(30,posYBox,30),boxTexture);
+            Boxes.Add(BoxClass);
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
@@ -169,20 +166,30 @@ namespace TGC.Group.Model
             skyBox.Init();
 
             //Crear Planta
+            //Modelo base 1
             Planta = new TgcSceneLoader().loadSceneFromFile(MediaDir + "Planta\\Planta-TgcScene.xml").Meshes[0];
+
+            //Planta 1
             Planta.Position = new Vector3(60,0,45);
             Planta.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             Planta.Enabled = true;
+            Plantas.Add(Planta);
 
-            PlantaB = Planta.clone("plantaB");
-            PlantaB.Position = new Vector3(30, 0, 45);
-            PlantaB.rotateY(30);
-            PlantaB.Enabled = true;
+            //Planta 2
+            Planta = Planta.clone("Planta2");
+            Planta.Position = new Vector3(30, 0, 45);
+            Planta.rotateY(30);
+            Planta.Enabled = true;
+            Plantas.Add(Planta);
 
-            PlantaC = Planta.clone("plantaB");
-            PlantaC.Position = new Vector3(4, 0, 45);
-            PlantaC.rotateY(16);
-            PlantaC.Enabled = true;
+            //Planta3
+            Planta = Planta.clone("Planta3");
+            Planta.Position = new Vector3(5, 0, 45);
+            Planta.rotateY(16);
+            Planta.Enabled = true;
+            Plantas.Add(Planta);
+
+            acumTime = 0;
         }
 
         /// <summary>
@@ -193,8 +200,6 @@ namespace TGC.Group.Model
         public override void Update()
         {
             PreUpdate();
-
-            Box.Enabled = true;
     
             //Capturar Input teclado
             if (Input.keyPressed(Key.F))
@@ -205,8 +210,9 @@ namespace TGC.Group.Model
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
-            var moving = false;
-            var rotating = false;
+            bool moving = false;
+            bool rotating = false;
+            
             float jump = 0;
 
             //Capturar Input teclado
@@ -246,11 +252,21 @@ namespace TGC.Group.Model
             //Jump
             if (Input.keyPressed(Key.Space) && jump == 0)
             {
-                jump = 30;
+                jumping = true;
                 moving = true;
             }
 
-            if (character.Position.Y > 0)
+            if (jumping /*&& moving*/)
+            {
+                jump += acumTime * 0.00002f;
+            }
+
+            if (jump > 30 || character.Position.Y > 30)
+            {
+                jumping = false;
+            }
+
+            if (character.Position.Y > 0 && !jumping)
             {
                 moving = true;
                 jump -= 30 * ElapsedTime;
@@ -266,7 +282,7 @@ namespace TGC.Group.Model
             //Vector de movimiento
             var movementVector = Vector3.Empty;
 
-            if (moving || rotating) 
+            if (moving || rotating || jumping) 
             {
                 character.playAnimation("Caminando", true);
                 //Colision mocha TODO: arregla esto hermano, solo permite caminar dentro de una parcela
@@ -278,10 +294,7 @@ namespace TGC.Group.Model
             }
 
             character.move(movementVector);
-            character.UpdateMeshTransform();
-
-            //Colision entre una caja y el personaje
-            if (TGC.Core.Collision.TgcCollisionUtils.testAABBAABB(characterBox, Box.BoundingBox)) Box.move(new Vector3(0,-15,0));                 
+            character.UpdateMeshTransform();              
 
             camaraSpring.Target = character.Position;
         }
@@ -301,19 +314,13 @@ namespace TGC.Group.Model
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
             DrawText.drawText("Con clic izquierdo subimos la camara [Actual]: " + TgcParserUtils.printVector3(Camara.Position), 0, 30, Color.OrangeRed);
             DrawText.drawText("Tiempo Acumulado: " + acumTime, 0, 40, Color.OrangeRed);
+            DrawText.drawText("Ubicacion Personaje: " + character.Position, 0, 50, Color.OrangeRed);
             //Renderizo cielo
             skyBox.render();
 
             //Renderizo camino
             Path.render();
             PathB.render();
-
-            //movimiento de 1 caja
-            Box.rotateY( ElapsedTime);
-            Box.Position = new Vector3( Box.Position.X, OriginalPosYBox + 3 * FastMath.Sin( acumTime), Box.Position.Z);
-            Box.updateValues();
-            
-            Box.render();
             
             //Clase Caja en funcionamiento
             BoxClass.animateBox(ElapsedTime, acumTime);
@@ -329,9 +336,10 @@ namespace TGC.Group.Model
             //Render del mesh
             //Mesh.render();
 
-            Planta.render();
-            PlantaB.render();
-            PlantaC.render();
+            foreach (var planta in Plantas)
+            {
+                planta.render();
+            }
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
             PostRender();
@@ -345,11 +353,15 @@ namespace TGC.Group.Model
         public override void Dispose()
         {
             character.dispose();
-            Box.dispose();
             Path.dispose();
             PathB.dispose();
             skyBox.dispose();
-            Planta.dispose();
+            //Dispose de las plantas
+            foreach (var planta in Plantas)
+            {
+                planta.dispose();
+            }
+            BoxClass.dispose();
         }
     }
 }
