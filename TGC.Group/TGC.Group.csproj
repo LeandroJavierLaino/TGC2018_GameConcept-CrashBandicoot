@@ -86,6 +86,8 @@
     </Compile>
     <Compile Include="Model\Caja.cs" />
     <Compile Include="Model\GameModel.cs" />
+    <Compile Include="Model\Parcelas\Horizontal.cs" />
+    <Compile Include="Model\Parcelas\Parcela.cs" />
     <Compile Include="Model\TgcFpsCamera.cs" />
     <Compile Include="Model\TgcSpringThirdPersonCamera.cs" />
     <Compile Include="Program.cs" />

@@ -13,6 +13,7 @@ using TGC.Core.SkeletalAnimation;
 using TGC.Core.Terrain;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
+using TGC.Group.Model.Parcelas;
 
 namespace TGC.Group.Model
 {
@@ -44,7 +45,9 @@ namespace TGC.Group.Model
         //Path a partir de un plano
         private TgcPlane Path { get; set; }
         private TgcPlane PathB { get; set; }
-        private List<TgcPlane> FullCouse = new List<TgcPlane>();
+        private List<TgcPlane> FullCourse = new List<TgcPlane>();
+        private Horizontal pathHorizontal;
+
 
         //Player
         private TgcSkeletalMesh character;
@@ -60,13 +63,10 @@ namespace TGC.Group.Model
 
         //Vegetacion
         private TgcMesh Planta;
-        private TgcMesh PlantaB;
-        private TgcMesh PlantaC;
-
         private List<TgcMesh> Plantas = new List<TgcMesh>();
 
         //Parametros varios
-        private float velocity = 0.2f;
+        private float velocity = 5f;
         private float rotationVelocity = 10;
         private float acumTime;
 
@@ -189,6 +189,9 @@ namespace TGC.Group.Model
             Planta.Enabled = true;
             Plantas.Add(Planta);
 
+            //Path horizontal
+            pathHorizontal = new Horizontal(new Vector3(100,0,0), MediaDir + "grass.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            
             acumTime = 0;
         }
 
@@ -340,6 +343,8 @@ namespace TGC.Group.Model
             {
                 planta.render();
             }
+
+            pathHorizontal.render();
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
             PostRender();
