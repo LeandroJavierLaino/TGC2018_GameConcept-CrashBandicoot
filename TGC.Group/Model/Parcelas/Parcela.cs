@@ -13,6 +13,7 @@ namespace TGC.Group.Model
     {
         protected TgcPlane floor;
         protected List<TgcMesh> plants = new List<TgcMesh>();
+        protected List<TgcMesh> walls = new List<TgcMesh>();
 
         public void render()
         {
@@ -20,6 +21,10 @@ namespace TGC.Group.Model
             foreach(var plant in plants)
             {
                 plant.render();
+            }
+            foreach(var wall in walls)
+            {
+                wall.render();
             }
         }
 

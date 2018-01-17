@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
+using TGC.Core.Utils;
 
 namespace TGC.Group.Model.Parcelas
 {
@@ -16,7 +17,7 @@ namespace TGC.Group.Model.Parcelas
         {
             //Se define el terrno de la parcela
             floor = new TgcPlane(position, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4);
-
+            
             //Variable temporal que contiene el modelo
             var basePlant = new TgcSceneLoader().loadSceneFromFile(plantModel).Meshes[0];
             basePlant.Position = new Vector3(position.X, position.Y, position.Z + 45);
@@ -90,6 +91,15 @@ namespace TGC.Group.Model.Parcelas
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
+
+            var baseTriangleWall = new TgcPlane(position,new Vector3(0,20,50),TgcPlane.Orientations.YZplane,TgcTexture.createTexture(grassTexture));
+            baseTriangleWall.Enabled = true;
+            var wallMesh = baseTriangleWall.toMesh("WallA");
+            wallMesh.Position = position;
+            wallMesh.rotateZ(FastMath.ToRad(10));
+            //wallMesh.rotateX(40);
+            wallMesh.UpdateMeshTransform();
+            walls.Add(wallMesh);
         }
     }
 }
