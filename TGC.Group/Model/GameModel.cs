@@ -1,6 +1,7 @@
 using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using TGC.Core.BoundingVolumes;
@@ -14,6 +15,7 @@ using TGC.Core.Terrain;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 using TGC.Group.Model.Parcelas;
+using TGC.Group.Model.Camera;
 
 namespace TGC.Group.Model
 {
@@ -37,7 +39,7 @@ namespace TGC.Group.Model
             Description = Game.Default.Description;
         }
         //Camara 3ra persona con efecto de resorte
-        private TGC.Examples.Camara.TgcSpringThirdPersonCamera camaraSpring;
+        private TgcSpringThirdPersonCamera camaraSpring;
 
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
@@ -45,9 +47,7 @@ namespace TGC.Group.Model
         //Path a partir de un plano
         private TgcPlane Path { get; set; }
         private TgcPlane PathB { get; set; }
-        private List<TgcPlane> FullCourse = new List<TgcPlane>();
-        private Horizontal pathHorizontal;
-
+        private List<Parcela> FullLevel = new List<Parcela>();
 
         //Player
         private TgcSkeletalMesh character;
@@ -61,12 +61,8 @@ namespace TGC.Group.Model
         //Cajas a Juntar
         private List<Caja> Boxes = new List<Caja>();
 
-        //Vegetacion
-        private TgcMesh Planta;
-        private List<TgcMesh> Plantas = new List<TgcMesh>();
-
         //Parametros varios
-        private float velocity = 5f;
+        private float velocity = 0.2f;
         private float rotationVelocity = 10;
         private float acumTime;
 
@@ -138,11 +134,11 @@ namespace TGC.Group.Model
             //Configuro donde esta la posicion de la camara y hacia donde mira.
 
             //Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
-            camaraSpring = new Examples.Camara.TgcSpringThirdPersonCamera();
-            camaraSpring.setOrientation(new Vector3(0, FastMath.PI, 0));
-            
-            camaraSpring.setTargetOffset(character.Position, 50, 50);
-            
+            camaraSpring = new TgcSpringThirdPersonCamera();
+            camaraSpring.SetCamera(new Vector3(100, 100, 100), character.Position);
+            //camaraSpring.Target = character.Position;
+            //camaraSpring.Eye = new Vector3(character.Position.X,character.Position.Y+20,character.Position.Z);
+            camaraSpring.setTargetOffset(character.Position, 15, -50);
             Camara = camaraSpring;
 
             //Cajas| objetivo es juntar una serie de cajas
@@ -165,33 +161,21 @@ namespace TGC.Group.Model
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.Init();
 
-            //Crear Planta
-            //Modelo base 1
-            Planta = new TgcSceneLoader().loadSceneFromFile(MediaDir + "Planta\\Planta-TgcScene.xml").Meshes[0];
+            //Empezamos los caminos???
+            Horizontal pathHorizontal;
+            Vertical pathVertical;
 
-            //Planta 1
-            Planta.Position = new Vector3(60,0,45);
-            Planta.Scale = new Vector3(0.5f, 0.5f, 0.5f);
-            Planta.Enabled = true;
-            Plantas.Add(Planta);
+            //Paths horizontales
+            pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "grass.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathHorizontal);
 
-            //Planta 2
-            Planta = Planta.clone("Planta2");
-            Planta.Position = new Vector3(30, 0, 45);
-            Planta.rotateY(30);
-            Planta.Enabled = true;
-            Plantas.Add(Planta);
+            //Paths verticales
+            pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "grass.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathVertical);
 
-            //Planta3
-            Planta = Planta.clone("Planta3");
-            Planta.Position = new Vector3(5, 0, 45);
-            Planta.rotateY(16);
-            Planta.Enabled = true;
-            Plantas.Add(Planta);
+            pathVertical = new Vertical(new Vector3(0, 20, 100), MediaDir + "grass.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathVertical);
 
-            //Path horizontal
-            pathHorizontal = new Horizontal(new Vector3(100,0,0), MediaDir + "grass.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
-            
             acumTime = 0;
         }
 
@@ -279,6 +263,8 @@ namespace TGC.Group.Model
             {
                 character.playAnimation("Caminando", true);
                 var rotAngle = rotate * ElapsedTime;
+                camaraSpring.rotateY(rotAngle);
+                Camara = camaraSpring;
                 character.rotateY(rotAngle);
             }
 
@@ -312,39 +298,30 @@ namespace TGC.Group.Model
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
 
+            //Acumuolamos tiempo para distintas tareas
             acumTime += ElapsedTime;
+           
             //Dibuja un texto por pantalla
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
             DrawText.drawText("Con clic izquierdo subimos la camara [Actual]: " + TgcParserUtils.printVector3(Camara.Position), 0, 30, Color.OrangeRed);
             DrawText.drawText("Tiempo Acumulado: " + acumTime, 0, 40, Color.OrangeRed);
             DrawText.drawText("Ubicacion Personaje: " + character.Position, 0, 50, Color.OrangeRed);
+            
             //Renderizo cielo
             skyBox.render();
 
-            //Renderizo camino
-            Path.render();
-            PathB.render();
-            
             //Clase Caja en funcionamiento
-            BoxClass.animateBox(ElapsedTime, acumTime);
             BoxClass.takeBox(character.BoundingBox);
             BoxClass.render();
 
             character.animateAndRender(ElapsedTime);
             //character.BoundingBox.render();
 
-            //Cuando tenemos modelos mesh podemos utilizar un método que hace la matriz de transformación estándar.
-            //Es útil cuando tenemos transformaciones simples, pero OJO cuando tenemos transformaciones jerárquicas o complicadas.
-            //Mesh.UpdateMeshTransform();
-            //Render del mesh
-            //Mesh.render();
-
-            foreach (var planta in Plantas)
+            //Renderizo el camino
+            foreach (var path in FullLevel)
             {
-                planta.render();
+                path.render();
             }
-
-            pathHorizontal.render();
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
             PostRender();
@@ -358,14 +335,7 @@ namespace TGC.Group.Model
         public override void Dispose()
         {
             character.dispose();
-            Path.dispose();
-            PathB.dispose();
             skyBox.dispose();
-            //Dispose de las plantas
-            foreach (var planta in Plantas)
-            {
-                planta.dispose();
-            }
             BoxClass.dispose();
         }
     }

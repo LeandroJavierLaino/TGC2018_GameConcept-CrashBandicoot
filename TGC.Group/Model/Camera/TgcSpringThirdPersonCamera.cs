@@ -1,23 +1,18 @@
-using System.Drawing;
-using System.Windows.Forms;
+Ôªøusing System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.DirectX;
-using Microsoft.DirectX.DirectInput;
 using TGC.Core.Camara;
-using TGC.Core.Direct3D;
-using TGC.Core.Input;
 using TGC.Core.Utils;
 
-namespace TGC.Examples.Camara
+namespace TGC.Group.Model.Camera
 {
-    /// <summary>
-    ///     Camara en Tercera Persona que permite seguir a un objeto que se desplaza
-    ///     desde atr·s, con una cierta distancia. Posee un efecto de Spring que realiza
-    ///     la rotaciÛn suavemente hasta llegar al ·ngulo deseado.
-    /// </summary>
-    public class TgcSpringThirdPersonCamera : TgcCamera
+    class TgcSpringThirdPersonCamera : TgcCamera
     {
-        private static readonly float DEFAULT_SPRING_CONSTANT = 32.0f;
-        private static readonly float DEFAULT_DAMPING_CONSTANT = 16.0f;
+        private static readonly float DEFAULT_SPRING_CONSTANT = 16.0f;
+        private static readonly float DEFAULT_DAMPING_CONSTANT = 8.0f;
 
         private static readonly Vector3 WORLD_XAXIS = new Vector3(1.0f, 0.0f, 0.0f);
         private static readonly Vector3 WORLD_YAXIS = new Vector3(0.0f, 1.0f, 0.0f);
@@ -56,7 +51,7 @@ namespace TGC.Examples.Camara
         }
 
         /// <summary>
-        ///     Carga los valores default de la camara y limpia todos los c·lculos intermedios
+        ///     Carga los valores default de la camara y limpia todos los c√°lculos intermedios
         /// </summary>
         public void resetValues()
         {
@@ -70,7 +65,7 @@ namespace TGC.Examples.Camara
 
             Eye = new Vector3(0.0f, 0.0f, 0.0f);
             Target = new Vector3(0.0f, 0.0f, 0.0f);
-            m_targetYAxis = new Vector3(0,1,0);
+            m_targetYAxis = new Vector3(0, 1, 0);
 
             m_velocity = new Vector3(0.0f, 0.0f, 0.0f);
 
@@ -104,7 +99,7 @@ namespace TGC.Examples.Camara
         }
 
         /// <summary>
-        ///     Rota la c·mara.
+        ///     Rota la c√°mara.
         ///     Debe ser rotada la misma cantidad que se rota al Target a seguir.
         ///     Se especifica en Degrees y no en Radianes
         /// </summary>
@@ -238,9 +233,9 @@ namespace TGC.Examples.Camara
         }
 
         /// <summary>
-        ///     Permite configurar la orientacion de la c·mara respecto del Target
+        ///     Permite configurar la orientacion de la c√°mara respecto del Target
         /// </summary>
-        /// <param name="cameraRotation">RotaciÛn absoluta a aplicar</param>
+        /// <param name="cameraRotation">Rotaci√≥n absoluta a aplicar</param>
         public void setOrientation(Vector3 cameraRotation)
         {
             m_orientation = Quaternion.RotationYawPitchRoll(cameraRotation.Y, cameraRotation.X, cameraRotation.Z);

@@ -85,11 +85,12 @@
       <DependentUpon>Game.settings</DependentUpon>
     </Compile>
     <Compile Include="Model\Caja.cs" />
+    <Compile Include="Model\Camera\TgcSpringThirdPersonCamera.cs" />
     <Compile Include="Model\GameModel.cs" />
+    <Compile Include="Model\Parcelas\Vertical.cs" />
     <Compile Include="Model\Parcelas\Horizontal.cs" />
     <Compile Include="Model\Parcelas\Parcela.cs" />
     <Compile Include="Model\TgcFpsCamera.cs" />
-    <Compile Include="Model\TgcSpringThirdPersonCamera.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form\GameForm.resx">

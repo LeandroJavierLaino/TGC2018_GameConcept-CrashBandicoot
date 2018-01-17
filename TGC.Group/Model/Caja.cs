@@ -34,18 +34,6 @@ namespace TGC.Group.Model
         }
 
         /// <summary>
-        ///     Animacion de oscilacion vertical y rotacion sobre el eje Y 
-        /// </summary>
-        /// <param name="elapsedTime"></param>
-        /// <param name="acumTime"></param>
-        public void animateBox(float elapsedTime, float acumTime)
-        {
-            box.rotateY(elapsedTime);
-            box.Position = new Vector3(box.Position.X, OriginalPosYBox + 3 * FastMath.Sin(acumTime), box.Position.Z);
-            box.updateValues();
-        }
-
-        /// <summary>
         ///     Verifica si el jugador tomo o no la caja y modifica el atributo BoxTaked
         /// </summary>
         /// <param name="characterBoundingbox"></param>

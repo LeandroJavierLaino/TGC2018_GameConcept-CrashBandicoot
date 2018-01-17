@@ -20,7 +20,7 @@ namespace TGC.Group.Model.Parcelas
 
             //Variable temporal que contiene el modelo
             var basePlant = new TgcSceneLoader().loadSceneFromFile(plantModel).Meshes[0];
-            basePlant.Position = new Vector3(position.X + 25, position.Y, position.Z);
+            basePlant.Position = new Vector3(position.X + 45, position.Y, position.Z);
             basePlant.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             var random = new Random();
             var ran = random.Next(0, 10);
@@ -30,7 +30,63 @@ namespace TGC.Group.Model.Parcelas
             plants.Add(basePlant);
 
             basePlant = basePlant.clone("plantaabajo1");
+            basePlant.Position = new Vector3(position.X + 35, position.Y, position.Z);
+            ran = random.Next(0, 10);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaabajo2");
+            basePlant.Position = new Vector3(position.X + 25, position.Y, position.Z);
+            ran = random.Next(0, 10);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaabajo3");
             basePlant.Position = new Vector3(position.X + 15, position.Y, position.Z);
+            ran = random.Next(0, 10);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaabajo4");
+            basePlant.Position = new Vector3(position.X + 5, position.Y, position.Z);
+            ran = random.Next(0, 10);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaarriba1");
+            basePlant.Position = new Vector3(position.X + 45, position.Y, position.Z + 50);
+            ran = random.Next(0, 10);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaarriba2");
+            basePlant.Position = new Vector3(position.X + 35, position.Y, position.Z + 50);
+            ran = random.Next(0, 10);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaarriba3");
+            basePlant.Position = new Vector3(position.X + 25, position.Y, position.Z + 50);
+            ran = random.Next(0, 10);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaarriba4");
+            basePlant.Position = new Vector3(position.X + 15, position.Y, position.Z + 50);
+            ran = random.Next(0, 10);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaarriba5");
+            basePlant.Position = new Vector3(position.X + 5, position.Y, position.Z + 50);
             ran = random.Next(0, 10);
             basePlant.rotateY(ran);
 
