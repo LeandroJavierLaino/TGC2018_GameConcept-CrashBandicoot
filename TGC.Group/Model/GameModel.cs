@@ -142,10 +142,11 @@ namespace TGC.Group.Model
 
             //Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
             camaraSpring = new TgcSpringThirdPersonCamera();
-            camaraSpring.SetCamera(new Vector3(100, 100, 100), character.Position);
-            camaraSpring.Target = new Vector3(character.Position.X, character.Position.Y, character.Position.Z);
-            //camaraSpring. = new Vector3(100, 100, 100);
             camaraSpring.setTargetOffset(character.Position, 15, -50);
+            camaraSpring.SetCamera(new Vector3(100,100,100), character.Position);
+            camaraSpring.Target = new Vector3(character.Position.X, character.Position.Y, character.Position.Z);
+            
+            //
             Camara = camaraSpring;
 
             //Cajas| objetivo es juntar una serie de cajas
@@ -168,9 +169,30 @@ namespace TGC.Group.Model
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.Init();
 
+
+            /*
+            
+            SIz = Superior Izquierda 
+            SDe = Superior Derecha
+            IIZ = Inferior Izquierda
+            IDe = Inferior Izquierda
+            Hor = Horizontal
+            Ver = Vertical
+
+             *---*---*---*
+             |SIz|Hor|SDe|
+             *---*---*---*
+             |Ver|   |Ver|
+             *---*---*---*
+             |IIz|Hor|IDe|
+             *---*---*---*
+             
+             */
+
             //Empezamos los caminos???
             Horizontal pathHorizontal;
             Vertical pathVertical;
+            SuperiorLeft pathSuperiorLeft;
 
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -182,6 +204,10 @@ namespace TGC.Group.Model
 
             pathVertical = new Vertical(new Vector3(0, 20, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
+
+            //Paths superior izquierdo
+            pathSuperiorLeft = new SuperiorLeft(new Vector3(0, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathSuperiorLeft);
 
             //Shaders? yaaaaay
             Shader = TGC.Core.Shaders.TgcShaders.Instance.TgcSkeletalMeshPointLightShader;
@@ -310,22 +336,6 @@ namespace TGC.Group.Model
             
             //Acumuolamos tiempo para distintas tareas
             acumTime += ElapsedTime;
-
-            //Asingamos el shader skeletal
-            character.Effect = Shader;
-            character.Technique = TgcShaders.Instance.getTgcSkeletalMeshTechnique(character.RenderType);
-            //Parametros para el shader
-            character.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
-            character.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(new Vector3(50,100,50)));
-            character.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
-            character.Effect.SetValue("lightIntensity", 200);
-            character.Effect.SetValue("lightAttenuation", 4f);
-
-            character.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.White));
-            character.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.Black));
-            character.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
-            character.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
-            character.Effect.SetValue("materialSpecularExp", 15f);
 
             //Dibuja un texto por pantalla
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);

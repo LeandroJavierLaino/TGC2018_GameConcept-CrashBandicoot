@@ -24,7 +24,7 @@ namespace TGC.Group.Model.Parcelas
             basePlant.Position = new Vector3(position.X + 45, position.Y, position.Z);
             basePlant.Scale = new Vector3(0.5f, 0.5f, 0.5f);
             var random = new Random();
-            var ran = random.Next(0, 10);
+            var ran = random.Next(0, 100);
             basePlant.rotateY(ran);
             basePlant.Enabled = true;
 
@@ -32,67 +32,68 @@ namespace TGC.Group.Model.Parcelas
 
             basePlant = basePlant.clone("plantaabajo1");
             basePlant.Position = new Vector3(position.X + 35, position.Y, position.Z);
-            ran = random.Next(0, 10);
+            ran = random.Next(0, 100);
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
 
             basePlant = basePlant.clone("plantaabajo2");
             basePlant.Position = new Vector3(position.X + 25, position.Y, position.Z);
-            ran = random.Next(0, 10);
+            ran = random.Next(0, 100);
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
 
             basePlant = basePlant.clone("plantaabajo3");
             basePlant.Position = new Vector3(position.X + 15, position.Y, position.Z);
-            ran = random.Next(0, 10);
+            ran = random.Next(0, 100);
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
 
             basePlant = basePlant.clone("plantaabajo4");
             basePlant.Position = new Vector3(position.X + 5, position.Y, position.Z);
-            ran = random.Next(0, 10);
+            ran = random.Next(0, 100);
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
 
             basePlant = basePlant.clone("plantaarriba1");
             basePlant.Position = new Vector3(position.X + 45, position.Y, position.Z + 50);
-            ran = random.Next(0, 10);
+            ran = random.Next(0, 100);
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
 
             basePlant = basePlant.clone("plantaarriba2");
             basePlant.Position = new Vector3(position.X + 35, position.Y, position.Z + 50);
-            ran = random.Next(0, 10);
+            ran = random.Next(0, 100);
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
 
             basePlant = basePlant.clone("plantaarriba3");
             basePlant.Position = new Vector3(position.X + 25, position.Y, position.Z + 50);
-            ran = random.Next(0, 10);
+            ran = random.Next(0, 100);
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
 
             basePlant = basePlant.clone("plantaarriba4");
             basePlant.Position = new Vector3(position.X + 15, position.Y, position.Z + 50);
-            ran = random.Next(0, 10);
+            ran = random.Next(0, 100);
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
 
             basePlant = basePlant.clone("plantaarriba5");
             basePlant.Position = new Vector3(position.X + 5, position.Y, position.Z + 50);
-            ran = random.Next(0, 10);
+            ran = random.Next(0, 100);
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
 
+            //Armamos muros a partir de un Plano y lo convertimos a Mesh
             var baseTriangleWallH = new TgcPlane(new Vector3(), new Vector3(50, 20, 0), TgcPlane.Orientations.XYplane, TgcTexture.createTexture(wallTexture),2,1);
             
             var wallMesh = baseTriangleWallH.toMesh("WallHA");
