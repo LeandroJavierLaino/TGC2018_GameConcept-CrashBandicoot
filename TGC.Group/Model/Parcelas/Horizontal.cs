@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 using TGC.Core.Textures;
+using TGC.Core.Utils;
 
 namespace TGC.Group.Model.Parcelas
 {
     public class Horizontal : Parcela
     {
 
-        public Horizontal(Vector3 position, string grassTexture, string plantModel)
+        public Horizontal(Vector3 position, string grassTexture, string wallTexture, string plantModel)
         {
             //Se define el terrno de la parcela
             floor = new TgcPlane(position, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4);
@@ -91,6 +92,20 @@ namespace TGC.Group.Model.Parcelas
             basePlant.rotateY(ran);
 
             plants.Add(basePlant);
+
+            var baseTriangleWallH = new TgcPlane(new Vector3(), new Vector3(50, 20, 0), TgcPlane.Orientations.XYplane, TgcTexture.createTexture(wallTexture),2,1);
+            
+            var wallMesh = baseTriangleWallH.toMesh("WallHA");
+            wallMesh.Position = position;
+            wallMesh.UpdateMeshTransform();
+
+            walls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("WallHB");
+            wallMesh.Position = new Vector3(position.X, position.Y, position.Z + 50);
+            wallMesh.UpdateMeshTransform();
+
+            walls.Add(wallMesh);
         }
     }
 }

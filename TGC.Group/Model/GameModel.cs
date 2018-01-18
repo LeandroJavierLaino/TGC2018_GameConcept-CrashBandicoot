@@ -1,5 +1,4 @@
 using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
 using Microsoft.DirectX.DirectInput;
 using System;
 using System.Collections.Generic;
@@ -16,6 +15,8 @@ using TGC.Core.Textures;
 using TGC.Core.Utils;
 using TGC.Group.Model.Parcelas;
 using TGC.Group.Model.Camera;
+using TGC.Core.Shaders;
+using Microsoft.DirectX.Direct3D;
 
 namespace TGC.Group.Model
 {
@@ -66,7 +67,11 @@ namespace TGC.Group.Model
         private float rotationVelocity = 10;
         private float acumTime;
 
+        //Skybox
         private TgcSkyBox skyBox { get; set; }
+
+        //Shader
+        private Microsoft.DirectX.Direct3D.Effect Shader { get; set; }
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -119,10 +124,12 @@ namespace TGC.Group.Model
             //Lo ubicamos 
             character.Position = new Vector3(10, 0, 10);
             character.UpdateMeshTransform();
+            
             //BoundingSphere que va a usar el personaje
             character.AutoUpdateBoundingBox = true;
             characterSphere = new TgcBoundingSphere(character.BoundingBox.calculateBoxCenter(), character.BoundingBox.calculateBoxRadius());
-            characterBox = character.BoundingBox.clone();            
+            characterBox = character.BoundingBox.clone();  
+            
 
             //Suelen utilizarse objetos que manejan el comportamiento de la camara.
             //Lo que en realidad necesitamos gráficamente es una matriz de View.
@@ -136,8 +143,8 @@ namespace TGC.Group.Model
             //Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
             camaraSpring = new TgcSpringThirdPersonCamera();
             camaraSpring.SetCamera(new Vector3(100, 100, 100), character.Position);
-            //camaraSpring.Target = character.Position;
-            //camaraSpring.Eye = new Vector3(character.Position.X,character.Position.Y+20,character.Position.Z);
+            camaraSpring.Target = new Vector3(character.Position.X, character.Position.Y, character.Position.Z);
+            //camaraSpring. = new Vector3(100, 100, 100);
             camaraSpring.setTargetOffset(character.Position, 15, -50);
             Camara = camaraSpring;
 
@@ -166,15 +173,18 @@ namespace TGC.Group.Model
             Vertical pathVertical;
 
             //Paths horizontales
-            pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "grass.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathHorizontal);
 
             //Paths verticales
-            pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "grass.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new Vector3(0, 20, 100), MediaDir + "grass.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new Vector3(0, 20, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
+
+            //Shaders? yaaaaay
+            Shader = TGC.Core.Shaders.TgcShaders.Instance.TgcSkeletalMeshPointLightShader;
 
             acumTime = 0;
         }
@@ -297,10 +307,26 @@ namespace TGC.Group.Model
         {
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
-
+            
             //Acumuolamos tiempo para distintas tareas
             acumTime += ElapsedTime;
-           
+
+            //Asingamos el shader skeletal
+            character.Effect = Shader;
+            character.Technique = TgcShaders.Instance.getTgcSkeletalMeshTechnique(character.RenderType);
+            //Parametros para el shader
+            character.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
+            character.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(new Vector3(50,100,50)));
+            character.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(Camara.Position));
+            character.Effect.SetValue("lightIntensity", 200);
+            character.Effect.SetValue("lightAttenuation", 4f);
+
+            character.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor(Color.White));
+            character.Effect.SetValue("materialAmbientColor", ColorValue.FromColor(Color.Black));
+            character.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor(Color.White));
+            character.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
+            character.Effect.SetValue("materialSpecularExp", 15f);
+
             //Dibuja un texto por pantalla
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
             DrawText.drawText("Con clic izquierdo subimos la camara [Actual]: " + TgcParserUtils.printVector3(Camara.Position), 0, 30, Color.OrangeRed);
@@ -337,6 +363,10 @@ namespace TGC.Group.Model
             character.dispose();
             skyBox.dispose();
             BoxClass.dispose();
+            foreach(var path in FullLevel)
+            {
+                path.dispose();
+            }
         }
     }
 }

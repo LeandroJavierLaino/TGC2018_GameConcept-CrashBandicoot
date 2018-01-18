@@ -13,7 +13,7 @@ namespace TGC.Group.Model.Parcelas
 {
     class Vertical : Parcela
     {
-        public Vertical(Vector3 position, string grassTexture, string plantModel)
+        public Vertical(Vector3 position, string grassTexture, string wallTexture, string plantModel)
         {
             //Se define el terrno de la parcela
             floor = new TgcPlane(position, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4);
@@ -26,6 +26,7 @@ namespace TGC.Group.Model.Parcelas
             var ran = random.Next(0, 100);
             basePlant.rotateY(ran);
             basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
 
             plants.Add(basePlant);
 
@@ -92,13 +93,20 @@ namespace TGC.Group.Model.Parcelas
 
             plants.Add(basePlant);
 
-            var baseTriangleWall = new TgcPlane(position,new Vector3(0,20,50),TgcPlane.Orientations.YZplane,TgcTexture.createTexture(grassTexture));
-            baseTriangleWall.Enabled = true;
-            var wallMesh = baseTriangleWall.toMesh("WallA");
+            var baseTriangleWall = new TgcPlane(new Vector3(),new Vector3(0,20,50),TgcPlane.Orientations.YZplane,TgcTexture.createTexture(wallTexture),2,1);
+            
+            var wallMesh = baseTriangleWall.toMesh("WallVA");
+            wallMesh.rotateZ(FastMath.ToRad(15));
             wallMesh.Position = position;
-            wallMesh.rotateZ(FastMath.ToRad(10));
-            //wallMesh.rotateX(40);
             wallMesh.UpdateMeshTransform();
+
+            walls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("WallVB");
+            wallMesh.rotateZ(FastMath.ToRad(-15));
+            wallMesh.Position = new Vector3(position.X + 50,position.Y,position.Z);
+            wallMesh.UpdateMeshTransform();
+
             walls.Add(wallMesh);
         }
     }
