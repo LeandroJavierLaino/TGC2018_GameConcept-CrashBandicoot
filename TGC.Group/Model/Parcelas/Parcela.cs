@@ -14,6 +14,7 @@ namespace TGC.Group.Model
         protected TgcPlane floor;
         protected List<TgcMesh> plants = new List<TgcMesh>();
         protected List<TgcMesh> walls = new List<TgcMesh>();
+        //Columnas TODO: hacer una coleccion de columnas, estas van a permitir una mejor conexion entre parcelas
 
         public void render()
         {

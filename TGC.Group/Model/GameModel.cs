@@ -63,7 +63,7 @@ namespace TGC.Group.Model
         private List<Caja> Boxes = new List<Caja>();
 
         //Parametros varios
-        private float velocity = 0.2f;
+        private float velocity = 1.2f;
         private float rotationVelocity = 10;
         private float acumTime;
 
