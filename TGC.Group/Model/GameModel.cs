@@ -142,11 +142,9 @@ namespace TGC.Group.Model
 
             //Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
             camaraSpring = new TgcSpringThirdPersonCamera();
-            camaraSpring.setTargetOffset(character.Position, 15, -50);
+            camaraSpring.setTargetOffset(character.Position, 35, -50);
             camaraSpring.SetCamera(new Vector3(100,100,100), character.Position);
             camaraSpring.Target = new Vector3(character.Position.X, character.Position.Y, character.Position.Z);
-            
-            //
             Camara = camaraSpring;
 
             //Cajas| objetivo es juntar una serie de cajas
@@ -193,6 +191,8 @@ namespace TGC.Group.Model
             Horizontal pathHorizontal;
             Vertical pathVertical;
             SuperiorLeft pathSuperiorLeft;
+            SuperiorRight pathSuperiorRight;
+            InferiorLeft pathInferiorLeft;
 
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -208,6 +208,14 @@ namespace TGC.Group.Model
             //Paths superior izquierdo
             pathSuperiorLeft = new SuperiorLeft(new Vector3(0, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorLeft);
+
+            //Paths superior derecho
+            pathSuperiorRight = new SuperiorRight(new Vector3(100, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathSuperiorRight);
+
+            //Paths inferior izquierdo
+            pathInferiorLeft = new InferiorLeft(new Vector3(100, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathInferiorLeft);
 
             //Shaders? yaaaaay
             Shader = TGC.Core.Shaders.TgcShaders.Instance.TgcSkeletalMeshPointLightShader;
