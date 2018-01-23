@@ -195,5 +195,21 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.UpdateMeshTransform();
             walls.Add(wallMesh);
         }
+
+        public void rotateY(float angle)
+        {
+            foreach (var wall in walls)
+            {
+                wall.rotateY(angle);
+                wall.UpdateMeshTransform();
+            }
+
+            foreach (var plant in plants)
+            {
+                plant.rotateY(angle);
+                plant.UpdateMeshTransform();
+            }
+
+        }
     }
 }

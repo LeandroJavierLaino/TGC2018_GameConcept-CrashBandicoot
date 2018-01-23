@@ -196,6 +196,7 @@ namespace TGC.Group.Model
 
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            //pathHorizontal.rotateY(FastMath.PI_HALF);
             FullLevel.Add(pathHorizontal);
 
             //Paths verticales
