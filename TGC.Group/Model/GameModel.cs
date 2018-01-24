@@ -142,9 +142,9 @@ namespace TGC.Group.Model
 
             //Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
             camaraSpring = new TgcSpringThirdPersonCamera();
-            camaraSpring.setTargetOffset(character.Position, 35, -50);
-            camaraSpring.SetCamera(new Vector3(100,100,100), character.Position);
-            camaraSpring.Target = new Vector3(character.Position.X, character.Position.Y, character.Position.Z);
+            //camaraSpring.SetCamera(new Vector3(character.Position.X, character.Position.Y + 30, character.Position.Z), new Vector3(character.Position.X, character.Position.Y+30, character.Position.Z));
+            //camaraSpring.setOffset(30);
+            camaraSpring.setTargetOffset(character.Position, 65, -40);
             Camara = camaraSpring;
 
             //Cajas| objetivo es juntar una serie de cajas
@@ -193,14 +193,21 @@ namespace TGC.Group.Model
             SuperiorLeft pathSuperiorLeft;
             SuperiorRight pathSuperiorRight;
             InferiorLeft pathInferiorLeft;
+            InferiorRight pathInferiorRight;
+            Pit pathPit;
 
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
-            //pathHorizontal.rotateY(FastMath.PI_HALF);
             FullLevel.Add(pathHorizontal);
 
             //Paths verticales
             pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathVertical);
+
+            pathVertical = new Vertical(new Vector3(150, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathVertical);
+
+            pathVertical = new Vertical(new Vector3(150, 0, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
             pathVertical = new Vertical(new Vector3(0, 20, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -217,6 +224,14 @@ namespace TGC.Group.Model
             //Paths inferior izquierdo
             pathInferiorLeft = new InferiorLeft(new Vector3(100, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorLeft);
+
+            //Paths inferior derecho
+            pathInferiorRight = new InferiorRight(new Vector3(150, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathInferiorRight);
+
+            //Paths que son fozas
+            pathPit = new Pit(new Vector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg");
+            FullLevel.Add(pathPit);
 
             //Shaders? yaaaaay
             Shader = TGC.Core.Shaders.TgcShaders.Instance.TgcSkeletalMeshPointLightShader;

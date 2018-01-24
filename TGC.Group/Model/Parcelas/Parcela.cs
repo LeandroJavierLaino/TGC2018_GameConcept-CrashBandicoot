@@ -11,30 +11,66 @@ namespace TGC.Group.Model
 {
     public class Parcela
     {
+        //Piso por el momento es simplemente un plano
         protected TgcPlane floor;
+        
+        //Algo de vegetacion
         protected List<TgcMesh> plants = new List<TgcMesh>();
+
+        //Paredes
         protected List<TgcMesh> walls = new List<TgcMesh>();
-        //Columnas TODO: hacer una coleccion de columnas, estas van a permitir una mejor conexion entre parcelas
+
+        //Columnas
+        protected List<TgcMesh> columns = new List<TgcMesh>();
+
+        //El tope de las columnas
+        protected List<TgcMesh> columnsTops = new List<TgcMesh>();
+
+        //Posicion a partir de la cual se ubica todo
+        protected Vector3 position;
 
         public void render()
         {
             floor.render();
+
             foreach(var plant in plants)
             {
                 plant.render();
             }
+
             foreach(var wall in walls)
             {
                 wall.render();
+            }
+
+            foreach (var column in columns)
+            {
+                column.render();
+            }
+
+            foreach (var columnTop in columnsTops)
+            {
+                columnTop.render();
             }
         }
 
         public void dispose()
         {
             floor.dispose();
+
             foreach (var plant in plants)
             {
                 plant.dispose();
+            }
+
+            foreach (var column in columns)
+            {
+                column.dispose();
+            }
+
+            foreach (var columnTop in columnsTops)
+            {
+                columnTop.dispose();
             }
         }
     }

@@ -57,6 +57,41 @@ namespace TGC.Group.Model.Parcelas
 
             plants.Add(basePlant);
 
+            basePlant = basePlant.clone("plantaarriba1");
+            basePlant.Position = new Vector3(position.X + 45, position.Y, position.Z + 45);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaarriba2");
+            basePlant.Position = new Vector3(position.X + 35, position.Y, position.Z + 45);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaarriba3");
+            basePlant.Position = new Vector3(position.X + 25, position.Y, position.Z + 45);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaarriba4");
+            basePlant.Position = new Vector3(position.X + 15, position.Y, position.Z + 45);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaarriba5");
+            basePlant.Position = new Vector3(position.X + 5, position.Y, position.Z + 45);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
             var baseWall = new TgcPlane(new Vector3(), new Vector3(0, 20.62f, 50), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(wallTexture), 2, 1);
 
             var wallMesh = baseWall.toMesh("WallVA");

@@ -57,6 +57,39 @@ namespace TGC.Group.Model.Parcelas
 
             plants.Add(basePlant);
 
+            basePlant = basePlant.clone("plantaabajo0");
+            basePlant.Position = new Vector3(position.X + 40, position.Y, position.Z + 5);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaabajo1");
+            basePlant.Position = new Vector3(position.X + 30, position.Y, position.Z + 5);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaabajo2");
+            basePlant.Position = new Vector3(position.X + 20, position.Y, position.Z + 5);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaabajo3");
+            basePlant.Position = new Vector3(position.X + 10, position.Y, position.Z + 5);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+
+            plants.Add(basePlant);
+
+            basePlant = basePlant.clone("plantaabajo4");
+            basePlant.Position = new Vector3(position.X, position.Y, position.Z + 5);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+
             var baseWall = new TgcPlane(new Vector3(), new Vector3(0, 20.62f, 50), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(wallTexture), 2, 1);
 
             var wallMesh = baseWall.toMesh("WallVA");
