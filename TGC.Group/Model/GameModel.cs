@@ -197,40 +197,40 @@ namespace TGC.Group.Model
             Pit pathPit;
 
             //Paths horizontales
-            pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathHorizontal);
 
             //Paths verticales
-            pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new Vector3(150, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new Vector3(150, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new Vector3(150, 0, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new Vector3(150, 0, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new Vector3(0, 20, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new Vector3(0, 20, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
             //Paths superior izquierdo
-            pathSuperiorLeft = new SuperiorLeft(new Vector3(0, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorLeft = new SuperiorLeft(new Vector3(0, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorLeft);
 
             //Paths superior derecho
-            pathSuperiorRight = new SuperiorRight(new Vector3(100, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorRight = new SuperiorRight(new Vector3(100, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorRight);
 
             //Paths inferior izquierdo
-            pathInferiorLeft = new InferiorLeft(new Vector3(100, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorLeft = new InferiorLeft(new Vector3(100, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorLeft);
 
             //Paths inferior derecho
-            pathInferiorRight = new InferiorRight(new Vector3(150, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new Vector3(150, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorRight);
 
             //Paths que son fozas
-            pathPit = new Pit(new Vector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg");
+            pathPit = new Pit(new Vector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
 
             //Shaders? yaaaaay
@@ -305,7 +305,7 @@ namespace TGC.Group.Model
 
             if (jumping /*&& moving*/)
             {
-                jump += acumTime * 0.00002f;
+                jump += acumTime * 0.000006f;
             }
 
             if (jump > 30 || character.Position.Y > 30)

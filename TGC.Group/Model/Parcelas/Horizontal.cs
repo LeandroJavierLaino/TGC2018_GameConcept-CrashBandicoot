@@ -14,7 +14,7 @@ namespace TGC.Group.Model.Parcelas
     public class Horizontal : Parcela
     {
 
-        public Horizontal(Vector3 position, string grassTexture, string wallTexture, string columnTexture, string plantModel)
+        public Horizontal(Vector3 position, string grassTexture, string wallTexture, string columnTexture, string topTexture, string plantModel)
         {
             //Se define el terrno de la parcela
             floor = new TgcPlane(position, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4);
@@ -110,7 +110,7 @@ namespace TGC.Group.Model.Parcelas
 
             walls.Add(wallMesh);
 
-            //Columnas TODO: hacer una coleccion de columnas
+            //Columnas 
             var baseWall = new TgcPlane(new Vector3(), new Vector3(0, 20, 5), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(columnTexture), 1, 1);
 
             wallMesh = baseWall.toMesh("Column1V1");
@@ -188,12 +188,35 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.UpdateMeshTransform();
             columns.Add(wallMesh);
 
-            baseWall = new TgcPlane(new Vector3(), new Vector3(5, 20, 0), TgcPlane.Orientations.XYplane, TgcTexture.createTexture(wallTexture), 1, 1);
+            baseWall = new TgcPlane(new Vector3(), new Vector3(5, 20, 0), TgcPlane.Orientations.XYplane, TgcTexture.createTexture(columnTexture), 1, 1);
 
             wallMesh = baseWall.toMesh("Column4H2");
             wallMesh.Position = new Vector3(position.X + 45, position.Y, position.Z + 50);
             wallMesh.UpdateMeshTransform();
             columns.Add(wallMesh);
+
+            //Tapas de columnas
+            baseWall = new TgcPlane(new Vector3(), new Vector3(5, 0, 5), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(topTexture), 1, 1);
+
+            wallMesh = baseWall.toMesh("TopColumn1");
+            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z);
+            wallMesh.UpdateMeshTransform();
+            columnsTops.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn2");
+            wallMesh.Position = new Vector3(position.X + 45, position.Y + 20, position.Z);
+            wallMesh.UpdateMeshTransform();
+            columnsTops.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn3");
+            wallMesh.Position = new Vector3(position.X + 45, position.Y + 20, position.Z + 45);
+            wallMesh.UpdateMeshTransform();
+            columnsTops.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn4");
+            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z + 45);
+            wallMesh.UpdateMeshTransform();
+            columnsTops.Add(wallMesh);
         }
     }
 }

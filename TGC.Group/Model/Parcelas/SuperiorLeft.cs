@@ -13,7 +13,7 @@ namespace TGC.Group.Model.Parcelas
 {
     class SuperiorLeft : Parcela
     {
-        public SuperiorLeft(Vector3 position, string grassTexture, string wallTexture, string columnTexture, string plantModel)
+        public SuperiorLeft(Vector3 position, string grassTexture, string wallTexture, string columnTexture, string topTexture, string plantModel)
         {
             //Se define el terrno de la parcela
             floor = new TgcPlane(position, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4);
@@ -193,6 +193,29 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.Position = new Vector3(position.X + 45, position.Y, position.Z + 50);
             wallMesh.UpdateMeshTransform();
             walls.Add(wallMesh);
+
+            //Tapas de columnas
+            baseWall = new TgcPlane(new Vector3(), new Vector3(5, 0, 5), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(topTexture), 1, 1);
+
+            wallMesh = baseWall.toMesh("TopColumn1");
+            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z);
+            wallMesh.UpdateMeshTransform();
+            columnsTops.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn2");
+            wallMesh.Position = new Vector3(position.X + 45, position.Y + 20, position.Z);
+            wallMesh.UpdateMeshTransform();
+            columnsTops.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn3");
+            wallMesh.Position = new Vector3(position.X + 45, position.Y + 20, position.Z + 45);
+            wallMesh.UpdateMeshTransform();
+            columnsTops.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn4");
+            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z + 45);
+            wallMesh.UpdateMeshTransform();
+            columnsTops.Add(wallMesh);
         }
     }
 }
