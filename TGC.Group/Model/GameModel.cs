@@ -139,7 +139,7 @@ namespace TGC.Group.Model
             //Quiero que la camara mire hacia el origen (0,0,0).
             var lookAt = Vector3.Empty;
             //Configuro donde esta la posicion de la camara y hacia donde mira.
-
+            
             //Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
             camaraSpring = new TgcSpringThirdPersonCamera();
             //camaraSpring.SetCamera(new Vector3(character.Position.X, character.Position.Y + 30, character.Position.Z), new Vector3(character.Position.X, character.Position.Y+30, character.Position.Z));
@@ -152,6 +152,12 @@ namespace TGC.Group.Model
             var posYBox = 5;
 
             BoxClass = new Caja(new Vector3(30,posYBox,30),boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(20, posYBox, 80), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(60, posYBox, 70), boxTexture);
             Boxes.Add(BoxClass);
 
             //Crear SkyBox
@@ -167,9 +173,7 @@ namespace TGC.Group.Model
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.Init();
 
-
             /*
-            
             SIz = Superior Izquierda 
             SDe = Superior Derecha
             IIZ = Inferior Izquierda
@@ -184,7 +188,6 @@ namespace TGC.Group.Model
              *---*---*---*
              |IIz|Hor|IDe|
              *---*---*---*
-             
              */
 
             //Empezamos los caminos???
@@ -197,24 +200,7 @@ namespace TGC.Group.Model
             Pit pathPit;
 
             //Shaders? yaaaaay
-            Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "BumpMapping.fx");
-
-            /*
-             * Parametros para el bump map shader
-            //Material del mesh
-            float3 materialEmissiveColor; //Color RGB
-            float3 materialAmbientColor; //Color RGB
-            float4 materialDiffuseColor; //Color ARGB (tiene canal Alpha)
-            float3 materialSpecularColor; //Color RGB
-            float materialSpecularExp; //Exponente de specular
-
-            //Parametros de la Luz
-            float3 lightColor; //Color RGB de la luz
-            float4 lightPosition; //Posicion de la luz
-            float4 eyePosition; //Posicion de la camara
-            float lightIntensity; //Intensidad de la luz
-            float lightAttenuation; //Factor de atenuacion de la luz
-            */
+            Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshSpotLightShader.fx");
 
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -222,7 +208,6 @@ namespace TGC.Group.Model
 
             //Paths verticales
             pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
-            pathVertical.bumpMapPiso(Shader);
             FullLevel.Add(pathVertical);
 
             pathVertical = new Vertical(new Vector3(150, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -389,8 +374,14 @@ namespace TGC.Group.Model
             skyBox.render();
 
             //Clase Caja en funcionamiento
-            BoxClass.takeBox(character.BoundingBox);
-            BoxClass.render();
+            //BoxClass.takeBox(character.BoundingBox);
+            //BoxClass.render();
+
+            foreach (var box in Boxes)
+            {
+                box.takeBox(character.BoundingBox);
+                box.render();
+            }
 
             character.animateAndRender(ElapsedTime);
             //character.BoundingBox.render();

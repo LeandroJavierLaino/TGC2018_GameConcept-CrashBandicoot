@@ -228,22 +228,5 @@ namespace TGC.Group.Model.Parcelas
             columnsTops.Add(wallMesh);
 
         }
-
-        public void bumpMapPiso(Effect shader)
-        {
-            floor.Effect = shader;
-            floor.Technique = "BumpMappingTechnique";
-            floor.Effect.SetValue("lightColor",ColorValue.FromColor(Color.White));
-            floor.Effect.SetValue(,);
-            floor.Effect.SetValue();
-            floor.Effect.SetValue();
-            floor.Effect.SetValue();
-
-            floor.Effect.SetValue();
-            floor.Effect.SetValue();
-            floor.Effect.SetValue();
-            floor.Effect.SetValue();
-            floor.Effect.SetValue();
-        }
     }
 }
