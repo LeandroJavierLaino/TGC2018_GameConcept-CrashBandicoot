@@ -196,12 +196,33 @@ namespace TGC.Group.Model
             InferiorRight pathInferiorRight;
             Pit pathPit;
 
+            //Shaders? yaaaaay
+            Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "BumpMapping.fx");
+
+            /*
+             * Parametros para el bump map shader
+            //Material del mesh
+            float3 materialEmissiveColor; //Color RGB
+            float3 materialAmbientColor; //Color RGB
+            float4 materialDiffuseColor; //Color ARGB (tiene canal Alpha)
+            float3 materialSpecularColor; //Color RGB
+            float materialSpecularExp; //Exponente de specular
+
+            //Parametros de la Luz
+            float3 lightColor; //Color RGB de la luz
+            float4 lightPosition; //Posicion de la luz
+            float4 eyePosition; //Posicion de la camara
+            float lightIntensity; //Intensidad de la luz
+            float lightAttenuation; //Factor de atenuacion de la luz
+            */
+
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathHorizontal);
 
             //Paths verticales
             pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical.bumpMapPiso(Shader);
             FullLevel.Add(pathVertical);
 
             pathVertical = new Vertical(new Vector3(150, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -232,9 +253,6 @@ namespace TGC.Group.Model
             //Paths que son fozas
             pathPit = new Pit(new Vector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
-
-            //Shaders? yaaaaay
-            Shader = TGC.Core.Shaders.TgcShaders.Instance.TgcSkeletalMeshPointLightShader;
 
             acumTime = 0;
         }

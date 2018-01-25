@@ -1,11 +1,14 @@
 ﻿using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
+using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
@@ -224,6 +227,23 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.UpdateMeshTransform();
             columnsTops.Add(wallMesh);
 
+        }
+
+        public void bumpMapPiso(Effect shader)
+        {
+            floor.Effect = shader;
+            floor.Technique = "BumpMappingTechnique";
+            floor.Effect.SetValue("lightColor",ColorValue.FromColor(Color.White));
+            floor.Effect.SetValue(,);
+            floor.Effect.SetValue();
+            floor.Effect.SetValue();
+            floor.Effect.SetValue();
+
+            floor.Effect.SetValue();
+            floor.Effect.SetValue();
+            floor.Effect.SetValue();
+            floor.Effect.SetValue();
+            floor.Effect.SetValue();
         }
     }
 }
