@@ -205,6 +205,7 @@ namespace TGC.Group.Model
             InferiorLeft pathInferiorLeft;
             InferiorRight pathInferiorRight;
             Pit pathPit;
+            Inicio pathInicio;
 
             //Shaders? yaaaaay
             Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshPointLightShader.fx");
@@ -241,6 +242,10 @@ namespace TGC.Group.Model
             //Paths inferior derecho
             pathInferiorRight = new InferiorRight(new Vector3(150, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorRight);
+
+            //Path inicio
+            pathInicio = new Inicio(new Vector3(0, 0, -50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            FullLevel.Add(pathInicio);
 
             //Paths que son fozas
             pathPit = new Pit(new Vector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");

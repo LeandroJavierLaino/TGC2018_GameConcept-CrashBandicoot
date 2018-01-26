@@ -89,8 +89,10 @@
     <Compile Include="Model\Camera\TgcSpringThirdPersonCamera.cs" />
     <Compile Include="Model\Camera\TgcThirdPersonCamera.cs" />
     <Compile Include="Model\GameModel.cs" />
+    <Compile Include="Model\Parcelas\Fin.cs" />
     <Compile Include="Model\Parcelas\InferiorLeft.cs" />
     <Compile Include="Model\Parcelas\InferiorRight.cs" />
+    <Compile Include="Model\Parcelas\Inicio.cs" />
     <Compile Include="Model\Parcelas\Pit.cs" />
     <Compile Include="Model\Parcelas\SuperiorLeft.cs" />
     <Compile Include="Model\Parcelas\SuperiorRight.cs" />

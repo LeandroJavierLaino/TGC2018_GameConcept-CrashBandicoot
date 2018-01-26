@@ -26,6 +26,8 @@ namespace TGC.Group.Model
         //El tope de las columnas
         protected List<TgcMesh> columnsTops = new List<TgcMesh>();
 
+        //TODO: Agregar List con todos los meshes facilitaria la aplicacion de shaders
+
         //Posicion a partir de la cual se ubica todo
         protected Vector3 position;
 
