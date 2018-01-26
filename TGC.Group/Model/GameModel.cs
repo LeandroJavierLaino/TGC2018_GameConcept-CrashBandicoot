@@ -17,6 +17,7 @@ using TGC.Group.Model.Parcelas;
 using TGC.Group.Model.Camera;
 using TGC.Core.Shaders;
 using Microsoft.DirectX.Direct3D;
+using TGC.Examples.Camara;
 
 namespace TGC.Group.Model
 {
@@ -26,6 +27,10 @@ namespace TGC.Group.Model
     ///     ejecute el nuevo ejemplo deben cambiar el modelo que instancia GameForm <see cref="Form.GameForm.InitGraphics()" />
     ///     line 97.
     /// </summary>
+    /// 
+
+    delegate bool del(Caja box);
+
     public class GameModel : TgcExample
     {
         /// <summary>
@@ -40,7 +45,7 @@ namespace TGC.Group.Model
             Description = Game.Default.Description;
         }
         //Camara 3ra persona con efecto de resorte
-        private TgcSpringThirdPersonCamera camaraSpring;
+        private TgcThirdPersonCamera camaraSpring;
 
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
@@ -55,6 +60,7 @@ namespace TGC.Group.Model
         private TgcBoundingSphere characterSphere;
         private TgcBoundingAxisAlignBox characterBox;
         private bool jumping = false;
+        private int boxesTaked = 0;
 
         //Caja
         private Caja BoxClass;
@@ -64,7 +70,7 @@ namespace TGC.Group.Model
 
         //Parametros varios
         private float velocity = 1.2f;
-        private float rotationVelocity = 10;
+        private float rotationVelocity = 2f;
         private float acumTime;
 
         //Skybox
@@ -72,6 +78,7 @@ namespace TGC.Group.Model
 
         //Shader
         private Microsoft.DirectX.Direct3D.Effect Shader { get; set; }
+        private List<TgcMesh> meshToShade = new List<TgcMesh>();
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -139,12 +146,12 @@ namespace TGC.Group.Model
             //Quiero que la camara mire hacia el origen (0,0,0).
             var lookAt = Vector3.Empty;
             //Configuro donde esta la posicion de la camara y hacia donde mira.
-            
+
             //Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
-            camaraSpring = new TgcSpringThirdPersonCamera();
+            camaraSpring = new TgcThirdPersonCamera(character.Position,30,90);
             //camaraSpring.SetCamera(new Vector3(character.Position.X, character.Position.Y + 30, character.Position.Z), new Vector3(character.Position.X, character.Position.Y+30, character.Position.Z));
             //camaraSpring.setOffset(30);
-            camaraSpring.setTargetOffset(character.Position, 65, -40);
+            //camaraSpring.setTargetOffset(character.Position, 65, -40);
             Camara = camaraSpring;
 
             //Cajas| objetivo es juntar una serie de cajas
@@ -200,7 +207,7 @@ namespace TGC.Group.Model
             Pit pathPit;
 
             //Shaders? yaaaaay
-            Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshSpotLightShader.fx");
+            Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshPointLightShader.fx");
 
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -238,6 +245,14 @@ namespace TGC.Group.Model
             //Paths que son fozas
             pathPit = new Pit(new Vector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
+
+            foreach(var path in FullLevel)
+            {
+                foreach(var wall in path.walls)
+                {
+                    meshToShade.Add(wall);
+                } 
+            }
 
             acumTime = 0;
         }
@@ -308,7 +323,7 @@ namespace TGC.Group.Model
 
             if (jumping /*&& moving*/)
             {
-                jump += acumTime * 0.000006f;
+                jump += acumTime * 0.00006f;
             }
 
             if (jump > 30 || character.Position.Y > 30)
@@ -364,27 +379,49 @@ namespace TGC.Group.Model
             //Acumuolamos tiempo para distintas tareas
             acumTime += ElapsedTime;
 
+            //Aplicar a cada mesh el shader actual
+            foreach (var mesh in meshToShade)
+            {
+                mesh.Effect = Shader;
+                //El Technique depende del tipo RenderType del mesh
+                mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
+            }
+
             //Dibuja un texto por pantalla
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
             DrawText.drawText("Con clic izquierdo subimos la camara [Actual]: " + TgcParserUtils.printVector3(Camara.Position), 0, 30, Color.OrangeRed);
             DrawText.drawText("Tiempo Acumulado: " + acumTime, 0, 40, Color.OrangeRed);
-            DrawText.drawText("Ubicacion Personaje: " + character.Position, 0, 50, Color.OrangeRed);
-            
+            DrawText.drawText("Ubicacion Personaje: \n" + character.Position, 0, 50, Color.OrangeRed);
+            DrawText.drawText("Cajas obtenidas: " + boxesTaked, 0, 110, Color.OrangeRed);
+
             //Renderizo cielo
             skyBox.render();
 
-            //Clase Caja en funcionamiento
-            //BoxClass.takeBox(character.BoundingBox);
-            //BoxClass.render();
-
+            //Cajas renderizadas
             foreach (var box in Boxes)
             {
+                if (box.isColliding(character.BoundingBox) && box.boxQuantity == 0) boxesTaked += 1;
                 box.takeBox(character.BoundingBox);
                 box.render();
             }
 
+            foreach(var wall in meshToShade)
+            {
+                wall.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
+                wall.Effect.SetValue("lightPosition", new Vector4(500,500,500,1));
+                wall.Effect.SetValue("lightIntensity", 3000);
+                wall.Effect.SetValue("lightAttenuation", 50);
+
+                //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
+                wall.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color.Black)));
+                wall.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color.White)));
+                wall.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color.White)));
+                wall.Effect.SetValue("materialSpecularColor", ColorValue.FromColor((Color.White)));
+                wall.Effect.SetValue("materialSpecularExp", 299.9f);
+            }
+
+            //renderizo y animo el personaje
             character.animateAndRender(ElapsedTime);
-            //character.BoundingBox.render();
 
             //Renderizo el camino
             foreach (var path in FullLevel)

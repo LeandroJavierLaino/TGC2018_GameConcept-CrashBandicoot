@@ -18,7 +18,7 @@ namespace TGC.Group.Model
         protected List<TgcMesh> plants = new List<TgcMesh>();
 
         //Paredes
-        protected List<TgcMesh> walls = new List<TgcMesh>();
+        public List<TgcMesh> walls = new List<TgcMesh>();
 
         //Columnas
         protected List<TgcMesh> columns = new List<TgcMesh>();

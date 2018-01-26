@@ -14,8 +14,9 @@ namespace TGC.Group.Model
     {
         private TgcBox box { get; set; }
         private float OriginalPosYBox { get; set; }
-        private bool BoxTaked { get; set; }
-        
+        public bool BoxTaked { get; set; }
+        public int boxQuantity = 0;
+
         /// <summary>
         ///     Creacion de la caja a partir de una posicion y la ruta de una textura
         /// </summary>
@@ -39,7 +40,16 @@ namespace TGC.Group.Model
         /// <param name="characterBoundingbox"></param>
         public void takeBox(TGC.Core.BoundingVolumes.TgcBoundingAxisAlignBox characterBoundingbox)
         {
-            if (TGC.Core.Collision.TgcCollisionUtils.testAABBAABB(characterBoundingbox, box.BoundingBox)) BoxTaked = true;
+            if (isColliding(characterBoundingbox) && boxQuantity == 0)
+            {
+                boxQuantity = 1;
+                BoxTaked = true;
+            }
+        }
+
+        public bool isColliding(TGC.Core.BoundingVolumes.TgcBoundingAxisAlignBox characterBoundingbox)
+        {
+            return TGC.Core.Collision.TgcCollisionUtils.testAABBAABB(characterBoundingbox, box.BoundingBox);
         }
 
         /// <summary>
