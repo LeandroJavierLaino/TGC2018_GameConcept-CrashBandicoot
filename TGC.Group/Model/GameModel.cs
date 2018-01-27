@@ -76,6 +76,9 @@ namespace TGC.Group.Model
         //Skybox
         private TgcSkyBox skyBox { get; set; }
 
+        //Ambiente
+        private TgcSimpleTerrain terreno;
+
         //Shader
         private Microsoft.DirectX.Direct3D.Effect Shader { get; set; }
         private List<TgcMesh> meshToShade = new List<TgcMesh>();
@@ -259,6 +262,10 @@ namespace TGC.Group.Model
                 } 
             }
 
+            terreno = new TgcSimpleTerrain();
+            terreno.loadHeightmap(MediaDir + "valle.jpg", 100, 4f, new Vector3 (0,-100,0));
+            terreno.loadTexture(MediaDir + "azgrssBig.jpg");
+
             acumTime = 0;
         }
 
@@ -331,7 +338,7 @@ namespace TGC.Group.Model
                 jump += acumTime * 0.00006f;
             }
 
-            if (jump > 30 || character.Position.Y > 30)
+            if (jump > 30 || character.Position.Y > 40)
             {
                 jumping = false;
             }
@@ -418,7 +425,7 @@ namespace TGC.Group.Model
                 wall.Effect.SetValue("lightAttenuation", 50);
 
                 //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                wall.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color.Black)));
+                wall.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color.PeachPuff)));
                 wall.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color.White)));
                 wall.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color.White)));
                 wall.Effect.SetValue("materialSpecularColor", ColorValue.FromColor((Color.White)));
@@ -433,6 +440,8 @@ namespace TGC.Group.Model
             {
                 path.render();
             }
+
+            terreno.render();
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
             PostRender();
