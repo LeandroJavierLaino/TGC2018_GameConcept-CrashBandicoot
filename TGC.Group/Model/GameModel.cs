@@ -209,6 +209,9 @@ namespace TGC.Group.Model
             InferiorRight pathInferiorRight;
             Pit pathPit;
             Inicio pathInicio;
+            Fin pathFin;
+            SideLeft pathSideLeft;
+            PitH pathPitH;
 
             //Shaders? yaaaaay
             Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshShader.fx");
@@ -216,6 +219,9 @@ namespace TGC.Group.Model
 
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathHorizontal);
+
+            pathHorizontal = new Horizontal(new Vector3(100, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathHorizontal);
 
             //Paths verticales
@@ -235,6 +241,9 @@ namespace TGC.Group.Model
             pathSuperiorLeft = new SuperiorLeft(new Vector3(0, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorLeft);
 
+            pathSuperiorLeft = new SuperiorLeft(new Vector3(0, 20, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathSuperiorLeft);
+
             //Paths superior derecho
             pathSuperiorRight = new SuperiorRight(new Vector3(100, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorRight);
@@ -247,15 +256,29 @@ namespace TGC.Group.Model
             pathInferiorRight = new InferiorRight(new Vector3(150, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorRight);
 
+            pathInferiorRight = new InferiorRight(new Vector3(50, 20, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathInferiorRight);
+
             //Path inicio
             pathInicio = new Inicio(new Vector3(0, 0, -50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathInicio);
+
+            //Path fin
+            pathFin = new Fin(new Vector3(150, 0, 500), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            FullLevel.Add(pathFin);
 
             //Paths que son fozas
             pathPit = new Pit(new Vector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
 
-            foreach(var path in FullLevel)
+            pathPitH = new PitH(new Vector3(150, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            FullLevel.Add(pathPitH);
+
+            //Path lado izquierdo
+            pathSideLeft = new SideLeft(new Vector3(50, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            FullLevel.Add(pathSideLeft);
+
+            foreach (var path in FullLevel)
             {
                 foreach(var wall in path.walls)
                 {
@@ -264,7 +287,7 @@ namespace TGC.Group.Model
             }
 
             terreno = new TgcSimpleTerrain();
-            terreno.loadHeightmap(MediaDir + "valle.jpg", 100, 4f, new Vector3 (0,-100,0));
+            terreno.loadHeightmap(MediaDir + "valle.jpg", 100, 6f, new Vector3 (0,-100,0));
             terreno.loadTexture(MediaDir + "azgrssBig.jpg");
 
             acumTime = 0;

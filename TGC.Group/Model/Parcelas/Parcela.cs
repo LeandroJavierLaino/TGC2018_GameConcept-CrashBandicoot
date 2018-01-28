@@ -12,7 +12,7 @@ namespace TGC.Group.Model
     public class Parcela
     {
         //Piso por el momento es simplemente un plano
-        protected TgcPlane floor;
+        protected TgcMesh floor;
         
         //Algo de vegetacion
         protected List<TgcMesh> plants = new List<TgcMesh>();
@@ -34,7 +34,7 @@ namespace TGC.Group.Model
 
         public void render()
         {
-            floor.toMesh("piso").render();
+            floor.render();
 
             foreach(var plant in plants)
             {

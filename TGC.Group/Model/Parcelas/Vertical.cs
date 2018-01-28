@@ -19,7 +19,7 @@ namespace TGC.Group.Model.Parcelas
         public Vertical(Vector3 position, string grassTexture, string wallTexture, string columnTexture, string topTexture, string plantModel)
         {
             //Se define el terrno de la parcela
-            floor = new TgcPlane(position, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4);
+            floor = new TgcPlane(position, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4).toMesh("floor");
 
             #region Plantas
             //Variable temporal que contiene el modelo

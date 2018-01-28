@@ -168,8 +168,10 @@ struct PS_DIFFUSE_MAP
 float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 {
 	float var = 1;
-	if(input.WorldPos.y < 5 ) var = 0.3;
+	if(input.WorldPos.y >= -21 && input.WorldPos.y < -15 ) var = (input.WorldPos.y + 20) * 0.1 - 0.3;
+	if(input.WorldPos.y >= -15 && input.WorldPos.y < 5 ) var = 0.3;
         if(input.WorldPos.y >= 5 && input.WorldPos.y < 5.7) var = input.WorldPos.y - 5  + 0.3;
+	if(input.WorldPos.y >= 35 && input.WorldPos.y <= 41 ) var = (input.WorldPos.y - 35) * 0.2 + 1;
 	//Modular color de la textura por color del mesh
 	return tex2D(diffuseMap, input.Texcoord) * input.Color * var;
 }

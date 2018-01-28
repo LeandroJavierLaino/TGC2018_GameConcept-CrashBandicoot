@@ -16,7 +16,7 @@ namespace TGC.Group.Model.Parcelas
         public Inicio(Vector3 position, string grassTexture, string wallTexture, string columnTexture, string topTexture)
         {
             //Se define el terrno de la parcela
-            floor = new TgcPlane(position, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4);
+            floor = new TgcPlane(position, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4).toMesh("floor");
             
             #region Paredes
             var baseWall = new TgcPlane(new Vector3(), new Vector3(0, 20f, 50), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(wallTexture), 2, 1);
