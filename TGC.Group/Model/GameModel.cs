@@ -211,7 +211,8 @@ namespace TGC.Group.Model
             Inicio pathInicio;
 
             //Shaders? yaaaaay
-            Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshPointLightShader.fx");
+            Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshShader.fx");
+            //Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshPointLightShader.fx");
 
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -416,20 +417,20 @@ namespace TGC.Group.Model
                 box.takeBox(character.BoundingBox);
                 box.render();
             }
-
+            
             foreach(var wall in meshToShade)
             {
-                wall.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
-                wall.Effect.SetValue("lightPosition", new Vector4(500,500,500,1));
-                wall.Effect.SetValue("lightIntensity", 3000);
-                wall.Effect.SetValue("lightAttenuation", 50);
+                wall.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));
+                //wall.Effect.SetValue("lightPosition", new Vector4(500,500,500,1));
+                //wall.Effect.SetValue("lightIntensity", 3000);
+                //wall.Effect.SetValue("lightAttenuation", 50);
 
                 //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                wall.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color.PeachPuff)));
-                wall.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color.White)));
-                wall.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color.White)));
-                wall.Effect.SetValue("materialSpecularColor", ColorValue.FromColor((Color.White)));
-                wall.Effect.SetValue("materialSpecularExp", 299.9f);
+                //wall.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color.PeachPuff)));
+                //wall.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color.White)));
+                //wall.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color.White)));
+                //wall.Effect.SetValue("materialSpecularColor", ColorValue.FromColor((Color.White)));
+                //wall.Effect.SetValue("materialSpecularExp", 299.9f);
             }
 
             //renderizo y animo el personaje
@@ -441,6 +442,9 @@ namespace TGC.Group.Model
                 path.render();
             }
 
+            //terreno.Effect = Shader;
+            //terreno.Technique = TgcShaders.Instance.getTgcMeshTechnique(TgcMesh.MeshRenderType.DIFFUSE_MAP);
+            //terreno.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));
             terreno.render();
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
