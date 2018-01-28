@@ -1,10 +1,12 @@
 ﻿using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TGC.Core.Geometry;
+using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
 
@@ -34,6 +36,12 @@ namespace TGC.Group.Model
             box.updateValues();
         }
 
+        public void applyEffect(Effect effect)
+        {
+            box.Effect = effect;
+            box.Technique = "BOX_DIFFUSE_MAP";
+        }
+
         /// <summary>
         ///     Verifica si el jugador tomo o no la caja y modifica el atributo BoxTaked
         /// </summary>
@@ -47,6 +55,11 @@ namespace TGC.Group.Model
             }
         }
 
+        /// <summary>
+        /// Verifica si hay colision entre el personaje y la caja
+        /// </summary>
+        /// <param name="characterBoundingbox"></param>
+        /// <returns></returns>
         public bool isColliding(TGC.Core.BoundingVolumes.TgcBoundingAxisAlignBox characterBoundingbox)
         {
             return TGC.Core.Collision.TgcCollisionUtils.testAABBAABB(characterBoundingbox, box.BoundingBox);

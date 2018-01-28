@@ -17,6 +17,7 @@ float4x4 matWorldViewProj; //Matriz World * View * Projection
 float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
 
 float4 color;
+float time;
 
 //Textura para DiffuseMap
 texture texDiffuseMap;
@@ -79,7 +80,7 @@ struct PS_INPUT_VERTEX_COLOR
 //Pixel Shader
 float4 ps_VertexColor(PS_INPUT_VERTEX_COLOR input) : COLOR0
 {
-	return input.Color*0.3f;
+	return input.Color;
 }
 
 /*
@@ -135,6 +136,26 @@ VS_OUTPUT_DIFFUSE_MAP vs_DiffuseMap(VS_INPUT_DIFFUSE_MAP input)
 	return output;
 }
 
+//Vertex Shader Box
+VS_OUTPUT_DIFFUSE_MAP vs_DiffuseMapBox(VS_INPUT_DIFFUSE_MAP input)
+{
+	VS_OUTPUT_DIFFUSE_MAP output;
+
+	//Proyectar posicion
+	output.Position = mul(input.Position, matWorldViewProj);
+	output.Position.y += 4*sin(2/(time)+3.1415);
+
+	//Enviar color directamente
+	output.Color = input.Color;
+
+	//Enviar Texcoord directamente
+	output.Texcoord = input.Texcoord;
+	
+	output.WorldPos = mul(input.Position,matWorld);
+
+	return output;
+}
+
 //Input del Pixel Shader
 struct PS_DIFFUSE_MAP
 {
@@ -147,8 +168,8 @@ struct PS_DIFFUSE_MAP
 float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 {
 	float var = 1;
-	if(input.WorldPos.y < 5) var = 0.3;
-        if(input.WorldPos.y >= 5 && var < 1) var += 0.004*input.WorldPos.y;
+	if(input.WorldPos.y < 5 ) var = 0.3;
+        if(input.WorldPos.y >= 5 && input.WorldPos.y < 5.7) var = input.WorldPos.y - 5  + 0.3;
 	//Modular color de la textura por color del mesh
 	return tex2D(diffuseMap, input.Texcoord) * input.Color * var;
 }
@@ -161,6 +182,18 @@ technique DIFFUSE_MAP
 	pass Pass_0
 	{
 		VertexShader = compile vs_3_0 vs_DiffuseMap();
+		PixelShader = compile ps_3_0 ps_DiffuseMap();
+	}
+}
+
+/*
+* Technique Box DIFFUSE_MAP
+*/
+technique BOX_DIFFUSE_MAP
+{
+	pass Pass_0
+	{
+		VertexShader = compile vs_3_0 vs_DiffuseMapBox();
 		PixelShader = compile ps_3_0 ps_DiffuseMap();
 	}
 }

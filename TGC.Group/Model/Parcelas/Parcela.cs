@@ -27,13 +27,14 @@ namespace TGC.Group.Model
         protected List<TgcMesh> columnsTops = new List<TgcMesh>();
 
         //TODO: Agregar List con todos los meshes facilitaria la aplicacion de shaders
+        public List<TgcMesh> meshes = new List<TgcMesh>();//Puede que no haga falta :| or :D
 
         //Posicion a partir de la cual se ubica todo
         protected Vector3 position;
 
         public void render()
         {
-            floor.render();
+            floor.toMesh("piso").render();
 
             foreach(var plant in plants)
             {

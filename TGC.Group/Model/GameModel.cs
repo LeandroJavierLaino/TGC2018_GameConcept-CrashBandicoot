@@ -373,9 +373,12 @@ namespace TGC.Group.Model
                 character.playAnimation("Parado", true);
             }
 
-            character.move(movementVector);
-            character.UpdateMeshTransform();              
+            //Acumuolamos tiempo para distintas tareas
+            acumTime += ElapsedTime;
 
+            character.move(movementVector);
+            character.UpdateMeshTransform();
+            
             camaraSpring.Target = character.Position;
         }
 
@@ -388,9 +391,6 @@ namespace TGC.Group.Model
         {
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
-            
-            //Acumuolamos tiempo para distintas tareas
-            acumTime += ElapsedTime;
 
             //Aplicar a cada mesh el shader actual
             foreach (var mesh in meshToShade)
@@ -398,6 +398,11 @@ namespace TGC.Group.Model
                 mesh.Effect = Shader;
                 //El Technique depende del tipo RenderType del mesh
                 mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
+            }
+
+            foreach(var box in Boxes)
+            {
+                box.applyEffect(Shader);
             }
 
             //Dibuja un texto por pantalla
@@ -411,6 +416,7 @@ namespace TGC.Group.Model
             skyBox.render();
 
             //Cajas renderizadas
+
             foreach (var box in Boxes)
             {
                 if (box.isColliding(character.BoundingBox) && box.boxQuantity == 0) boxesTaked += 1;
@@ -421,6 +427,7 @@ namespace TGC.Group.Model
             foreach(var wall in meshToShade)
             {
                 wall.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));
+                wall.Effect.SetValue("time",ElapsedTime*3000);
                 //wall.Effect.SetValue("lightPosition", new Vector4(500,500,500,1));
                 //wall.Effect.SetValue("lightIntensity", 3000);
                 //wall.Effect.SetValue("lightAttenuation", 50);
@@ -441,10 +448,11 @@ namespace TGC.Group.Model
             {
                 path.render();
             }
-
+            
             //terreno.Effect = Shader;
-            //terreno.Technique = TgcShaders.Instance.getTgcMeshTechnique(TgcMesh.MeshRenderType.DIFFUSE_MAP);
+            //terreno.Technique = "BOX_DIFFUSE_MAP";
             //terreno.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));
+            //terreno.Effect.SetValue("time", ElapsedTime);
             terreno.render();
 
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
