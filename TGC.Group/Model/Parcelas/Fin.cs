@@ -112,7 +112,6 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z);
             wallMesh.UpdateMeshTransform();
             columnsTops.Add(wallMesh);
-
         }
     }
 }
