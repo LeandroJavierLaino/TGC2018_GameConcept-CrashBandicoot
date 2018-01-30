@@ -143,7 +143,7 @@ VS_OUTPUT_DIFFUSE_MAP vs_DiffuseMapBox(VS_INPUT_DIFFUSE_MAP input)
 
 	//Proyectar posicion
 	output.Position = mul(input.Position, matWorldViewProj);
-	output.Position.y += 4*sin(2/(time)+3.1415);
+	output.Position.y += 8*sin(time);
 
 	//Enviar color directamente
 	output.Color = input.Color;
@@ -171,7 +171,8 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	if(input.WorldPos.y >= -21 && input.WorldPos.y < -15 ) var = (input.WorldPos.y + 20) * 0.1 - 0.3;
 	if(input.WorldPos.y >= -15 && input.WorldPos.y < 5 ) var = 0.3;
         if(input.WorldPos.y >= 5 && input.WorldPos.y < 5.7) var = input.WorldPos.y - 5  + 0.3;
-	if(input.WorldPos.y >= 35 && input.WorldPos.y <= 41 ) var = (input.WorldPos.y - 35) * 0.2 + 1;
+	if(input.WorldPos.y >= 35 && input.WorldPos.y < 41 ) var = (input.WorldPos.y - 35) * 0.2 + 1;
+	if(input.WorldPos.y >= 41 && input.WorldPos.y < 200 ) var = 2.2; 
 	//Modular color de la textura por color del mesh
 	return tex2D(diffuseMap, input.Texcoord) * input.Color * var;
 }

@@ -18,6 +18,7 @@ using TGC.Group.Model.Camera;
 using TGC.Core.Shaders;
 using Microsoft.DirectX.Direct3D;
 using TGC.Examples.Camara;
+using TGC.Group.Model.Enviroment_Objects;
 
 namespace TGC.Group.Model
 {
@@ -78,6 +79,7 @@ namespace TGC.Group.Model
 
         //Ambiente
         private TgcSimpleTerrain terreno;
+        private List<Tower> torres = new List<Tower>();
 
         //Shader
         private Microsoft.DirectX.Direct3D.Effect Shader { get; set; }
@@ -286,6 +288,21 @@ namespace TGC.Group.Model
                 } 
             }
 
+            //Torres
+            Tower torre;
+
+            torre = new Tower(new Vector3(50,0,0),MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
+            torres.Add(torre);
+
+            torre = new Tower(new Vector3(50, 0, 100), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
+            torres.Add(torre);
+
+            torre = new Tower(new Vector3(100, 0, 100), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
+            torres.Add(torre);
+
+            torre = new Tower(new Vector3(100, 0, 150), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
+            torres.Add(torre);
+
             terreno = new TgcSimpleTerrain();
             terreno.loadHeightmap(MediaDir + "valle.jpg", 100, 6f, new Vector3 (0,-100,0));
             terreno.loadTexture(MediaDir + "azgrssBig.jpg");
@@ -450,7 +467,7 @@ namespace TGC.Group.Model
             foreach(var wall in meshToShade)
             {
                 wall.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));
-                wall.Effect.SetValue("time",ElapsedTime*3000);
+                wall.Effect.SetValue("time", acumTime );
                 //wall.Effect.SetValue("lightPosition", new Vector4(500,500,500,1));
                 //wall.Effect.SetValue("lightIntensity", 3000);
                 //wall.Effect.SetValue("lightAttenuation", 50);
@@ -471,7 +488,12 @@ namespace TGC.Group.Model
             {
                 path.render();
             }
-            
+
+            foreach(var torre in torres)
+            {
+                torre.render();
+            }
+
             //terreno.Effect = Shader;
             //terreno.Technique = "BOX_DIFFUSE_MAP";
             //terreno.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));
