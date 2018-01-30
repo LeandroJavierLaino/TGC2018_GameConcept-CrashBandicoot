@@ -70,7 +70,7 @@ namespace TGC.Group.Model
         private List<Caja> Boxes = new List<Caja>();
 
         //Parametros varios
-        private float velocity = 1.2f;
+        private float velocity = 5f;
         private float rotationVelocity = 2f;
         private float acumTime;
 
@@ -80,6 +80,7 @@ namespace TGC.Group.Model
         //Ambiente
         private TgcSimpleTerrain terreno;
         private List<Tower> torres = new List<Tower>();
+        private List<Temple> templos = new List<Temple>();
 
         //Shader
         private Microsoft.DirectX.Direct3D.Effect Shader { get; set; }
@@ -303,6 +304,12 @@ namespace TGC.Group.Model
             torre = new Tower(new Vector3(100, 0, 150), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
             torres.Add(torre);
 
+            //Templos
+            Temple templo;
+
+            templo = new Temple(new Vector3(-100, 0, 0), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
+            templos.Add(templo);
+
             terreno = new TgcSimpleTerrain();
             terreno.loadHeightmap(MediaDir + "valle.jpg", 100, 6f, new Vector3 (0,-100,0));
             terreno.loadTexture(MediaDir + "azgrssBig.jpg");
@@ -318,7 +325,7 @@ namespace TGC.Group.Model
         public override void Update()
         {
             PreUpdate();
-    
+            
             //Capturar Input teclado
             if (Input.keyPressed(Key.F))
             {
@@ -456,7 +463,6 @@ namespace TGC.Group.Model
             skyBox.render();
 
             //Cajas renderizadas
-
             foreach (var box in Boxes)
             {
                 if (box.isColliding(character.BoundingBox) && box.boxQuantity == 0) boxesTaked += 1;
@@ -489,9 +495,16 @@ namespace TGC.Group.Model
                 path.render();
             }
 
+            //Renderizo las torres
             foreach(var torre in torres)
             {
                 torre.render();
+            }
+
+            //Renderizo los Templos
+            foreach (var templo in templos)
+            {
+                templo.render();
             }
 
             //terreno.Effect = Shader;
@@ -513,10 +526,29 @@ namespace TGC.Group.Model
         {
             character.dispose();
             skyBox.dispose();
-            BoxClass.dispose();
+
+            //Dispose de los caminos
             foreach(var path in FullLevel)
             {
                 path.dispose();
+            }
+
+            //Dispose de las torres
+            foreach(var tower in torres)
+            {
+                tower.dispose();
+            }
+
+            //Dispose de las Cajas
+            foreach (var box in Boxes)
+            {
+                box.dispose();
+            }
+
+            //Dispose de los Templos
+            foreach (var templo in templos)
+            {
+                templo.dispose();
             }
         }
     }

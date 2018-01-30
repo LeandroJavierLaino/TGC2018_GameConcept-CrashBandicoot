@@ -177,5 +177,13 @@ namespace TGC.Group.Model.Enviroment_Objects
                 element.render();
             }
         }
+
+        public void dispose()
+        {
+            foreach (var element in towerWalls)
+            {
+                element.dispose();
+            }
+        }
     }
 }
