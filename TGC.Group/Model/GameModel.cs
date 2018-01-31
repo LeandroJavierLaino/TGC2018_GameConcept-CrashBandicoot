@@ -307,7 +307,7 @@ namespace TGC.Group.Model
             //Templos
             Temple templo;
 
-            templo = new Temple(new Vector3(-100, 0, 0), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
+            templo = new Temple(new Vector3(-100, 0, 0), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg", MediaDir + "azwalltrim2.jpg");
             templos.Add(templo);
 
             terreno = new TgcSimpleTerrain();
