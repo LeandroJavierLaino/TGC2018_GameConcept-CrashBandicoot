@@ -19,6 +19,7 @@ using TGC.Core.Shaders;
 using Microsoft.DirectX.Direct3D;
 using TGC.Examples.Camara;
 using TGC.Group.Model.Enviroment_Objects;
+using TGC.Core.Collision;
 
 namespace TGC.Group.Model
 {
@@ -45,8 +46,10 @@ namespace TGC.Group.Model
             Name = Game.Default.Name;
             Description = Game.Default.Description;
         }
-        //Camara 3ra persona con efecto de resorte
-        private TgcThirdPersonCamera camaraSpring;
+        //Camara 3ra persona no pudo ser el efecto de resorte
+        private TgcThirdPersonCamera camara3rdPerson;
+        private List<TgcMesh> objectsFront = new List<TgcMesh>();
+        private List<TgcMesh> objectsBack = new List<TgcMesh>();
 
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
@@ -154,11 +157,11 @@ namespace TGC.Group.Model
             //Configuro donde esta la posicion de la camara y hacia donde mira.
 
             //Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
-            camaraSpring = new TgcThirdPersonCamera(character.Position,30,90);
+            camara3rdPerson = new TgcThirdPersonCamera(character.Position,30,90);
             //camaraSpring.SetCamera(new Vector3(character.Position.X, character.Position.Y + 30, character.Position.Z), new Vector3(character.Position.X, character.Position.Y+30, character.Position.Z));
             //camaraSpring.setOffset(30);
             //camaraSpring.setTargetOffset(character.Position, 65, -40);
-            Camara = camaraSpring;
+            Camara = camara3rdPerson;
 
             //Cajas| objetivo es juntar una serie de cajas
             var boxTexture = MediaDir + "cajaMadera2.jpg";
@@ -283,10 +286,10 @@ namespace TGC.Group.Model
 
             foreach (var path in FullLevel)
             {
-                foreach(var wall in path.walls)
+                foreach(var wall in path.getAllMeshes())
                 {
                     meshToShade.Add(wall);
-                } 
+                }
             }
 
             //Torres
@@ -401,8 +404,8 @@ namespace TGC.Group.Model
             {
                 character.playAnimation("Caminando", true);
                 var rotAngle = rotate * ElapsedTime;
-                camaraSpring.rotateY(rotAngle);
-                Camara = camaraSpring;
+                camara3rdPerson.rotateY(rotAngle);
+                Camara = camara3rdPerson;
                 character.rotateY(rotAngle);
             }
 
@@ -425,8 +428,35 @@ namespace TGC.Group.Model
 
             character.move(movementVector);
             character.UpdateMeshTransform();
-            
-            camaraSpring.Target = character.Position;
+
+            //Vemos que se interpone a la camara
+            var walls = new List<TgcMesh>();
+
+            foreach(var path in FullLevel)
+            {
+                foreach(var wall in path.getWalls())
+                {
+                    walls.Add(wall);
+                }
+            }
+
+            objectsFront.Clear();
+            objectsBack.Clear();
+            foreach(var mesh in walls)
+            {
+                Vector3 q;
+                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, character.Position, mesh.BoundingBox, out q))
+                {
+                    objectsBack.Add(mesh);
+                }
+                else
+                {
+                    objectsFront.Add(mesh);
+                }
+            }
+
+
+            camara3rdPerson.Target = character.Position;
         }
 
         /// <summary>
@@ -474,6 +504,7 @@ namespace TGC.Group.Model
             {
                 wall.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));
                 wall.Effect.SetValue("time", acumTime );
+                wall.Effect.SetValue("playerPos", new Vector4( character.Position.X, character.Position.Y, character.Position.Z, 1));
                 //wall.Effect.SetValue("lightPosition", new Vector4(500,500,500,1));
                 //wall.Effect.SetValue("lightIntensity", 3000);
                 //wall.Effect.SetValue("lightAttenuation", 50);
@@ -493,6 +524,12 @@ namespace TGC.Group.Model
             foreach (var path in FullLevel)
             {
                 path.render();
+            }
+
+            foreach (var path in objectsFront)
+            {
+                path.render();
+                path.BoundingBox.render();
             }
 
             //Renderizo las torres

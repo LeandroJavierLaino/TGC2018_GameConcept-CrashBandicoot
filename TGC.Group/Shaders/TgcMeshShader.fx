@@ -18,6 +18,7 @@ float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
 
 float4 color;
 float time;
+float4 playerPos;
 
 //Textura para DiffuseMap
 texture texDiffuseMap;
@@ -172,7 +173,9 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	if(input.WorldPos.y >= -15 && input.WorldPos.y < 5 ) var = 0.3;
         if(input.WorldPos.y >= 5 && input.WorldPos.y < 5.7) var = input.WorldPos.y - 5  + 0.3;
 	if(input.WorldPos.y >= 35 && input.WorldPos.y < 41 ) var = (input.WorldPos.y - 35) * 0.2 + 1;
-	if(input.WorldPos.y >= 41 && input.WorldPos.y < 200 ) var = 2.2; 
+	if(input.WorldPos.y >= 41 && input.WorldPos.y < 200 ) var = 2.2;
+	if(distance(playerPos,input.WorldPos)<7) var -= 0.2 / distance(playerPos,input.WorldPos) ;
+	//if(input.WorldPos.x < playerPos.x + 5 && input.WorldPos.z < playerPos.z + 5) var = 0.4; 
 	//Modular color de la textura por color del mesh
 	return tex2D(diffuseMap, input.Texcoord) * input.Color * var;
 }

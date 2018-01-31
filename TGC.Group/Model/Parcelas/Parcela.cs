@@ -18,7 +18,7 @@ namespace TGC.Group.Model
         protected List<TgcMesh> plants = new List<TgcMesh>();
 
         //Paredes
-        public List<TgcMesh> walls = new List<TgcMesh>();
+        protected List<TgcMesh> walls = new List<TgcMesh>();
 
         //Columnas
         protected List<TgcMesh> columns = new List<TgcMesh>();
@@ -26,11 +26,42 @@ namespace TGC.Group.Model
         //El tope de las columnas
         protected List<TgcMesh> columnsTops = new List<TgcMesh>();
 
-        //TODO: Agregar List con todos los meshes facilitaria la aplicacion de shaders
-        public List<TgcMesh> meshes = new List<TgcMesh>();//Puede que no haga falta :| or :D
-
         //Posicion a partir de la cual se ubica todo
         protected Vector3 position;
+
+        public List<TgcMesh> getWalls()
+        {
+            return walls;
+        }
+
+        public List<TgcMesh> getAllMeshes()
+        {
+            List<TgcMesh> allMeshesList = new List<TgcMesh>();
+
+            allMeshesList.Add(floor);
+
+            foreach (var plant in plants)
+            {
+                allMeshesList.Add(plant);
+            }
+
+            foreach (var wall in walls)
+            {
+                allMeshesList.Add(wall);
+            }
+
+            foreach (var column in columns)
+            {
+                allMeshesList.Add(column);
+            }
+
+            foreach (var column in columnsTops)
+            {
+                allMeshesList.Add(column);
+            }
+
+            return allMeshesList;
+        }
 
         public void render()
         {
@@ -40,11 +71,11 @@ namespace TGC.Group.Model
             {
                 plant.render();
             }
-
+            /*
             foreach(var wall in walls)
             {
                 wall.render();
-            }
+            }*/
 
             foreach (var column in columns)
             {
