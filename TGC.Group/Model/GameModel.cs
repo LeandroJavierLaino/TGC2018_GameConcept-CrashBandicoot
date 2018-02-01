@@ -58,6 +58,7 @@ namespace TGC.Group.Model
         private TgcPlane Path { get; set; }
         private TgcPlane PathB { get; set; }
         private List<Parcela> FullLevel = new List<Parcela>();
+        private Vertical verticalTest;
 
         //Player
         private TgcSkeletalMesh character;
@@ -232,6 +233,7 @@ namespace TGC.Group.Model
 
             //Paths verticales
             pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            verticalTest = pathVertical;
             FullLevel.Add(pathVertical);
 
             pathVertical = new Vertical(new Vector3(150, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -412,11 +414,12 @@ namespace TGC.Group.Model
             //Vector de movimiento
             var movementVector = Vector3.Empty;
 
-            if (moving || rotating || jumping) 
+            if (moving || rotating || jumping)
             {
                 character.playAnimation("Caminando", true);
-                //Colision mocha TODO: arregla esto hermano, solo permite caminar dentro de una parcela
-                /*if(Path.BoundingBox.PMin.X < character.Position.X || Path.BoundingBox.PMin.Z > character.Position.Z)*/ movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f,jump,FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
+                //Colision mocha TODO: arregla esto hermano, ahora solo deja caminar en un rango hay que analizar dentro de cada tipo de parcela.
+                if (verticalTest.isInParcela(character.Position)) movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f, jump, FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
+                else movementVector = new Vector3( - FastMath.Sin(character.Rotation.Y) * moveForward *0.5f,jump, - FastMath.Cos(character.Rotation.Y) * moveForward * 0.5f);
             }
             else
             {
@@ -438,6 +441,11 @@ namespace TGC.Group.Model
                 {
                     walls.Add(wall);
                 }
+
+                foreach(var column in path.getColumns())
+                {
+                    walls.Add(column);
+                }
             }
 
             objectsFront.Clear();
@@ -445,7 +453,7 @@ namespace TGC.Group.Model
             foreach(var mesh in walls)
             {
                 Vector3 q;
-                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, character.Position, mesh.BoundingBox, out q))
+                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new Vector3( character.Position.X, character.Position.Y + 10, character.Position.Z), mesh.BoundingBox, out q))
                 {
                     objectsBack.Add(mesh);
                 }

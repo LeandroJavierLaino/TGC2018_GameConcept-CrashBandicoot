@@ -228,5 +228,12 @@ namespace TGC.Group.Model.Parcelas
             columnsTops.Add(wallMesh);
 
         }
+
+        public bool isInParcela(Vector3 positionCharacter)
+        {
+            Vector3 size = floor.BoundingBox.calculateSize();
+
+            return positionCharacter.X > floor.Position.X && positionCharacter.X < floor.Position.X + size.X;
+        }
     }
 }
