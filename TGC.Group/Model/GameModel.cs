@@ -418,8 +418,8 @@ namespace TGC.Group.Model
             {
                 character.playAnimation("Caminando", true);
                 //Colision mocha TODO: arregla esto hermano, ahora solo deja caminar en un rango hay que analizar dentro de cada tipo de parcela.
-                if (verticalTest.isInParcela(character.Position)) movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f, jump, FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
-                else movementVector = new Vector3( - FastMath.Sin(character.Rotation.Y) * moveForward *0.5f,jump, - FastMath.Cos(character.Rotation.Y) * moveForward * 0.5f);
+                /*if (verticalTest.isInParcela(character.Position))*/ movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f, jump, FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
+                //else movementVector = new Vector3( - FastMath.Sin(character.Rotation.Y) * moveForward *0.5f,jump, - FastMath.Cos(character.Rotation.Y) * moveForward * 0.5f);
             }
             else
             {
@@ -537,7 +537,7 @@ namespace TGC.Group.Model
             foreach (var path in objectsFront)
             {
                 path.render();
-                path.BoundingBox.render();
+                //path.BoundingBox.render();
             }
 
             //Renderizo las torres
