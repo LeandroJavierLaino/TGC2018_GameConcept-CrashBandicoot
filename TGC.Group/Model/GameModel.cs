@@ -312,7 +312,7 @@ namespace TGC.Group.Model
             //Templos
             Temple templo;
 
-            templo = new Temple(new Vector3(-100, 0, 0), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg", MediaDir + "azwalltrim2.jpg");
+            templo = new Temple(new Vector3(-100, 0, 0), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg", MediaDir + "azwalltrim2.jpg", MediaDir + "AzStatB.jpg", MediaDir + "azgroundB.jpg");
             templos.Add(templo);
 
             terreno = new TgcSimpleTerrain();
@@ -448,6 +448,22 @@ namespace TGC.Group.Model
                 }
             }
 
+            foreach (var templo in templos)
+            {
+                foreach (var wall in templo.getWalls())
+                {
+                    walls.Add(wall);
+                }
+            }
+
+            foreach (var torre in torres)
+            {
+                foreach (var wall in torre.getWalls())
+                {
+                    walls.Add(wall);
+                }
+            }
+
             objectsFront.Clear();
             objectsBack.Clear();
             foreach(var mesh in walls)
@@ -527,7 +543,7 @@ namespace TGC.Group.Model
 
             //renderizo y animo el personaje
             character.animateAndRender(ElapsedTime);
-
+            
             //Renderizo el camino
             foreach (var path in FullLevel)
             {
@@ -537,21 +553,8 @@ namespace TGC.Group.Model
             foreach (var path in objectsFront)
             {
                 path.render();
-                //path.BoundingBox.render();
             }
-
-            //Renderizo las torres
-            foreach(var torre in torres)
-            {
-                torre.render();
-            }
-
-            //Renderizo los Templos
-            foreach (var templo in templos)
-            {
-                templo.render();
-            }
-
+            
             //terreno.Effect = Shader;
             //terreno.Technique = "BOX_DIFFUSE_MAP";
             //terreno.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));

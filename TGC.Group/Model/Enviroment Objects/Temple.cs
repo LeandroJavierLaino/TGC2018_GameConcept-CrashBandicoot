@@ -16,7 +16,7 @@ namespace TGC.Group.Model.Enviroment_Objects
         //Paredes del Templo, tambien pueden ser columnas
         private List<TgcMesh> templeWalls = new List<TgcMesh>();
 
-        public Temple(Vector3 position, string wallTexture, string columnTexture, string topWall)
+        public Temple(Vector3 position, string wallTexture, string columnTexture, string topWall, string topTexture, string floorTexture)
         {
 
             #region 1er Piso
@@ -54,7 +54,7 @@ namespace TGC.Group.Model.Enviroment_Objects
 
             templeWalls.Add(wallMesh);
 
-            baseWall = new TgcPlane(new Vector3(), new Vector3(90, 0, 90), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(wallTexture), 2, 1);
+            baseWall = new TgcPlane(new Vector3(), new Vector3(90, 0, 90), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(floorTexture), 2, 2);
 
             wallMesh = baseWall.toMesh("Floor");
             wallMesh.Position = new Vector3(position.X + 5,position.Y + 20,position.Z + 5);
@@ -98,7 +98,7 @@ namespace TGC.Group.Model.Enviroment_Objects
 
             templeWalls.Add(wallMesh);
 
-            baseWall = new TgcPlane(new Vector3(), new Vector3(70, 0, 70), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(wallTexture), 2, 1);
+            baseWall = new TgcPlane(new Vector3(), new Vector3(70, 0, 70), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(floorTexture), 2, 2);
 
             wallMesh = baseWall.toMesh("Floor");
             wallMesh.Position = new Vector3(position.X + 15, position.Y + 40, position.Z + 15);
@@ -142,7 +142,7 @@ namespace TGC.Group.Model.Enviroment_Objects
 
             templeWalls.Add(wallMesh);
 
-            baseWall = new TgcPlane(new Vector3(), new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(wallTexture), 2, 1);
+            baseWall = new TgcPlane(new Vector3(), new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(floorTexture), 2, 2);
 
             wallMesh = baseWall.toMesh("Floor");
             wallMesh.Position = new Vector3(position.X + 25, position.Y + 60, position.Z + 25);
@@ -429,84 +429,84 @@ namespace TGC.Group.Model.Enviroment_Objects
             baseWall = new TgcPlane(new Vector3(), new Vector3(0, 20, 5), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(columnTexture), 1, 1);
 
             wallMesh = baseWall.toMesh("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 5, position.Y + 20, position.Z);
+            wallMesh.Position = new Vector3(position.X + 15, position.Y + 20, position.Z + 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z);
+            wallMesh.Position = new Vector3(position.X + 10, position.Y + 20, position.Z + 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 20, position.Z);
+            wallMesh.Position = new Vector3(position.X + 95 - 10, position.Y + 20, position.Z + 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 100, position.Y + 20, position.Z);
+            wallMesh.Position = new Vector3(position.X + 100 - 10, position.Y + 20, position.Z + 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 5, position.Y + 20, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 15, position.Y + 20, position.Z + 95 - 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 10, position.Y + 20, position.Z + 95 - 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 20, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 95 - 10, position.Y + 20, position.Z + 95 - 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 100, position.Y + 20, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 100 - 10, position.Y + 20, position.Z + 95 - 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             baseWall = new TgcPlane(new Vector3(), new Vector3(5, 20, 0), TgcPlane.Orientations.XYplane, TgcTexture.createTexture(columnTexture), 1, 1);
 
             wallMesh = baseWall.toMesh("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z);
+            wallMesh.Position = new Vector3(position.X + 10, position.Y + 20, position.Z + 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z + 5);
+            wallMesh.Position = new Vector3(position.X + 10, position.Y + 20, position.Z + 5 + 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 10, position.Y + 20, position.Z + 95 - 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z + 100);
+            wallMesh.Position = new Vector3(position.X + 10, position.Y + 20, position.Z + 100 - 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 20, position.Z);
+            wallMesh.Position = new Vector3(position.X + 95 - 10, position.Y + 20, position.Z + 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 20, position.Z + 5);
+            wallMesh.Position = new Vector3(position.X + 95 - 10, position.Y + 20, position.Z + 5 + 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 20, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 95 - 10, position.Y + 20, position.Z + 95 - 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 20, position.Z + 100);
+            wallMesh.Position = new Vector3(position.X + 95 - 10, position.Y + 20, position.Z + 100 - 10);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
@@ -514,84 +514,148 @@ namespace TGC.Group.Model.Enviroment_Objects
             baseWall = new TgcPlane(new Vector3(), new Vector3(0, 20, 5), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(columnTexture), 1, 1);
 
             wallMesh = baseWall.toMesh("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 5, position.Y + 40, position.Z);
+            wallMesh.Position = new Vector3(position.X + 5 + 20, position.Y + 40, position.Z + 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 40, position.Z);
+            wallMesh.Position = new Vector3(position.X + 20, position.Y + 40, position.Z + 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 40, position.Z);
+            wallMesh.Position = new Vector3(position.X + 95 - 20, position.Y + 40, position.Z + 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 100, position.Y + 40, position.Z);
+            wallMesh.Position = new Vector3(position.X + 100 - 20, position.Y + 40, position.Z + 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 5, position.Y + 40, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 5 + 20, position.Y + 40, position.Z + 95 - 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 40, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 20, position.Y + 40, position.Z + 95 - 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 40, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 95 - 20, position.Y + 40, position.Z + 95 - 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 100, position.Y + 40, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 100 - 20, position.Y + 40, position.Z + 95 - 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             baseWall = new TgcPlane(new Vector3(), new Vector3(5, 20, 0), TgcPlane.Orientations.XYplane, TgcTexture.createTexture(columnTexture), 1, 1);
 
             wallMesh = baseWall.toMesh("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 40, position.Z);
+            wallMesh.Position = new Vector3(position.X + 20 , position.Y + 40, position.Z + 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 40, position.Z + 5);
+            wallMesh.Position = new Vector3(position.X + 20, position.Y + 40, position.Z + 5 + 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 40, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 20, position.Y + 40, position.Z + 95 - 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X, position.Y + 40, position.Z + 100);
+            wallMesh.Position = new Vector3(position.X + 20, position.Y + 40, position.Z + 100 - 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 40, position.Z);
+            wallMesh.Position = new Vector3(position.X + 95 - 20, position.Y + 40, position.Z + 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 40, position.Z + 5);
+            wallMesh.Position = new Vector3(position.X + 95 - 20, position.Y + 40, position.Z + 5 + 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 40, position.Z + 95);
+            wallMesh.Position = new Vector3(position.X + 95 - 20, position.Y + 40, position.Z + 95 - 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
 
             wallMesh = wallMesh.clone("Column1V1");
-            wallMesh.Position = new Vector3(position.X + 95, position.Y + 40, position.Z + 100);
+            wallMesh.Position = new Vector3(position.X + 95 - 20, position.Y + 40, position.Z + 100 - 20);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            //Tapas
+
+            baseWall = new TgcPlane(new Vector3(), new Vector3(5, 0, 5), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(topTexture), 1, 1);
+
+            wallMesh = baseWall.toMesh("TopColumn1");
+            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn2");
+            wallMesh.Position = new Vector3(position.X + 95, position.Y + 20, position.Z);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn3");
+            wallMesh.Position = new Vector3(position.X + 95, position.Y + 20, position.Z + 95);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn4");
+            wallMesh.Position = new Vector3(position.X, position.Y + 20, position.Z + 95);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = baseWall.toMesh("TopColumn1");
+            wallMesh.Position = new Vector3(position.X + 10, position.Y + 40, position.Z + 10);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn2");
+            wallMesh.Position = new Vector3(position.X + 95 - 10, position.Y + 40, position.Z + 10);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn3");
+            wallMesh.Position = new Vector3(position.X + 95 - 10, position.Y + 40, position.Z + 95 - 10);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn4");
+            wallMesh.Position = new Vector3(position.X + 10, position.Y + 40, position.Z + 95 - 10);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = baseWall.toMesh("TopColumn1");
+            wallMesh.Position = new Vector3(position.X + 20, position.Y + 60, position.Z + 20);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn2");
+            wallMesh.Position = new Vector3(position.X + 95 - 20, position.Y + 60, position.Z + 20);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn3");
+            wallMesh.Position = new Vector3(position.X + 95 - 20, position.Y + 60, position.Z + 95 - 20);
+            wallMesh.UpdateMeshTransform();
+            templeWalls.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("TopColumn4");
+            wallMesh.Position = new Vector3(position.X + 20, position.Y + 60, position.Z + 95 - 20);
             wallMesh.UpdateMeshTransform();
             templeWalls.Add(wallMesh);
             #endregion
@@ -613,5 +677,9 @@ namespace TGC.Group.Model.Enviroment_Objects
             }
         }
 
+        public List<TgcMesh> getWalls()
+        {
+            return templeWalls;
+        }
     }
 }

@@ -185,5 +185,10 @@ namespace TGC.Group.Model.Enviroment_Objects
                 element.dispose();
             }
         }
+
+        public List<TgcMesh> getWalls()
+        {
+            return towerWalls;
+        }
     }
 }
