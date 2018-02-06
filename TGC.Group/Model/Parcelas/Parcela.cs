@@ -85,11 +85,6 @@ namespace TGC.Group.Model
             {
                 plant.render();
             }
-            /*
-            foreach(var wall in walls)
-            {
-                wall.render();
-            }*/
 
             foreach (var column in columns)
             {
