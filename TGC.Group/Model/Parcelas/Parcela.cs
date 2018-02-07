@@ -30,14 +30,6 @@ namespace TGC.Group.Model
         //Posicion a partir de la cual se ubica todo
         protected Vector3 position;
 
-        public bool isInParcela(Vector3 positionCharacter)
-        {
-            Vector3 size = floor.BoundingBox.calculateSize();
-
-            return positionCharacter.X > floor.Position.X && positionCharacter.X < floor.Position.X + size.X && positionCharacter.Z > floor.Position.Z && positionCharacter.Z < floor.Position.Z + size.Z;
-            
-        }
-
         public List<TgcMesh> getWalls()
         {
             return walls;
@@ -75,6 +67,11 @@ namespace TGC.Group.Model
             }
 
             return allMeshesList;
+        }
+
+        public Vector3 getPosition()
+        {
+            return position;
         }
 
         public void render()

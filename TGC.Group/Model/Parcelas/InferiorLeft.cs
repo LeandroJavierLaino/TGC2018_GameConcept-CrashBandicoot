@@ -215,6 +215,5 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.UpdateMeshTransform();
             columnsTops.Add(wallMesh);
         }
-
     }
 }

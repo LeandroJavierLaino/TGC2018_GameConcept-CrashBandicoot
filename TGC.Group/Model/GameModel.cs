@@ -224,7 +224,6 @@ namespace TGC.Group.Model
             Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshShader.fx");
             //Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshPointLightShader.fx");
 
-            //50, 20, 450
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathHorizontal);
@@ -435,7 +434,7 @@ namespace TGC.Group.Model
                 moving = true;
             }
 
-            if (jumping /*&& moving*/)
+            if (jumping)
             {
                 jump += acumTime * 0.00006f;
             }
@@ -445,12 +444,17 @@ namespace TGC.Group.Model
                 jumping = false;
             }
 
-            if (character.Position.Y > 0 && !jumping)
+            if (character.Position.Y > 0  && !jumping)
             {
                 moving = true;
                 jump -= 30 * ElapsedTime;
             }
-
+                
+            if (character.Position.Y < 0)
+            {
+                character.move(new Vector3(character.Position.X, 0, character.Position.Z) - character.Position);
+            }            
+            
             if (rotating)
             {
                 character.playAnimation("Caminando", true);
@@ -467,8 +471,7 @@ namespace TGC.Group.Model
             {
                 character.playAnimation("Caminando", true);
                 //Colision mocha TODO: arregla esto hermano, ahora solo deja caminar en un rango hay que analizar dentro de cada tipo de parcela.
-                /*if (verticalTest.isInParcela(character.Position))*/ movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f, jump, FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
-                //else movementVector = new Vector3( - FastMath.Sin(character.Rotation.Y) * moveForward *0.5f,jump, - FastMath.Cos(character.Rotation.Y) * moveForward * 0.5f);
+                movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f, jump, FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
             }
             else
             {
