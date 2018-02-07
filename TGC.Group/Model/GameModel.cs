@@ -66,6 +66,7 @@ namespace TGC.Group.Model
         private TgcBoundingAxisAlignBox characterBox;
         private bool jumping = false;
         private int boxesTaked = 0;
+        float positionY = 0;
 
         //Caja
         private Caja BoxClass;
@@ -164,6 +165,7 @@ namespace TGC.Group.Model
             //camaraSpring.setTargetOffset(character.Position, 65, -40);
             Camara = camara3rdPerson;
 
+            #region Cajas
             //Cajas| objetivo es juntar una serie de cajas
             var boxTexture = MediaDir + "cajaMadera2.jpg";
             var posYBox = 5;
@@ -176,6 +178,37 @@ namespace TGC.Group.Model
 
             BoxClass = new Caja(new Vector3(60, posYBox, 70), boxTexture);
             Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(80, posYBox, 70), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(30, 25, 120), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(25, 25, 145), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(35, 25, 165), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(68, 25, 165), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(78, 25, 185), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(110, posYBox, 65), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(120, posYBox, 85), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(130, posYBox, 45), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(65, posYBox, 215), boxTexture);
+            Boxes.Add(BoxClass);
+            #endregion
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
@@ -190,6 +223,10 @@ namespace TGC.Group.Model
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
             skyBox.Init();
 
+            //Shaders
+            Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshShader.fx");
+
+            #region Caminos
             /*
             SIz = Superior Izquierda 
             SDe = Superior Derecha
@@ -207,7 +244,7 @@ namespace TGC.Group.Model
              *---*---*---*
              */
 
-            //Empezamos los caminos???
+            //caminos
             Horizontal pathHorizontal;
             Vertical pathVertical;
             SuperiorLeft pathSuperiorLeft;
@@ -219,10 +256,6 @@ namespace TGC.Group.Model
             Fin pathFin;
             SideLeft pathSideLeft;
             PitH pathPitH;
-
-            //Shaders? yaaaaay
-            Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshShader.fx");
-            //Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshPointLightShader.fx");
 
             //Paths horizontales
             pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -333,6 +366,7 @@ namespace TGC.Group.Model
 
             pathSideLeft = new SideLeft(new Vector3(100, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSideLeft);
+#endregion
 
             foreach (var path in FullLevel)
             {
@@ -345,22 +379,37 @@ namespace TGC.Group.Model
             //Torres
             Tower torre;
 
-            torre = new Tower(new Vector3(50,0,0),MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
+            torre = new Tower(new Vector3(50,0,0),MediaDir + "azwallb2.jpg", MediaDir + "az_pole01.jpg");
             torres.Add(torre);
 
-            torre = new Tower(new Vector3(50, 0, 100), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
+            torre = new Tower(new Vector3(50, 0, 100), MediaDir + "azwallad2b.jpg", MediaDir + "az_pole01.jpg");
             torres.Add(torre);
 
-            torre = new Tower(new Vector3(100, 0, 100), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
+            torre = new Tower(new Vector3(100, 0, 100), MediaDir + "azwallb2.jpg", MediaDir + "az_pole01.jpg");
             torres.Add(torre);
 
-            torre = new Tower(new Vector3(100, 0, 150), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg");
+            torre = new Tower(new Vector3(100, 0, 150), MediaDir + "azwallad2b.jpg", MediaDir + "az_pole01.jpg");
+            torres.Add(torre);
+
+            torre = new Tower(new Vector3(50, 0, 250), MediaDir + "azwallb2.jpg", MediaDir + "az_pole01.jpg");
+            torres.Add(torre);
+
+            torre = new Tower(new Vector3(100, 0, 400), MediaDir + "azwallad2b.jpg", MediaDir + "az_pole01.jpg");
             torres.Add(torre);
 
             //Templos
             Temple templo;
 
-            templo = new Temple(new Vector3(-100, 0, 0), MediaDir + "azwallA.jpg", MediaDir + "az_pole01.jpg", MediaDir + "azwalltrim2.jpg", MediaDir + "AzStatB.jpg", MediaDir + "azgroundB.jpg");
+            templo = new Temple(new Vector3(-100, 0, 0), MediaDir + "azwallAc.jpg", MediaDir + "az_pole01.jpg", MediaDir + "azwalltrim2.jpg", MediaDir + "AzStatB.jpg", MediaDir + "azgroundB.jpg");
+            templos.Add(templo);
+
+            templo = new Temple(new Vector3(200, 0, 100), MediaDir + "azwallAc.jpg", MediaDir + "az_pole01.jpg", MediaDir + "azwalltrim2.jpg", MediaDir + "AzStatB.jpg", MediaDir + "azgroundB.jpg");
+            templos.Add(templo);
+
+            templo = new Temple(new Vector3(-50, 0, 200), MediaDir + "azwallAc.jpg", MediaDir + "az_pole01.jpg", MediaDir + "azwalltrim2.jpg", MediaDir + "AzStatB.jpg", MediaDir + "azgroundB.jpg");
+            templos.Add(templo);
+
+            templo = new Temple(new Vector3(200, 0, 350), MediaDir + "azwallAc.jpg", MediaDir + "az_pole01.jpg", MediaDir + "azwalltrim2.jpg", MediaDir + "AzStatB.jpg", MediaDir + "azgroundB.jpg");
             templos.Add(templo);
 
             terreno = new TgcSimpleTerrain();
@@ -427,7 +476,18 @@ namespace TGC.Group.Model
                 rotating = true;
             }
 
+            Parcela parcelaCol = new Parcela();
             //Jump
+            foreach(var path in FullLevel)
+            {
+                if (path.isInParcela(character.Position))
+                {
+                    parcelaCol = path;
+                }
+            }
+
+            positionY = parcelaCol.getPosition().Y;
+
             if (Input.keyPressed(Key.Space) && jump == 0)
             {
                 jumping = true;
@@ -444,13 +504,13 @@ namespace TGC.Group.Model
                 jumping = false;
             }
 
-            if (character.Position.Y > 0  && !jumping)
+            if (character.Position.Y > positionY  && !jumping)
             {
                 moving = true;
                 jump -= 30 * ElapsedTime;
             }
                 
-            if (character.Position.Y < 0)
+            if (character.Position.Y < positionY - 20)
             {
                 character.move(new Vector3(character.Position.X, 0, character.Position.Z) - character.Position);
             }            
@@ -489,14 +549,9 @@ namespace TGC.Group.Model
 
             foreach(var path in FullLevel)
             {
-                foreach(var wall in path.getWalls())
+                foreach(var wall in path.getAllMeshes())
                 {
                     walls.Add(wall);
-                }
-
-                foreach(var column in path.getColumns())
-                {
-                    walls.Add(column);
                 }
             }
 
@@ -521,7 +576,10 @@ namespace TGC.Group.Model
             foreach(var mesh in walls)
             {
                 Vector3 q;
-                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new Vector3( character.Position.X, character.Position.Y + 10, character.Position.Z), mesh.BoundingBox, out q))
+                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new Vector3( character.Position.X, character.Position.Y + 5, character.Position.Z), mesh.BoundingBox, out q) || 
+                    TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new Vector3(character.Position.X, character.Position.Y + 50, character.Position.Z), mesh.BoundingBox, out q) ||
+                    TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new Vector3(character.Position.X + 5, character.Position.Y + 25, character.Position.Z + 5), mesh.BoundingBox, out q) ||
+                    TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new Vector3(character.Position.X - 5, character.Position.Y + 25, character.Position.Z - 5), mesh.BoundingBox, out q))
                 {
                     objectsBack.Add(mesh);
                 }
@@ -530,7 +588,6 @@ namespace TGC.Group.Model
                     objectsFront.Add(mesh);
                 }
             }
-
 
             camara3rdPerson.Target = character.Position;
         }
@@ -595,18 +652,14 @@ namespace TGC.Group.Model
 
             //renderizo y animo el personaje
             character.animateAndRender(ElapsedTime);
-            
-            //Renderizo el camino
-            foreach (var path in FullLevel)
-            {
-                path.render();
-            }
 
+            //Renderizo el camino
             foreach (var path in objectsFront)
             {
                 path.render();
             }
-            
+
+
             //terreno.Effect = Shader;
             //terreno.Technique = "BOX_DIFFUSE_MAP";
             //terreno.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TGC.Core.BoundingVolumes;
+using TGC.Core.Collision;
 using TGC.Core.Geometry;
 using TGC.Core.SceneLoader;
 
@@ -72,6 +73,14 @@ namespace TGC.Group.Model
         public Vector3 getPosition()
         {
             return position;
+        }
+
+        public bool isInParcela(Vector3 player)
+        {
+            return position.X < player.X &&
+                position.Z < player.Z &&
+                position.X + 50 > player.X &&
+                position.Z + 50 > player.Z;
         }
 
         public void render()

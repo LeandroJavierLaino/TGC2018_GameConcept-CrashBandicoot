@@ -14,6 +14,8 @@ namespace TGC.Group.Model.Parcelas
     {
         public PitH(Vector3 position, string grassTexture, string wallTexture, string columnTexture, string topTexture)
         {
+            this.position = position;
+
             //Se define el terrno de la parcela
             floor = new TgcPlane(new Vector3(position.X, position.Y - 20, position.Z), new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4).toMesh("floor");
 
