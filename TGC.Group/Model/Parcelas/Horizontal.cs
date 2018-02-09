@@ -120,6 +120,16 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.UpdateMeshTransform();
             columns.Add(wallMesh);
 
+            wallMesh = wallMesh.clone("Column1V2");
+            wallMesh.Position = new Vector3(position.X + 50, position.Y, position.Z);
+            wallMesh.UpdateMeshTransform();
+            columns.Add(wallMesh);
+
+            wallMesh = wallMesh.clone("Column1V2");
+            wallMesh.Position = new Vector3(position.X + 50, position.Y, position.Z + 45);
+            wallMesh.UpdateMeshTransform();
+            columns.Add(wallMesh);
+
             baseWall = new TgcPlane(new Vector3(), new Vector3(5, 20, 0), TgcPlane.Orientations.XYplane, TgcTexture.createTexture(columnTexture), 1, 1);
 
             wallMesh = baseWall.toMesh("Column1H1");

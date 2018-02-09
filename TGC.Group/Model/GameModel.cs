@@ -8,6 +8,7 @@ using TGC.Core.Direct3D;
 using TGC.Core.Example;
 using TGC.Core.Geometry;
 using TGC.Core.Input;
+using TGC.Core.Sound;
 using TGC.Core.SceneLoader;
 using TGC.Core.SkeletalAnimation;
 using TGC.Core.Terrain;
@@ -46,6 +47,15 @@ namespace TGC.Group.Model
             Name = Game.Default.Name;
             Description = Game.Default.Description;
         }
+        //Sonidos
+        private TgcStaticSound jumpSound;
+        private Tgc3dSound jungleAmbience;
+        private TgcStaticSound walkSound;
+        private TgcStaticSound takeBox;
+
+        //Optimización por Frustum Culling
+        List<TgcMesh> candidatos = new List<TgcMesh>();
+
         //Camara 3ra persona no pudo ser el efecto de resorte
         private TgcThirdPersonCamera camara3rdPerson;
         private List<TgcMesh> objectsFront = new List<TgcMesh>();
@@ -75,7 +85,7 @@ namespace TGC.Group.Model
         private List<Caja> Boxes = new List<Caja>();
 
         //Parametros varios
-        private float velocity = 5f;
+        private float velocity = 15f;
         private float rotationVelocity = 2f;
         private float acumTime;
 
@@ -157,12 +167,7 @@ namespace TGC.Group.Model
             //Quiero que la camara mire hacia el origen (0,0,0).
             var lookAt = Vector3.Empty;
             //Configuro donde esta la posicion de la camara y hacia donde mira.
-
-            //Camara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
-            camara3rdPerson = new TgcThirdPersonCamera(character.Position,30,90);
-            //camaraSpring.SetCamera(new Vector3(character.Position.X, character.Position.Y + 30, character.Position.Z), new Vector3(character.Position.X, character.Position.Y+30, character.Position.Z));
-            //camaraSpring.setOffset(30);
-            //camaraSpring.setTargetOffset(character.Position, 65, -40);
+            camara3rdPerson = new TgcThirdPersonCamera(character.Position,40,60);
             Camara = camara3rdPerson;
 
             #region Cajas
@@ -416,6 +421,22 @@ namespace TGC.Group.Model
             terreno.loadHeightmap(MediaDir + "valle.jpg", 100, 6f, new Vector3 (0,-100,0));
             terreno.loadTexture(MediaDir + "azgrssBig.jpg");
 
+            //Sonidos Init
+            jumpSound = new TgcStaticSound();
+            jumpSound.dispose();
+            jumpSound.loadSound(MediaDir + "Mario_Jumping.wav", DirectSound.DsDevice);
+
+            jungleAmbience = new Tgc3dSound(MediaDir + "jungle.wav", new Vector3( 100, 100, 100) , DirectSound.DsDevice);
+            jungleAmbience.MinDistance = 120;
+
+            walkSound = new TgcStaticSound();
+            walkSound.dispose();
+            walkSound.loadSound(MediaDir + "pl_grass1.wav", DirectSound.DsDevice);
+
+            takeBox = new TgcStaticSound();
+            takeBox.dispose();
+            takeBox.loadSound(MediaDir + "pl_grass4.wav", DirectSound.DsDevice);
+
             acumTime = 0;
         }
 
@@ -490,6 +511,7 @@ namespace TGC.Group.Model
 
             if (Input.keyPressed(Key.Space) && jump == 0)
             {
+                jumpSound.play(false);
                 jumping = true;
                 moving = true;
             }
@@ -526,7 +548,8 @@ namespace TGC.Group.Model
 
             //Vector de movimiento
             var movementVector = Vector3.Empty;
-
+            if ((moving || rotating) && !jumping) walkSound.play(false);
+           
             if (moving || rotating || jumping)
             {
                 character.playAnimation("Caminando", true);
@@ -589,6 +612,8 @@ namespace TGC.Group.Model
                 }
             }
 
+            jungleAmbience.play(true);
+
             camara3rdPerson.Target = character.Position;
         }
 
@@ -628,7 +653,11 @@ namespace TGC.Group.Model
             //Cajas renderizadas
             foreach (var box in Boxes)
             {
-                if (box.isColliding(character.BoundingBox) && box.boxQuantity == 0) boxesTaked += 1;
+                if (box.isColliding(character.BoundingBox) && box.boxQuantity == 0)
+                {
+                    takeBox.play(false);
+                    boxesTaked += 1;
+                }
                 box.takeBox(character.BoundingBox);
                 box.render();
             }
@@ -653,12 +682,23 @@ namespace TGC.Group.Model
             //renderizo y animo el personaje
             character.animateAndRender(ElapsedTime);
 
+            candidatos.Clear();
+
             //Renderizo el camino
             foreach (var path in objectsFront)
             {
-                path.render();
+                //Renderizar modelo con FrustumCulling
+                var r = TgcCollisionUtils.classifyFrustumAABB(Frustum, path.BoundingBox);
+                if (r != TgcCollisionUtils.FrustumResult.OUTSIDE)
+                {
+                    candidatos.Add(path);
+                }
             }
 
+            foreach (var path in candidatos)
+            {
+                path.render();
+            }
 
             //terreno.Effect = Shader;
             //terreno.Technique = "BOX_DIFFUSE_MAP";
@@ -703,6 +743,8 @@ namespace TGC.Group.Model
             {
                 templo.dispose();
             }
+
+            jumpSound.dispose();
         }
     }
 }
