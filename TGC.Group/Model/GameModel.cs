@@ -32,8 +32,6 @@ namespace TGC.Group.Model
     /// </summary>
     /// 
 
-    delegate bool del(Caja box);
-
     public class GameModel : TgcExample
     {
         /// <summary>
@@ -68,6 +66,7 @@ namespace TGC.Group.Model
         private TgcPlane Path { get; set; }
         private TgcPlane PathB { get; set; }
         private List<Parcela> FullLevel = new List<Parcela>();
+        private List<Parcela> Pits = new List<Parcela>();
         private Vertical verticalTest;
 
         //Player
@@ -76,7 +75,10 @@ namespace TGC.Group.Model
         private TgcBoundingAxisAlignBox characterBox;
         private bool jumping = false;
         private int boxesTaked = 0;
-        float positionY = 0;
+        private float positionY = 0;
+        private int lives = 5;
+        private bool winGame = false;
+        private bool gameOver = false;
 
         //Caja
         private Caja BoxClass;
@@ -352,18 +354,23 @@ namespace TGC.Group.Model
             //Paths que son fozas
             pathPit = new Pit(new Vector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
+            Pits.Add(pathPit);
 
             pathPit = new Pit(new Vector3(200, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
+            Pits.Add(pathPit);
 
             pathPit = new Pit(new Vector3(150, 0, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
+            Pits.Add(pathPit);
 
             pathPitH = new PitH(new Vector3(150, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPitH);
+            Pits.Add(pathPitH);
 
             pathPitH = new PitH(new Vector3(150, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPitH);
+            Pits.Add(pathPitH);
 
             //Path lado izquierdo
             pathSideLeft = new SideLeft(new Vector3(50, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -547,10 +554,12 @@ namespace TGC.Group.Model
             }
 
             //Vector de movimiento
+            if (lives == 0) gameOver = true;
+            if (boxesTaked == 20) winGame = true;
             var movementVector = Vector3.Empty;
             if ((moving || rotating) && !jumping) walkSound.play(false);
            
-            if (moving || rotating || jumping)
+            if ((moving || rotating || jumping) && (!gameOver))
             {
                 character.playAnimation("Caminando", true);
                 //Colision mocha TODO: arregla esto hermano, ahora solo deja caminar en un rango hay que analizar dentro de cada tipo de parcela.
@@ -566,6 +575,17 @@ namespace TGC.Group.Model
 
             character.move(movementVector);
             character.UpdateMeshTransform();
+            
+            //Vemos si cae en algun pozo
+            foreach (var pit in Pits)
+            {
+                if (pit.isInPit(character.Position))
+                {
+                    lives -= 1;
+                    character.move(0, 0, -50);
+                    break;
+                }
+            }
 
             //Vemos que se interpone a la camara
             var walls = new List<TgcMesh>();
@@ -646,7 +666,12 @@ namespace TGC.Group.Model
             DrawText.drawText("Tiempo Acumulado: " + acumTime, 0, 40, Color.OrangeRed);
             DrawText.drawText("Ubicacion Personaje: \n" + character.Position, 0, 50, Color.OrangeRed);
             DrawText.drawText("Cajas obtenidas: " + boxesTaked, 0, 110, Color.OrangeRed);
-
+            DrawText.drawText("Vidas: " + lives, 0, 120, Color.OrangeRed);
+            
+            if (gameOver)
+            {
+                DrawText.drawText("Game Over! " + lives, D3DDevice.Instance.Width / 2, D3DDevice.Instance.Height / 2, Color.OrangeRed);
+            }
             //Renderizo cielo
             skyBox.render();
 

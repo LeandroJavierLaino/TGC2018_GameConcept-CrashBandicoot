@@ -29,7 +29,7 @@ namespace TGC.Group.Model
         protected List<TgcMesh> columnsTops = new List<TgcMesh>();
 
         //Posicion a partir de la cual se ubica todo
-        protected Vector3 position;
+        new protected Vector3 position;
 
         public List<TgcMesh> getWalls()
         {
@@ -81,6 +81,15 @@ namespace TGC.Group.Model
                 position.Z < player.Z &&
                 position.X + 50 > player.X &&
                 position.Z + 50 > player.Z;
+        }
+
+        public bool isInPit(Vector3 player)
+        {
+            return position.X + 5 < player.X &&
+                    position.Z + 5 < player.Z &&
+                    position.X + 45 > player.X &&
+                    position.Z + 45 > player.Z &&
+                    player.Y < 0;
         }
 
         public void render()
