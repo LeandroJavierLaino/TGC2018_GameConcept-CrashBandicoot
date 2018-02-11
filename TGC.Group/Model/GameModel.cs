@@ -21,6 +21,7 @@ using Microsoft.DirectX.Direct3D;
 using TGC.Examples.Camara;
 using TGC.Group.Model.Enviroment_Objects;
 using TGC.Core.Collision;
+using TGC.Core.Text;
 
 namespace TGC.Group.Model
 {
@@ -102,6 +103,28 @@ namespace TGC.Group.Model
         //Shader
         private Microsoft.DirectX.Direct3D.Effect Shader { get; set; }
         private List<TgcMesh> meshToShade = new List<TgcMesh>();
+        private Microsoft.DirectX.Direct3D.Effect ShaderQuad { get; set; }
+
+        //Full Quad 
+        CustomVertex.PositionTextured[] screenQuadVertices =
+            {
+                new CustomVertex.PositionTextured(-1, 1, 1, 0, 0),
+                new CustomVertex.PositionTextured(1, 1, 1, 1, 0),
+                new CustomVertex.PositionTextured(-1, -1, 1, 0, 1),
+                new CustomVertex.PositionTextured(1, -1, 1, 1, 1)
+            };
+        //vertex buffer de los triangulos
+        VertexBuffer ScreenQuadVB = new VertexBuffer(typeof(CustomVertex.PositionTextured),
+                4, D3DDevice.Instance.Device, Usage.Dynamic | Usage.WriteOnly,
+            CustomVertex.PositionTextured.Format, Pool.Default);
+
+        private Surface g_pDepthStencil; // Depth-stencil buffer
+        private Texture g_pRenderTarget;
+
+        //Messages
+        private System.Drawing.Text.PrivateFontCollection Fonts;
+        private TgcText2D gameOverMessage;
+        private TgcText2D winGameMessage;
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -152,7 +175,7 @@ namespace TGC.Group.Model
             //Escalarlo porque es muy grande
             character.Scale = new Vector3(0.1f, 0.1f, 0.1f);
             //Lo ubicamos 
-            character.Position = new Vector3(10, 0, 10);
+            character.Position = new Vector3(10, -0.5f, 10);
             character.UpdateMeshTransform();
             
             //BoundingSphere que va a usar el personaje
@@ -442,7 +465,43 @@ namespace TGC.Group.Model
 
             takeBox = new TgcStaticSound();
             takeBox.dispose();
-            takeBox.loadSound(MediaDir + "pl_grass4.wav", DirectSound.DsDevice);
+            takeBox.loadSound(MediaDir + "pl_grass4.wav", DirectSound.DsDevice);//TODO: cambiar este sonido por uno mejor
+
+            //Mensajes
+            //Fuentes
+            Fonts = new System.Drawing.Text.PrivateFontCollection();
+            Fonts.AddFontFile(MediaDir + "\\Fonts\\The tropical jungle.ttf");
+
+            //Game Over
+            gameOverMessage = new TgcText2D();
+            gameOverMessage.changeFont(new System.Drawing.Font(Fonts.Families[0], 55));
+            gameOverMessage.Color = Color.Red;
+            gameOverMessage.Text = "Game Over!";
+            gameOverMessage.Position = new Point(D3DDevice.Instance.Width / 16, D3DDevice.Instance.Height / 2);
+
+            //Win Game
+            winGameMessage = new TgcText2D();
+            winGameMessage.changeFont(new System.Drawing.Font(Fonts.Families[0], 55));
+            winGameMessage.Color = Color.Green;
+            winGameMessage.Text = "You Win!";
+            winGameMessage.Position = new Point(D3DDevice.Instance.Width / 16, D3DDevice.Instance.Height / 2);
+
+            //Full Quad init
+            ScreenQuadVB.SetData(screenQuadVertices, 0, LockFlags.None);
+            ShaderQuad = TgcShaders.loadEffect(ShadersDir + "FullQuad.fx");
+
+            g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
+                d3dDevice.PresentationParameters.BackBufferHeight,
+                DepthFormat.D24S8, MultiSampleType.None, 0, true);
+
+            g_pRenderTarget = new Texture(d3dDevice, d3dDevice.PresentationParameters.BackBufferWidth
+                , d3dDevice.PresentationParameters.BackBufferHeight, 1, Usage.RenderTarget, Format.X8R8G8B8,
+                Pool.Default);
+
+            ShaderQuad.SetValue("g_RenderTarget", g_pRenderTarget);
+
+            ShaderQuad.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
+            ShaderQuad.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
 
             acumTime = 0;
         }
@@ -455,7 +514,7 @@ namespace TGC.Group.Model
         public override void Update()
         {
             PreUpdate();
-            
+
             //Capturar Input teclado
             if (Input.keyPressed(Key.F))
             {
@@ -645,8 +704,18 @@ namespace TGC.Group.Model
         public override void Render()
         {
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
-            PreRender();
+            //PreRender();
 
+            ClearTextures();
+            var device = D3DDevice.Instance.Device;
+            var pOldRT = device.GetRenderTarget(0);
+            var pSurf = g_pRenderTarget.GetSurfaceLevel(0);
+            device.SetRenderTarget(0, pSurf);
+            var pOldDS = device.DepthStencilSurface;
+            device.DepthStencilSurface = g_pDepthStencil;
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+
+            device.BeginScene();
             //Aplicar a cada mesh el shader actual
             foreach (var mesh in meshToShade)
             {
@@ -659,19 +728,17 @@ namespace TGC.Group.Model
             {
                 box.applyEffect(Shader);
             }
-
-            //Dibuja un texto por pantalla
-            DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
-            DrawText.drawText("Con clic izquierdo subimos la camara [Actual]: " + TgcParserUtils.printVector3(Camara.Position), 0, 30, Color.OrangeRed);
-            DrawText.drawText("Tiempo Acumulado: " + acumTime, 0, 40, Color.OrangeRed);
-            DrawText.drawText("Ubicacion Personaje: \n" + character.Position, 0, 50, Color.OrangeRed);
-            DrawText.drawText("Cajas obtenidas: " + boxesTaked, 0, 110, Color.OrangeRed);
-            DrawText.drawText("Vidas: " + lives, 0, 120, Color.OrangeRed);
             
             if (gameOver)
             {
-                DrawText.drawText("Game Over! " + lives, D3DDevice.Instance.Width / 2, D3DDevice.Instance.Height / 2, Color.OrangeRed);
+                gameOverMessage.render();
             }
+
+            if (winGame)
+            {
+                winGameMessage.render();
+            }
+
             //Renderizo cielo
             skyBox.render();
 
@@ -725,14 +792,53 @@ namespace TGC.Group.Model
                 path.render();
             }
 
-            //terreno.Effect = Shader;
-            //terreno.Technique = "BOX_DIFFUSE_MAP";
-            //terreno.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));
-            //terreno.Effect.SetValue("time", ElapsedTime);
             terreno.render();
 
+            device.EndScene();
+
+            //Arranque del full quad
+            pSurf.Dispose();
+
+            // restuaro el render target y el stencil
+            device.DepthStencilSurface = pOldDS;
+            device.SetRenderTarget(0, pOldRT);
+
+            // dibujo el quad pp dicho :
+            device.BeginScene();
+
+            ShaderQuad.Technique = "PostProcess";
+            // Condicion para una tecnica diferente --> if ((glowstick.getEnergia() == 0 && glowstick.getSelect()) || (System.Math.Truncate(lighter.getEnergia()) == 0 && lighter.getSelect()) || (System.Math.Truncate(flashlight.getEnergia()) == 0 && flashlight.getSelect())) ShaderQuad.Technique = "Waves";
+            ShaderQuad.SetValue("time", ElapsedTime);
+            device.VertexFormat = CustomVertex.PositionTextured.Format;
+            device.SetStreamSource(0, ScreenQuadVB, 0);
+            ShaderQuad.SetValue("g_RenderTarget", g_pRenderTarget);
+
+            device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            ShaderQuad.Begin(FX.None);
+            ShaderQuad.BeginPass(0);
+            device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            ShaderQuad.EndPass();
+            ShaderQuad.End();
+
+            device.EndScene();
+
+            device.BeginScene();
+
+            //Dibuja un texto por pantalla
+            DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
+            DrawText.drawText("Con clic izquierdo subimos la camara [Actual]: " + TgcParserUtils.printVector3(Camara.Position), 0, 30, Color.OrangeRed);
+            DrawText.drawText("Tiempo Acumulado: " + acumTime, 0, 40, Color.OrangeRed);
+            DrawText.drawText("Ubicacion Personaje: \n" + character.Position, 0, 50, Color.OrangeRed);
+            DrawText.drawText("Cajas obtenidas: " + boxesTaked, 0, 110, Color.OrangeRed);
+            DrawText.drawText("Vidas: " + lives, 0, 120, Color.OrangeRed);
+
+            RenderAxis();
+            RenderFPS();
+            device.EndScene();
+            device.Present();
+
             //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
-            PostRender();
+            //PostRender();
         }
 
         /// <summary>
