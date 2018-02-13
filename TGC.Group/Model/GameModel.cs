@@ -22,6 +22,7 @@ using TGC.Examples.Camara;
 using TGC.Group.Model.Enviroment_Objects;
 using TGC.Core.Collision;
 using TGC.Core.Text;
+using TGC.Examples.Engine2D.Spaceship.Core;
 
 namespace TGC.Group.Model
 {
@@ -46,6 +47,22 @@ namespace TGC.Group.Model
             Name = Game.Default.Name;
             Description = Game.Default.Description;
         }
+        #region HUD
+        //HUD
+        private Drawer2D drawer2D;
+
+        //Head        
+        private CustomSprite headHUD;
+
+        //Box
+        private CustomSprite boxHUD;
+
+        //Text
+        private TgcText2D livesText;
+        private TgcText2D boxesText;
+
+        #endregion
+
         //Sonidos
         private TgcStaticSound jumpSound;
         private Tgc3dSound jungleAmbience;
@@ -591,6 +608,7 @@ namespace TGC.Group.Model
             //Fuentes
             Fonts = new System.Drawing.Text.PrivateFontCollection();
             Fonts.AddFontFile(MediaDir + "\\Fonts\\The tropical jungle.ttf");
+            Fonts.AddFontFile(MediaDir + "\\Fonts\\TroglodyteNF.ttf");
 
             //Game Over
             gameOverMessage = new TgcText2D();
@@ -623,6 +641,31 @@ namespace TGC.Group.Model
             ShaderQuad.SetValue("screen_dx", d3dDevice.PresentationParameters.BackBufferWidth);
             ShaderQuad.SetValue("screen_dy", d3dDevice.PresentationParameters.BackBufferHeight);
 
+            #region HUD init
+            //HUD
+            drawer2D = new Drawer2D();
+
+            //Head
+            headHUD = new CustomSprite();
+            headHUD.Bitmap = new CustomBitmap(MediaDir + "\\head.png", D3DDevice.Instance.Device);
+
+            livesText = new TgcText2D();
+            livesText.changeFont(new System.Drawing.Font(Fonts.Families[1], 55));
+            livesText.Color = Color.Red;
+            livesText.Text = "x" + lives;
+            livesText.Position = new Point((int) (D3DDevice.Instance.Width * 0.35f) , (int)(D3DDevice.Instance.Height * 0.75f) );
+
+            //Box
+            boxHUD = new CustomSprite();
+            boxHUD.Bitmap = new CustomBitmap(MediaDir + "\\box.png", D3DDevice.Instance.Device);
+
+            boxesText = new TgcText2D();
+            boxesText.changeFont(new System.Drawing.Font(Fonts.Families[1], 55));
+            boxesText.Color = Color.Red;
+            boxesText.Text = "x" + boxesTaked;
+            boxesText.Position = new Point(-(int)(D3DDevice.Instance.Width / 2 * 0.6f), (int)(D3DDevice.Instance.Height * 0.1f));
+            #endregion
+
             acumTime = 0;
         }
 
@@ -634,6 +677,15 @@ namespace TGC.Group.Model
         public override void Update()
         {
             PreUpdate();
+
+            headHUD.Position = new Vector2(D3DDevice.Instance.Width * 0.7f , D3DDevice.Instance.Height * 0.7f);
+            headHUD.Scaling = new Vector2(0.25f, 0.15f);
+
+            boxHUD.Position = new Vector2(D3DDevice.Instance.Width * 0.05f, D3DDevice.Instance.Height * 0.1f);
+            boxHUD.Scaling = new Vector2(0.25f, 0.25f);
+
+            livesText.Text = "x" + lives;
+            boxesText.Text = "x" + boxesTaked;
 
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
@@ -858,11 +910,8 @@ namespace TGC.Group.Model
                 winGameMessage.render();
             }
 
-            /*
-            foreach(var plant in plantas)
-            {
-                plant.render();
-            }*/
+            livesText.render();
+            boxesText.render();
 
             //Renderizo cielo
             skyBox.render();
@@ -919,6 +968,11 @@ namespace TGC.Group.Model
 
             terreno.render();
 
+            drawer2D.BeginDrawSprite();
+            drawer2D.DrawSprite(headHUD);
+            drawer2D.DrawSprite(boxHUD);
+            drawer2D.EndDrawSprite();
+
             device.EndScene();
 
             //Arranque del full quad
@@ -950,12 +1004,11 @@ namespace TGC.Group.Model
             device.BeginScene();
 
             //Dibuja un texto por pantalla
-            DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
-            DrawText.drawText("Con clic izquierdo subimos la camara [Actual]: " + TgcParserUtils.printVector3(Camara.Position), 0, 30, Color.OrangeRed);
             DrawText.drawText("Tiempo Acumulado: " + acumTime, 0, 40, Color.OrangeRed);
             DrawText.drawText("Ubicacion Personaje: \n" + character.Position, 0, 50, Color.OrangeRed);
             DrawText.drawText("Cajas obtenidas: " + boxesTaked, 0, 110, Color.OrangeRed);
-            DrawText.drawText("Vidas: " + lives, 0, 120, Color.OrangeRed);
+            DrawText.drawText("Vidas: " + lives, 0, 130, Color.OrangeRed);
+            DrawText.drawText("posicion texto cajas: " + boxesText.Position, 0, 150, Color.OrangeRed);
 
             RenderAxis();
             RenderFPS();
