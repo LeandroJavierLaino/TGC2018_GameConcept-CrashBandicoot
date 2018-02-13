@@ -51,6 +51,7 @@ namespace TGC.Group.Model
         private Tgc3dSound jungleAmbience;
         private TgcStaticSound walkSound;
         private TgcStaticSound takeBox;
+        private Tgc3dSound cricketsSound;
 
         //Optimización por Frustum Culling
         List<TgcMesh> candidatos = new List<TgcMesh>();
@@ -99,6 +100,7 @@ namespace TGC.Group.Model
         private TgcSimpleTerrain terreno;
         private List<Tower> torres = new List<Tower>();
         private List<Temple> templos = new List<Temple>();
+        private List<TgcMesh> plantas = new List<TgcMesh>();
 
         //Shader
         private Microsoft.DirectX.Direct3D.Effect Shader { get; set; }
@@ -192,7 +194,8 @@ namespace TGC.Group.Model
             //Quiero que la camara mire hacia el origen (0,0,0).
             var lookAt = Vector3.Empty;
             //Configuro donde esta la posicion de la camara y hacia donde mira.
-            camara3rdPerson = new TgcThirdPersonCamera(character.Position,40,60);
+            camara3rdPerson = new TgcThirdPersonCamera(character.Position,40,80);
+            //var fpsCamara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
             Camara = camara3rdPerson;
 
             #region Cajas
@@ -236,7 +239,52 @@ namespace TGC.Group.Model
             BoxClass = new Caja(new Vector3(130, posYBox, 45), boxTexture);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(65, posYBox, 215), boxTexture);
+            BoxClass = new Caja(new Vector3(225, posYBox, 215), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(75, posYBox, 225), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(130, posYBox, 235), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(165, posYBox, 265), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(180, posYBox, 35), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(170, posYBox, 70), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(150, posYBox, 30), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(120, posYBox, 280), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(220, posYBox, 325), boxTexture);
+            Boxes.Add(BoxClass);
+            
+            BoxClass = new Caja(new Vector3(130, posYBox, 330), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(80, posYBox, 365), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(120, posYBox, 380), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(180, posYBox, 365), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(170, posYBox, 420), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(130, 25, 480), boxTexture);
+            Boxes.Add(BoxClass);
+
+            BoxClass = new Caja(new Vector3(80, 25, 420), boxTexture);
             Boxes.Add(BoxClass);
             #endregion
 
@@ -411,6 +459,75 @@ namespace TGC.Group.Model
                 }
             }
 
+            #region Plantas
+            var basePlant = new TgcSceneLoader().loadSceneFromFile(MediaDir + "\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml").Meshes[0];
+            basePlant.Position = new Vector3(0, 0,-60);
+            basePlant.Scale = new Vector3(0.25f, 0.25f, 0.25f);
+            var random = new Random();
+            var ran = random.Next(1, 100);
+            basePlant.rotateY(ran);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(50,0,-60);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f) ;
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(100, 0, -30);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(-40, 0, 120);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(-40, 0, 150);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(-40, 0, -20);
+            ran = random.Next(0, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+            #endregion
+
             //Torres
             Tower torre;
 
@@ -465,7 +582,10 @@ namespace TGC.Group.Model
 
             takeBox = new TgcStaticSound();
             takeBox.dispose();
-            takeBox.loadSound(MediaDir + "pl_grass4.wav", DirectSound.DsDevice);//TODO: cambiar este sonido por uno mejor
+            takeBox.loadSound(MediaDir + "door_wood_shake1.wav", DirectSound.DsDevice);//TODO: cambiar este sonido por uno mejor
+
+            cricketsSound = new Tgc3dSound(MediaDir + "crickets.wav", new Vector3(200, 0, 100), DirectSound.DsDevice);
+            cricketsSound.MinDistance = 20;
 
             //Mensajes
             //Fuentes
@@ -515,12 +635,6 @@ namespace TGC.Group.Model
         {
             PreUpdate();
 
-            //Capturar Input teclado
-            if (Input.keyPressed(Key.F))
-            {
-                BoundingBox = !BoundingBox;
-            }
-
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
@@ -534,7 +648,7 @@ namespace TGC.Group.Model
             {
                 BoundingBox = !BoundingBox;
             }
-
+            
             //Move forward
             if (Input.keyDown(Key.W))
             {
@@ -584,7 +698,7 @@ namespace TGC.Group.Model
 
             if (jumping)
             {
-                jump += acumTime * 0.00006f;
+                jump += ElapsedTime * 80f;
             }
 
             if (jump > 30 || character.Position.Y > 40)
@@ -595,7 +709,7 @@ namespace TGC.Group.Model
             if (character.Position.Y > positionY  && !jumping)
             {
                 moving = true;
-                jump -= 30 * ElapsedTime;
+                jump -= 80 * ElapsedTime;
             }
                 
             if (character.Position.Y < positionY - 20)
@@ -614,11 +728,11 @@ namespace TGC.Group.Model
 
             //Vector de movimiento
             if (lives == 0) gameOver = true;
-            if (boxesTaked == 20) winGame = true;
+            if (boxesTaked == 28) winGame = true;
             var movementVector = Vector3.Empty;
             if ((moving || rotating) && !jumping) walkSound.play(false);
            
-            if ((moving || rotating || jumping) && (!gameOver))
+            if ((moving || rotating || jumping) && (!gameOver) && (!winGame))
             {
                 character.playAnimation("Caminando", true);
                 //Colision mocha TODO: arregla esto hermano, ahora solo deja caminar en un rango hay que analizar dentro de cada tipo de parcela.
@@ -671,6 +785,11 @@ namespace TGC.Group.Model
                 {
                     walls.Add(wall);
                 }
+            }
+
+            foreach (var plant in plantas)
+            {
+                walls.Add(plant);
             }
 
             objectsFront.Clear();
@@ -738,6 +857,12 @@ namespace TGC.Group.Model
             {
                 winGameMessage.render();
             }
+
+            /*
+            foreach(var plant in plantas)
+            {
+                plant.render();
+            }*/
 
             //Renderizo cielo
             skyBox.render();

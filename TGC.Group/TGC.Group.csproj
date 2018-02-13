@@ -105,6 +105,7 @@
     <Compile Include="Model\Parcelas\Horizontal.cs" />
     <Compile Include="Model\Parcelas\Parcela.cs" />
     <Compile Include="Model\TgcFpsCamera.cs" />
+    <Compile Include="Model\Vida.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form\GameForm.resx">
