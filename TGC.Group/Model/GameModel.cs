@@ -69,6 +69,8 @@ namespace TGC.Group.Model
         private TgcStaticSound walkSound;
         private TgcStaticSound takeBox;
         private Tgc3dSound cricketsSound;
+        private TgcStaticSound getalife;
+        private TgcStaticSound gameOverSound;
 
         //Optimización por Frustum Culling
         List<TgcMesh> candidatos = new List<TgcMesh>();
@@ -81,12 +83,9 @@ namespace TGC.Group.Model
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
 
-        //Path a partir de un plano
-        private TgcPlane Path { get; set; }
-        private TgcPlane PathB { get; set; }
+        //Paths
         private List<Parcela> FullLevel = new List<Parcela>();
         private List<Parcela> Pits = new List<Parcela>();
-        private Vertical verticalTest;
 
         //Player
         private TgcSkeletalMesh character;
@@ -98,6 +97,10 @@ namespace TGC.Group.Model
         private int lives = 5;
         private bool winGame = false;
         private bool gameOver = false;
+
+        //Vida
+        private Vida live;
+        private List<Vida> Lives = new List<Vida>();
 
         //Caja
         private Caja BoxClass;
@@ -167,11 +170,6 @@ namespace TGC.Group.Model
             //Internamente el framework construye la matriz de view con estos dos vectores.
             //Luego en nuestro juego tendremos que crear una cámara que cambie la matriz de view con variables como movimientos o animaciones de escenas.
 
-            //Path basico
-            var texturaPasto = MediaDir + "grass.jpg";
-            Path = new TgcPlane(Vector3.Empty, new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(texturaPasto), 4, 4);
-            PathB = new TgcPlane(new Vector3(50,0,0), new Vector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(texturaPasto), 4, 4);
-
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
             //RobotTGC ok; Hunter ok; BasicHuman ok; Samus nope; Trooper nope;
@@ -201,7 +199,6 @@ namespace TGC.Group.Model
             character.AutoUpdateBoundingBox = true;
             characterSphere = new TgcBoundingSphere(character.BoundingBox.calculateBoxCenter(), character.BoundingBox.calculateBoxRadius());
             characterBox = character.BoundingBox.clone();  
-            
 
             //Suelen utilizarse objetos que manejan el comportamiento de la camara.
             //Lo que en realidad necesitamos gráficamente es una matriz de View.
@@ -370,7 +367,6 @@ namespace TGC.Group.Model
 
             //Paths verticales
             pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
-            verticalTest = pathVertical;
             FullLevel.Add(pathVertical);
 
             pathVertical = new Vertical(new Vector3(150, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
@@ -604,6 +600,14 @@ namespace TGC.Group.Model
             cricketsSound = new Tgc3dSound(MediaDir + "crickets.wav", new Vector3(200, 0, 100), DirectSound.DsDevice);
             cricketsSound.MinDistance = 20;
 
+            getalife = new TgcStaticSound();
+            getalife.dispose();
+            getalife.loadSound(MediaDir + "getalife.wav", DirectSound.DsDevice);
+
+            gameOverSound = new TgcStaticSound();
+            gameOverSound.dispose();
+            gameOverSound.loadSound(MediaDir + "gameover.wav", DirectSound.DsDevice);
+
             //Mensajes
             //Fuentes
             Fonts = new System.Drawing.Text.PrivateFontCollection();
@@ -665,6 +669,15 @@ namespace TGC.Group.Model
             boxesText.Text = "x" + boxesTaked;
             boxesText.Position = new Point(-(int)(D3DDevice.Instance.Width / 2 * 0.6f), (int)(D3DDevice.Instance.Height * 0.1f));
             #endregion
+
+            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new Vector3(175,10,170));
+            Lives.Add(live);
+
+            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new Vector3(80, 10, 335));
+            Lives.Add(live);
+
+            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new Vector3(75, 30, 475));
+            Lives.Add(live);
 
             acumTime = 0;
         }
@@ -777,10 +790,16 @@ namespace TGC.Group.Model
                 Camara = camara3rdPerson;
                 character.rotateY(rotAngle);
             }
+            
+            //Condiciones de derrota y victoria
+            if (lives == 0)
+            {
+                gameOverSound.play(false);
+                gameOver = true;
+            }
+            if (boxesTaked == 28) winGame = true;
 
             //Vector de movimiento
-            if (lives == 0) gameOver = true;
-            if (boxesTaked == 28) winGame = true;
             var movementVector = Vector3.Empty;
             if ((moving || rotating) && !jumping) walkSound.play(false);
            
@@ -895,6 +914,11 @@ namespace TGC.Group.Model
                 mesh.Technique = TgcShaders.Instance.getTgcMeshTechnique(mesh.RenderType);
             }
 
+            foreach(var live in Lives)
+            {
+                live.applyShader(Shader);
+            }
+
             foreach(var box in Boxes)
             {
                 box.applyEffect(Shader);
@@ -927,11 +951,23 @@ namespace TGC.Group.Model
                 box.takeBox(character.BoundingBox);
                 box.render();
             }
+
+            foreach (var live in Lives)
+            {
+                if (live.isColliding(character.BoundingBox) && live.liveQuantity == 0)
+                {
+                    getalife.play(false);
+                    lives += 1;
+                } 
+                live.takeLive(character.BoundingBox);
+                live.render();
+            }
             
             foreach(var wall in meshToShade)
             {
                 wall.Effect.SetValue("color", ColorValue.FromColor(Color.PeachPuff));
                 wall.Effect.SetValue("time", acumTime );
+                wall.Effect.SetValue("timeFrame", ElapsedTime);
                 wall.Effect.SetValue("playerPos", new Vector4( character.Position.X, character.Position.Y, character.Position.Z, 1));
                 //wall.Effect.SetValue("lightPosition", new Vector4(500,500,500,1));
                 //wall.Effect.SetValue("lightIntensity", 3000);

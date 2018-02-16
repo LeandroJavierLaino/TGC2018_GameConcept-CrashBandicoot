@@ -18,6 +18,7 @@ float4x4 matInverseTransposeWorld; //Matriz Transpose(Invert(World))
 
 float4 color;
 float time;
+float timeFrame;
 float4 playerPos;
 
 //Textura para DiffuseMap
@@ -180,6 +181,16 @@ float4 ps_DiffuseMap(PS_DIFFUSE_MAP input) : COLOR0
 	return tex2D(diffuseMap, input.Texcoord) * input.Color * var;
 }
 
+
+
+float4 ps_DiffuseMapHead(PS_DIFFUSE_MAP input) : COLOR0
+{
+	float var = 1;
+	if (input.WorldPos.y % 2 >= 1 && input.WorldPos.y % 2 <= 1.5) discard;
+	if (distance(input.WorldPos,playerPos) <= 30 ) var += distance(input.WorldPos,playerPos);
+	return tex2D(diffuseMap, input.Texcoord) * input.Color * var;
+}
+
 /*
 * Technique DIFFUSE_MAP
 */
@@ -201,6 +212,19 @@ technique BOX_DIFFUSE_MAP
 	{
 		VertexShader = compile vs_3_0 vs_DiffuseMapBox();
 		PixelShader = compile ps_3_0 ps_DiffuseMap();
+	}
+}
+
+/*
+* Technique Head DIFFUSE_MAP
+*/
+
+technique HEAD_DIFFUSE_MAP
+{
+	pass Pass_0
+	{
+		VertexShader = compile vs_3_0 vs_DiffuseMap();
+		PixelShader = compile ps_3_0 ps_DiffuseMapHead();
 	}
 }
 
