@@ -23,6 +23,7 @@ using TGC.Group.Model.Enviroment_Objects;
 using TGC.Core.Collision;
 using TGC.Core.Text;
 using TGC.Examples.Engine2D.Spaceship.Core;
+using TGC.Core.Particle;
 
 namespace TGC.Group.Model
 {
@@ -71,6 +72,8 @@ namespace TGC.Group.Model
         private Tgc3dSound cricketsSound;
         private TgcStaticSound getalife;
         private TgcStaticSound gameOverSound;
+        private TgcStaticSound gameWinSound;
+        private bool playedMusic = false;
 
         //Optimización por Frustum Culling
         List<TgcMesh> candidatos = new List<TgcMesh>();
@@ -97,6 +100,8 @@ namespace TGC.Group.Model
         private int lives = 5;
         private bool winGame = false;
         private bool gameOver = false;
+        private ParticleEmitter walkEmitter;
+        private bool walk = false;
 
         //Vida
         private Vida live;
@@ -121,6 +126,9 @@ namespace TGC.Group.Model
         private List<Tower> torres = new List<Tower>();
         private List<Temple> templos = new List<Temple>();
         private List<TgcMesh> plantas = new List<TgcMesh>();
+        private ParticleEmitter fireEmitter;
+        private ParticleEmitter leafEmitter;
+        private TgcMesh fogata;
 
         //Shader
         private Microsoft.DirectX.Direct3D.Effect Shader { get; set; }
@@ -487,7 +495,7 @@ namespace TGC.Group.Model
 
             basePlant = basePlant.clone("a");
             basePlant.Position = new Vector3(50,0,-60);
-            ran = random.Next(0, 100);
+            ran = random.Next(20, 100);
             basePlant.rotateY(ran);
             basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f) ;
             basePlant.Enabled = true;
@@ -498,7 +506,7 @@ namespace TGC.Group.Model
 
             basePlant = basePlant.clone("a");
             basePlant.Position = new Vector3(100, 0, -30);
-            ran = random.Next(0, 100);
+            ran = random.Next(20, 100);
             basePlant.rotateY(ran);
             basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
@@ -509,7 +517,7 @@ namespace TGC.Group.Model
 
             basePlant = basePlant.clone("a");
             basePlant.Position = new Vector3(-40, 0, 120);
-            ran = random.Next(0, 100);
+            ran = random.Next(20, 100);
             basePlant.rotateY(ran);
             basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
@@ -520,7 +528,7 @@ namespace TGC.Group.Model
 
             basePlant = basePlant.clone("a");
             basePlant.Position = new Vector3(-40, 0, 150);
-            ran = random.Next(0, 100);
+            ran = random.Next(20, 100);
             basePlant.rotateY(ran);
             basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
@@ -531,7 +539,238 @@ namespace TGC.Group.Model
 
             basePlant = basePlant.clone("a");
             basePlant.Position = new Vector3(-40, 0, -20);
-            ran = random.Next(0, 100);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(170, 0, -25);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(235, 0, 5);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(230, 0, 50);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(275, 0, 225);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(275, 0, 275);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(270, 0, 335);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(20, 0, 320);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(25, 0, 380);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(240, 0, 480);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(-30, 0, 200);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(130, 0, -55);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(220, 0, -40);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(300, 0, 300);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(20, 0, 440);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(35, 0, 480);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(175, 0, 575);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(20, 0, 495);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(40, 0, 535);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(80, 0, 515);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(125, 0, 525);
+            ran = random.Next(20, 100);
+            basePlant.rotateY(ran);
+            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.Enabled = true;
+            basePlant.UpdateMeshTransform();
+            basePlant.updateBoundingBox();
+
+            plantas.Add(basePlant);
+
+            basePlant = basePlant.clone("a");
+            basePlant.Position = new Vector3(235, 0, 535);
+            ran = random.Next(20, 100);
             basePlant.rotateY(ran);
             basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
@@ -608,6 +847,10 @@ namespace TGC.Group.Model
             gameOverSound.dispose();
             gameOverSound.loadSound(MediaDir + "gameover.wav", DirectSound.DsDevice);
 
+            gameWinSound = new TgcStaticSound();
+            gameWinSound.dispose();
+            gameWinSound.loadSound(MediaDir + "gamewin.wav", DirectSound.DsDevice);
+
             //Mensajes
             //Fuentes
             Fonts = new System.Drawing.Text.PrivateFontCollection();
@@ -670,6 +913,7 @@ namespace TGC.Group.Model
             boxesText.Position = new Point(-(int)(D3DDevice.Instance.Width / 2 * 0.6f), (int)(D3DDevice.Instance.Height * 0.1f));
             #endregion
 
+            //Logos de vida
             live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new Vector3(175,10,170));
             Lives.Add(live);
 
@@ -678,6 +922,46 @@ namespace TGC.Group.Model
 
             live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new Vector3(75, 30, 475));
             Lives.Add(live);
+
+            //Particulas del personaje
+            walkEmitter = new ParticleEmitter(MediaDir + "pisada.png", 40);
+            walkEmitter.CreationFrecuency = 1f;
+            walkEmitter.MinSizeParticle = 46f;
+            walkEmitter.MaxSizeParticle = 56f;
+            walkEmitter.Position = character.Position;
+            walkEmitter.Speed = new Vector3(0, 20, 0);
+            walkEmitter.ParticleTimeToLive = 4f;
+            walkEmitter.Dispersion = 1000;
+            walkEmitter.Enabled = true;
+            walkEmitter.Playing = true;
+
+            fireEmitter = new ParticleEmitter(MediaDir + "fuego.png", 40);
+            fireEmitter.CreationFrecuency = 1f;
+            fireEmitter.MinSizeParticle = 46f;
+            fireEmitter.MaxSizeParticle = 56f;
+            fireEmitter.Position = new Vector3(25,0,-20);
+            fireEmitter.Speed = new Vector3(0, 20, 0);
+            fireEmitter.ParticleTimeToLive = 4f;
+            fireEmitter.Dispersion = 1000;
+            fireEmitter.Enabled = true;
+            fireEmitter.Playing = true;
+
+            leafEmitter = new ParticleEmitter(MediaDir + "hoja.png", 140);
+            leafEmitter.CreationFrecuency = 1f;
+            leafEmitter.MinSizeParticle = 46f;
+            leafEmitter.MaxSizeParticle = 56f;
+            leafEmitter.Position = new Vector3(25, 200, -30);
+            leafEmitter.Speed = new Vector3(0, -20, 0);
+            leafEmitter.ParticleTimeToLive = 4f;
+            leafEmitter.Dispersion = 1000;
+            leafEmitter.Enabled = true;
+            leafEmitter.Playing = true;
+
+            fogata = new TgcSceneLoader().loadSceneFromFile(MediaDir + "\\Tripode\\Tripode-TgcScene.xml").Meshes[0];
+            fogata.Position = new Vector3(22, 0, -20);
+            fogata.Scale = new Vector3(0.04f, 0.04f, 0.04f);
+            fogata.Enabled = true;
+            fogata.UpdateMeshTransform();
 
             acumTime = 0;
         }
@@ -700,11 +984,14 @@ namespace TGC.Group.Model
             livesText.Text = "x" + lives;
             boxesText.Text = "x" + boxesTaked;
 
+            walkEmitter.Position = character.Position;
+
             //Calcular proxima posicion de personaje segun Input
             var moveForward = 0f;
             float rotate = 0;
             bool moving = false;
             bool rotating = false;
+            walk = false;
             
             float jump = 0;
 
@@ -718,6 +1005,7 @@ namespace TGC.Group.Model
             if (Input.keyDown(Key.W))
             {
                 moveForward = -velocity;
+                walk = true;
                 moving = true;
             }
 
@@ -725,6 +1013,7 @@ namespace TGC.Group.Model
             if (Input.keyDown(Key.S))
             {
                 moveForward = velocity;
+                walk = true;
                 moving = true;
             }
 
@@ -792,12 +1081,18 @@ namespace TGC.Group.Model
             }
             
             //Condiciones de derrota y victoria
-            if (lives == 0)
+            if (lives == 0 && !playedMusic)
             {
                 gameOverSound.play(false);
+                playedMusic = true;
                 gameOver = true;
             }
-            if (boxesTaked == 28) winGame = true;
+            if (boxesTaked == 28 && !playedMusic)
+            { 
+                winGame = true;
+                playedMusic = true;
+                gameWinSound.play(false);
+            } 
 
             //Vector de movimiento
             var movementVector = Vector3.Empty;
@@ -969,16 +1264,6 @@ namespace TGC.Group.Model
                 wall.Effect.SetValue("time", acumTime );
                 wall.Effect.SetValue("timeFrame", ElapsedTime);
                 wall.Effect.SetValue("playerPos", new Vector4( character.Position.X, character.Position.Y, character.Position.Z, 1));
-                //wall.Effect.SetValue("lightPosition", new Vector4(500,500,500,1));
-                //wall.Effect.SetValue("lightIntensity", 3000);
-                //wall.Effect.SetValue("lightAttenuation", 50);
-
-                //Cargar variables de shader de Material. El Material en realidad deberia ser propio de cada mesh. Pero en este ejemplo se simplifica con uno comun para todos
-                //wall.Effect.SetValue("materialEmissiveColor", ColorValue.FromColor((Color.PeachPuff)));
-                //wall.Effect.SetValue("materialAmbientColor", ColorValue.FromColor((Color.White)));
-                //wall.Effect.SetValue("materialDiffuseColor", ColorValue.FromColor((Color.White)));
-                //wall.Effect.SetValue("materialSpecularColor", ColorValue.FromColor((Color.White)));
-                //wall.Effect.SetValue("materialSpecularExp", 299.9f);
             }
 
             //renderizo y animo el personaje
@@ -1008,6 +1293,51 @@ namespace TGC.Group.Model
             drawer2D.DrawSprite(headHUD);
             drawer2D.DrawSprite(boxHUD);
             drawer2D.EndDrawSprite();
+
+            //Sistema de particulas
+            D3DDevice.Instance.ParticlesEnabled = true;
+            D3DDevice.Instance.EnableParticles();
+
+            if (walk)
+            {
+                walkEmitter.Enabled = true;
+                walkEmitter.CreationFrecuency = 0.2f;
+                walkEmitter.MinSizeParticle = 0.6f;
+                walkEmitter.MaxSizeParticle = 1f;
+                walkEmitter.Speed = new Vector3(0, 5, 0);
+                walkEmitter.ParticleTimeToLive = 1f;
+                walkEmitter.Dispersion = 350;
+                walkEmitter.Position = character.Position;
+                walkEmitter.Playing = true;
+                walkEmitter.render(ElapsedTime);
+            }
+            if (!walk) walkEmitter.Playing = false;
+
+            walkEmitter.render(ElapsedTime);
+
+            
+            fireEmitter.Enabled = true;
+            fireEmitter.CreationFrecuency = 0.2f;
+            fireEmitter.MinSizeParticle = 0.6f;
+            fireEmitter.MaxSizeParticle = 1f;
+            fireEmitter.Speed = new Vector3(0, 5, 0);
+            fireEmitter.ParticleTimeToLive = 1f;
+            fireEmitter.Dispersion = 350;
+            fireEmitter.Playing = true;
+            fireEmitter.render(ElapsedTime);
+
+            leafEmitter.Enabled = true;
+            leafEmitter.CreationFrecuency = 0.2f;
+            leafEmitter.MinSizeParticle = 0.3f;
+            leafEmitter.MaxSizeParticle = 0.8f;
+            leafEmitter.Speed = new Vector3(2, -20, 4);
+            leafEmitter.ParticleTimeToLive = 1f;
+            leafEmitter.Position = new Vector3( character.Position.X, character.Position.Y + 40, character.Position.Z);
+            leafEmitter.Dispersion = 1050;
+            leafEmitter.Playing = true;
+            leafEmitter.render(ElapsedTime);
+
+            fogata.render();
 
             device.EndScene();
 

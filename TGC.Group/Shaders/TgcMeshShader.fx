@@ -187,7 +187,7 @@ float4 ps_DiffuseMapHead(PS_DIFFUSE_MAP input) : COLOR0
 {
 	float var = 1;
 	if (input.WorldPos.y % 2 >= 1 && input.WorldPos.y % 2 <= 1.5) discard;
-	if (distance(input.WorldPos,playerPos) <= 30 ) var += distance(input.WorldPos,playerPos);
+	if (distance(input.WorldPos,playerPos) < 30 ) var = 1 + distance(playerPos,input.WorldPos) / 10;
 	return tex2D(diffuseMap, input.Texcoord) * input.Color * var;
 }
 
