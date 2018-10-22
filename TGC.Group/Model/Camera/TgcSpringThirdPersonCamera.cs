@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.DirectX;
 using TGC.Core.Camara;
 using TGC.Core.Utils;
+using TGC.Core.Mathematica;
 
 namespace TGC.Group.Model.Camera
 {
@@ -63,8 +64,8 @@ namespace TGC.Group.Model.Camera
             m_headingDegrees = 0.0f;
             m_pitchDegrees = 0.0f;
 
-            Eye = new Vector3(0.0f, 0.0f, 0.0f);
-            Target = new Vector3(0.0f, 0.0f, 0.0f);
+            Eye = new TGCVector3(0.0f, 0.0f, 0.0f);
+            Target = new TGCVector3(0.0f, 0.0f, 0.0f);
             m_targetYAxis = new Vector3(0, 1, 0);
 
             m_velocity = new Vector3(0.0f, 0.0f, 0.0f);
@@ -77,9 +78,9 @@ namespace TGC.Group.Model.Camera
         /// <summary>
         ///     Asigna target con offsets.
         /// </summary>
-        public void setTargetOffset(Vector3 target, float offsetY, float offsetZ)
+        public void setTargetOffset(TGCVector3 target, float offsetY, float offsetZ)
         {
-            Eye = new Vector3(target.X, target.Y + offsetY, target.Z + offsetZ);
+            Eye = new TGCVector3(target.X, target.Y + offsetY, target.Z + offsetZ);
 
             Target = target;
 
@@ -93,9 +94,9 @@ namespace TGC.Group.Model.Camera
             m_pitchDegrees = 0.0f;
         }
 
-        public override Matrix GetViewMatrix()
+        public override TGCMatrix GetViewMatrix()
         {
-            return m_viewMatrix;
+            return new TGCMatrix(m_viewMatrix);
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace TGC.Group.Model.Camera
             var m_yAxis = new Vector3(m_viewMatrix.M12, m_viewMatrix.M22, m_viewMatrix.M32);
             var m_zAxis = new Vector3(m_viewMatrix.M13, m_viewMatrix.M23, m_viewMatrix.M33);
 
-            Eye = Target + m_zAxis * -m_offsetDistance;
+            Eye = Target + new TGCVector3(m_zAxis) * -m_offsetDistance;
 
             m_viewMatrix.M41 = -Vector3.Dot(m_xAxis, Eye);
             m_viewMatrix.M42 = -Vector3.Dot(m_yAxis, Eye);
@@ -174,7 +175,7 @@ namespace TGC.Group.Model.Camera
             var springAcceleration = -Spring * displacement - Damping * m_velocity;
 
             m_velocity += springAcceleration * elapsedTimeSec;
-            Eye += m_velocity * elapsedTimeSec;
+            Eye += new TGCVector3(m_velocity) * elapsedTimeSec;
 
             // The view matrix is always relative to the camera's current position
             // 'm_eye'. Since a spring system is being used here 'm_eye' will be
@@ -258,7 +259,7 @@ namespace TGC.Group.Model.Camera
         /// <summary>
         ///     Objetivo al cual la camara tiene que apuntar
         /// </summary>
-        public Vector3 Target { get; set; }
+        public TGCVector3 Target { get; set; }
 
         /// <summary>
         ///     Valor de Spring para el delay de la camara
@@ -273,7 +274,7 @@ namespace TGC.Group.Model.Camera
         /// <summary>
         ///     Posicion del ojo de la camara que apunta hacia el Target
         /// </summary>
-        public Vector3 Eye { get; set; }
+        public TGCVector3 Eye { get; set; }
 
         #endregion Getters y Setters
     }

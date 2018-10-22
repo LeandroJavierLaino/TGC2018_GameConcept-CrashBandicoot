@@ -24,6 +24,7 @@ using TGC.Core.Collision;
 using TGC.Core.Text;
 using TGC.Examples.Engine2D.Spaceship.Core;
 using TGC.Core.Particle;
+using TGC.Core.Mathematica;
 
 namespace TGC.Group.Model
 {
@@ -166,17 +167,6 @@ namespace TGC.Group.Model
         {
             //Device de DirectX para crear primitivas.
             var d3dDevice = D3DDevice.Instance.Device;
-            
-            //Textura de la carperta Media. Game.Default es un archivo de configuracion (Game.settings) util para poner cosas.
-            //Pueden abrir el Game.settings que se ubica dentro de nuestro proyecto para configurar.
-            var pathTexturaCaja = MediaDir + Game.Default.TexturaCaja;
-
-            //Cargamos una textura, tener en cuenta que cargar una textura significa crear una copia en memoria.
-            //Es importante cargar texturas en Init, si se hace en el render loop podemos tener grandes problemas si instanciamos muchas.
-            var texture = TgcTexture.createTexture(pathTexturaCaja);
-
-            //Internamente el framework construye la matriz de view con estos dos vectores.
-            //Luego en nuestro juego tendremos que crear una cámara que cambie la matriz de view con variables como movimientos o animaciones de escenas.
 
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
@@ -198,9 +188,9 @@ namespace TGC.Group.Model
             //hay muchas operaciones y la mayoria las maneja el manager de colisiones, con lo cual se esta
             //perdiendo el control de las transformaciones del personaje.
             //Escalarlo porque es muy grande
-            character.Scale = new Vector3(0.1f, 0.1f, 0.1f);
+            character.Scale = new TGCVector3(0.1f, 0.1f, 0.1f);
             //Lo ubicamos 
-            character.Position = new Vector3(10, -0.5f, 10);
+            character.Position = new TGCVector3(10, -0.5f, 10);
             character.UpdateMeshTransform();
             
             //BoundingSphere que va a usar el personaje
@@ -208,13 +198,6 @@ namespace TGC.Group.Model
             characterSphere = new TgcBoundingSphere(character.BoundingBox.calculateBoxCenter(), character.BoundingBox.calculateBoxRadius());
             characterBox = character.BoundingBox.clone();  
 
-            //Suelen utilizarse objetos que manejan el comportamiento de la camara.
-            //Lo que en realidad necesitamos gráficamente es una matriz de View.
-            //El framework maneja una cámara estática, pero debe ser inicializada.
-            //Posición de la camara.
-            var cameraPosition = new Vector3(0, 0, 125);
-            //Quiero que la camara mire hacia el origen (0,0,0).
-            var lookAt = Vector3.Empty;
             //Configuro donde esta la posicion de la camara y hacia donde mira.
             camara3rdPerson = new TgcThirdPersonCamera(character.Position,40,80);
             //var fpsCamara = new TGC.Group.Camera.TgcFpsCamera(cameraPosition,100,100,Input);
@@ -312,8 +295,8 @@ namespace TGC.Group.Model
 
             //Crear SkyBox
             skyBox = new TgcSkyBox();
-            skyBox.Center = new Vector3(0, 500, 0);
-            skyBox.Size = new Vector3(10000, 10000, 10000);
+            skyBox.Center = new TGCVector3(0, 500, 0);
+            skyBox.Size = new TGCVector3(10000, 10000, 10000);
             var texturesPath = MediaDir + "SkyBox1\\";
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
             skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
@@ -358,117 +341,117 @@ namespace TGC.Group.Model
             PitH pathPitH;
 
             //Paths horizontales
-            pathHorizontal = new Horizontal(new Vector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new TGCVector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new Vector3(100, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new Vector3(100, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new Vector3(100, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new Vector3(100, 20, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new TGCVector3(100, 20, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathHorizontal);
 
             //Paths verticales
-            pathVertical = new Vertical(new Vector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new Vector3(150, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(150, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new Vector3(150, 0, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(150, 0, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new Vector3(0, 20, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(0, 20, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new Vector3(150, 0, 400), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(150, 0, 400), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new Vector3(50, 20, 400), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(50, 20, 400), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathVertical);
             
             //Paths superior izquierdo
-            pathSuperiorLeft = new SuperiorLeft(new Vector3(0, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(0, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorLeft);
 
-            pathSuperiorLeft = new SuperiorLeft(new Vector3(0, 20, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(0, 20, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorLeft);
 
-            pathSuperiorLeft = new SuperiorLeft(new Vector3(50, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(50, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorLeft);
 
-            pathSuperiorLeft = new SuperiorLeft(new Vector3(50, 20, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(50, 20, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorLeft);
 
             //Paths superior derecho
-            pathSuperiorRight = new SuperiorRight(new Vector3(100, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorRight = new SuperiorRight(new TGCVector3(100, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorRight);
 
-            pathSuperiorRight = new SuperiorRight(new Vector3(200, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorRight = new SuperiorRight(new TGCVector3(200, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSuperiorRight);
 
             //Paths inferior izquierdo
-            pathInferiorLeft = new InferiorLeft(new Vector3(100, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorLeft = new InferiorLeft(new TGCVector3(100, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorLeft);
 
-            pathInferiorLeft = new InferiorLeft(new Vector3(50, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorLeft = new InferiorLeft(new TGCVector3(50, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorLeft);
 
             //Paths inferior derecho
-            pathInferiorRight = new InferiorRight(new Vector3(150, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new Vector3(50, 20, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new TGCVector3(50, 20, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new Vector3(200, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new TGCVector3(200, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new Vector3(150, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new Vector3(150, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathInferiorRight);
 
             //Path inicio
-            pathInicio = new Inicio(new Vector3(0, 0, -50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathInicio = new Inicio(new TGCVector3(0, 0, -50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathInicio);
 
             //Path fin
-            pathFin = new Fin(new Vector3(150, 0, 500), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathFin = new Fin(new TGCVector3(150, 0, 500), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathFin);
 
             //Paths que son fozas
-            pathPit = new Pit(new Vector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPit = new Pit(new TGCVector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPit = new Pit(new Vector3(200, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPit = new Pit(new TGCVector3(200, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPit = new Pit(new Vector3(150, 0, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPit = new Pit(new TGCVector3(150, 0, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPitH = new PitH(new Vector3(150, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPitH = new PitH(new TGCVector3(150, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPitH);
             Pits.Add(pathPitH);
 
-            pathPitH = new PitH(new Vector3(150, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPitH = new PitH(new TGCVector3(150, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPitH);
             Pits.Add(pathPitH);
 
             //Path lado izquierdo
-            pathSideLeft = new SideLeft(new Vector3(50, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSideLeft = new SideLeft(new TGCVector3(50, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSideLeft);
 
-            pathSideLeft = new SideLeft(new Vector3(100, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSideLeft = new SideLeft(new TGCVector3(100, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
             FullLevel.Add(pathSideLeft);
 #endregion
 
@@ -482,11 +465,11 @@ namespace TGC.Group.Model
 
             #region Plantas
             var basePlant = new TgcSceneLoader().loadSceneFromFile(MediaDir + "\\ArbolSelvatico\\ArbolSelvatico-TgcScene.xml").Meshes[0];
-            basePlant.Position = new Vector3(0, 0,-60);
-            basePlant.Scale = new Vector3(0.25f, 0.25f, 0.25f);
+            basePlant.Position = new TGCVector3(0, 0,-60);
+            basePlant.Scale = new TGCVector3(0.25f, 0.25f, 0.25f);
             var random = new Random();
             var ran = random.Next(1, 100);
-            basePlant.rotateY(ran);
+            basePlant.RotateY(ran);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -494,10 +477,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(50,0,-60);
+            basePlant.Position = new TGCVector3(50,0,-60);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f) ;
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f) ;
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -505,10 +488,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(100, 0, -30);
+            basePlant.Position = new TGCVector3(100, 0, -30);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -516,10 +499,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(-40, 0, 120);
+            basePlant.Position = new TGCVector3(-40, 0, 120);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -527,10 +510,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(-40, 0, 150);
+            basePlant.Position = new TGCVector3(-40, 0, 150);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -538,10 +521,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(-40, 0, -20);
+            basePlant.Position = new TGCVector3(-40, 0, -20);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -549,10 +532,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(170, 0, -25);
+            basePlant.Position = new TGCVector3(170, 0, -25);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -560,10 +543,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(235, 0, 5);
+            basePlant.Position = new TGCVector3(235, 0, 5);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -571,10 +554,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(230, 0, 50);
+            basePlant.Position = new TGCVector3(230, 0, 50);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -582,10 +565,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(275, 0, 225);
+            basePlant.Position = new TGCVector3(275, 0, 225);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -593,10 +576,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(275, 0, 275);
+            basePlant.Position = new TGCVector3(275, 0, 275);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -604,10 +587,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(270, 0, 335);
+            basePlant.Position = new TGCVector3(270, 0, 335);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -615,10 +598,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(20, 0, 320);
+            basePlant.Position = new TGCVector3(20, 0, 320);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -626,10 +609,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(25, 0, 380);
+            basePlant.Position = new TGCVector3(25, 0, 380);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -637,10 +620,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(240, 0, 480);
+            basePlant.Position = new TGCVector3(240, 0, 480);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -648,10 +631,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(-30, 0, 200);
+            basePlant.Position = new TGCVector3(-30, 0, 200);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -659,10 +642,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(130, 0, -55);
+            basePlant.Position = new TGCVector3(130, 0, -55);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -670,10 +653,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(220, 0, -40);
+            basePlant.Position = new TGCVector3(220, 0, -40);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -681,10 +664,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(300, 0, 300);
+            basePlant.Position = new TGCVector3(300, 0, 300);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -692,10 +675,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(20, 0, 440);
+            basePlant.Position = new TGCVector3(20, 0, 440);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -703,10 +686,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(35, 0, 480);
+            basePlant.Position = new TGCVector3(35, 0, 480);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -714,10 +697,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(175, 0, 575);
+            basePlant.Position = new TGCVector3(175, 0, 575);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -725,10 +708,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(20, 0, 495);
+            basePlant.Position = new TGCVector3(20, 0, 495);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -736,10 +719,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(40, 0, 535);
+            basePlant.Position = new TGCVector3(40, 0, 535);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -747,10 +730,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(80, 0, 515);
+            basePlant.Position = new TGCVector3(80, 0, 515);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -758,10 +741,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(125, 0, 525);
+            basePlant.Position = new TGCVector3(125, 0, 525);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -769,10 +752,10 @@ namespace TGC.Group.Model
             plantas.Add(basePlant);
 
             basePlant = basePlant.clone("a");
-            basePlant.Position = new Vector3(235, 0, 535);
+            basePlant.Position = new TGCVector3(235, 0, 535);
             ran = random.Next(20, 100);
-            basePlant.rotateY(ran);
-            basePlant.Scale = new Vector3(0.25f, 0.008f * ran, 0.25f);
+            basePlant.RotateY(ran);
+            basePlant.Scale = new TGCVector3(0.25f, 0.008f * ran, 0.25f);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
             basePlant.updateBoundingBox();
@@ -817,7 +800,7 @@ namespace TGC.Group.Model
             templos.Add(templo);
 
             terreno = new TgcSimpleTerrain();
-            terreno.loadHeightmap(MediaDir + "valle.jpg", 100, 6f, new Vector3 (0,-100,0));
+            terreno.loadHeightmap(MediaDir + "valle.jpg", 100, 6f, new TGCVector3(0,-100,0));
             terreno.loadTexture(MediaDir + "azgrssBig.jpg");
 
             //Sonidos Init
@@ -825,7 +808,7 @@ namespace TGC.Group.Model
             jumpSound.dispose();
             jumpSound.loadSound(MediaDir + "Mario_Jumping.wav", DirectSound.DsDevice);
 
-            jungleAmbience = new Tgc3dSound(MediaDir + "jungle.wav", new Vector3( 100, 100, 100) , DirectSound.DsDevice);
+            jungleAmbience = new Tgc3dSound(MediaDir + "jungle.wav", new TGCVector3( 100, 100, 100) , DirectSound.DsDevice);
             jungleAmbience.MinDistance = 120;
 
             walkSound = new TgcStaticSound();
@@ -836,7 +819,7 @@ namespace TGC.Group.Model
             takeBox.dispose();
             takeBox.loadSound(MediaDir + "door_wood_shake1.wav", DirectSound.DsDevice);//TODO: cambiar este sonido por uno mejor
 
-            cricketsSound = new Tgc3dSound(MediaDir + "crickets.wav", new Vector3(200, 0, 100), DirectSound.DsDevice);
+            cricketsSound = new Tgc3dSound(MediaDir + "crickets.wav", new TGCVector3(200, 0, 100), DirectSound.DsDevice);
             cricketsSound.MinDistance = 20;
 
             getalife = new TgcStaticSound();
@@ -914,13 +897,13 @@ namespace TGC.Group.Model
             #endregion
 
             //Logos de vida
-            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new Vector3(175,10,170));
+            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new TGCVector3(175,10,170));
             Lives.Add(live);
 
-            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new Vector3(80, 10, 335));
+            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new TGCVector3(80, 10, 335));
             Lives.Add(live);
 
-            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new Vector3(75, 30, 475));
+            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new TGCVector3(75, 30, 475));
             Lives.Add(live);
 
             //Particulas del personaje
@@ -929,7 +912,7 @@ namespace TGC.Group.Model
             walkEmitter.MinSizeParticle = 46f;
             walkEmitter.MaxSizeParticle = 56f;
             walkEmitter.Position = character.Position;
-            walkEmitter.Speed = new Vector3(0, 20, 0);
+            walkEmitter.Speed = new TGCVector3(0, 20, 0);
             walkEmitter.ParticleTimeToLive = 4f;
             walkEmitter.Dispersion = 1000;
             walkEmitter.Enabled = true;
@@ -939,8 +922,8 @@ namespace TGC.Group.Model
             fireEmitter.CreationFrecuency = 1f;
             fireEmitter.MinSizeParticle = 46f;
             fireEmitter.MaxSizeParticle = 56f;
-            fireEmitter.Position = new Vector3(25,0,-20);
-            fireEmitter.Speed = new Vector3(0, 20, 0);
+            fireEmitter.Position = new TGCVector3(25,0,-20);
+            fireEmitter.Speed = new TGCVector3(0, 20, 0);
             fireEmitter.ParticleTimeToLive = 4f;
             fireEmitter.Dispersion = 1000;
             fireEmitter.Enabled = true;
@@ -950,16 +933,16 @@ namespace TGC.Group.Model
             leafEmitter.CreationFrecuency = 1f;
             leafEmitter.MinSizeParticle = 46f;
             leafEmitter.MaxSizeParticle = 56f;
-            leafEmitter.Position = new Vector3(25, 200, -30);
-            leafEmitter.Speed = new Vector3(0, -20, 0);
+            leafEmitter.Position = new TGCVector3(25, 200, -30);
+            leafEmitter.Speed = new TGCVector3(0, -20, 0);
             leafEmitter.ParticleTimeToLive = 4f;
             leafEmitter.Dispersion = 1000;
             leafEmitter.Enabled = true;
             leafEmitter.Playing = true;
 
             fogata = new TgcSceneLoader().loadSceneFromFile(MediaDir + "\\Tripode\\Tripode-TgcScene.xml").Meshes[0];
-            fogata.Position = new Vector3(22, 0, -20);
-            fogata.Scale = new Vector3(0.04f, 0.04f, 0.04f);
+            fogata.Position = new TGCVector3(22, 0, -20);
+            fogata.Scale = new TGCVector3(0.04f, 0.04f, 0.04f);
             fogata.Enabled = true;
             fogata.UpdateMeshTransform();
 
@@ -1068,7 +1051,7 @@ namespace TGC.Group.Model
                 
             if (character.Position.Y < positionY - 20)
             {
-                character.move(new Vector3(character.Position.X, 0, character.Position.Z) - character.Position);
+                character.Move(new TGCVector3(character.Position.X, 0, character.Position.Z) - character.Position);
             }            
             
             if (rotating)
@@ -1077,7 +1060,7 @@ namespace TGC.Group.Model
                 var rotAngle = rotate * ElapsedTime;
                 camara3rdPerson.rotateY(rotAngle);
                 Camara = camara3rdPerson;
-                character.rotateY(rotAngle);
+                character.RotateY(rotAngle);
             }
             
             //Condiciones de derrota y victoria
@@ -1112,7 +1095,7 @@ namespace TGC.Group.Model
             //Acumuolamos tiempo para distintas tareas
             acumTime += ElapsedTime;
 
-            character.move(movementVector);
+            character.Move(new TGCVector3(movementVector));
             character.UpdateMeshTransform();
             
             //Vemos si cae en algun pozo
@@ -1121,7 +1104,7 @@ namespace TGC.Group.Model
                 if (pit.isInPit(character.Position))
                 {
                     lives -= 1;
-                    character.move(0, 0, -50);
+                    character.Move(0, 0, -50);
                     break;
                 }
             }
@@ -1162,11 +1145,11 @@ namespace TGC.Group.Model
             objectsBack.Clear();
             foreach(var mesh in walls)
             {
-                Vector3 q;
-                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new Vector3( character.Position.X, character.Position.Y + 5, character.Position.Z), mesh.BoundingBox, out q) || 
-                    TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new Vector3(character.Position.X, character.Position.Y + 50, character.Position.Z), mesh.BoundingBox, out q) ||
-                    TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new Vector3(character.Position.X + 5, character.Position.Y + 25, character.Position.Z + 5), mesh.BoundingBox, out q) ||
-                    TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new Vector3(character.Position.X - 5, character.Position.Y + 25, character.Position.Z - 5), mesh.BoundingBox, out q))
+                TGCVector3 q;
+                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new TGCVector3( character.Position.X, character.Position.Y + 5, character.Position.Z), mesh.BoundingBox, out q) || 
+                    TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new TGCVector3(character.Position.X, character.Position.Y + 50, character.Position.Z), mesh.BoundingBox, out q) ||
+                    TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new TGCVector3(character.Position.X + 5, character.Position.Y + 25, character.Position.Z + 5), mesh.BoundingBox, out q) ||
+                    TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new TGCVector3(character.Position.X - 5, character.Position.Y + 25, character.Position.Z - 5), mesh.BoundingBox, out q))
                 {
                     objectsBack.Add(mesh);
                 }
@@ -1179,6 +1162,8 @@ namespace TGC.Group.Model
             jungleAmbience.play(true);
 
             camara3rdPerson.Target = character.Position;
+
+            PostUpdate();
         }
 
         /// <summary>
@@ -1233,7 +1218,7 @@ namespace TGC.Group.Model
             boxesText.render();
 
             //Renderizo cielo
-            skyBox.render();
+            skyBox.Render();
 
             //Cajas renderizadas
             foreach (var box in Boxes)
@@ -1272,11 +1257,14 @@ namespace TGC.Group.Model
             candidatos.Clear();
 
             //Renderizo el camino
+            //TODO: Para que quede copado debo sumar un fog sino se ve feo
             foreach (var path in objectsFront)
             {
                 //Renderizar modelo con FrustumCulling
                 var r = TgcCollisionUtils.classifyFrustumAABB(Frustum, path.BoundingBox);
-                if (r != TgcCollisionUtils.FrustumResult.OUTSIDE)
+                var dif = path.Position - character.Position;
+                var dist = FastMath.Pow2(FastMath.Abs(dif.X)) + FastMath.Pow2(FastMath.Abs(dif.Y)) + FastMath.Pow2(FastMath.Abs(dif.Z));
+                if (r != TgcCollisionUtils.FrustumResult.OUTSIDE && dist <= 5625 )
                 {
                     candidatos.Add(path);
                 }
@@ -1284,10 +1272,10 @@ namespace TGC.Group.Model
 
             foreach (var path in candidatos)
             {
-                path.render();
+                path.Render();
             }
 
-            terreno.render();
+            //terreno.Render();
 
             drawer2D.BeginDrawSprite();
             drawer2D.DrawSprite(headHUD);
@@ -1304,7 +1292,7 @@ namespace TGC.Group.Model
                 walkEmitter.CreationFrecuency = 0.2f;
                 walkEmitter.MinSizeParticle = 0.6f;
                 walkEmitter.MaxSizeParticle = 1f;
-                walkEmitter.Speed = new Vector3(0, 5, 0);
+                walkEmitter.Speed = new TGCVector3(0, 5, 0);
                 walkEmitter.ParticleTimeToLive = 1f;
                 walkEmitter.Dispersion = 350;
                 walkEmitter.Position = character.Position;
@@ -1320,7 +1308,7 @@ namespace TGC.Group.Model
             fireEmitter.CreationFrecuency = 0.2f;
             fireEmitter.MinSizeParticle = 0.6f;
             fireEmitter.MaxSizeParticle = 1f;
-            fireEmitter.Speed = new Vector3(0, 5, 0);
+            fireEmitter.Speed = new TGCVector3(0, 5, 0);
             fireEmitter.ParticleTimeToLive = 1f;
             fireEmitter.Dispersion = 350;
             fireEmitter.Playing = true;
@@ -1330,14 +1318,14 @@ namespace TGC.Group.Model
             leafEmitter.CreationFrecuency = 0.2f;
             leafEmitter.MinSizeParticle = 0.3f;
             leafEmitter.MaxSizeParticle = 0.8f;
-            leafEmitter.Speed = new Vector3(2, -20, 4);
+            leafEmitter.Speed = new TGCVector3(2, -20, 4);
             leafEmitter.ParticleTimeToLive = 1f;
-            leafEmitter.Position = new Vector3( character.Position.X, character.Position.Y + 40, character.Position.Z);
+            leafEmitter.Position = new TGCVector3( character.Position.X, character.Position.Y + 40, character.Position.Z);
             leafEmitter.Dispersion = 1050;
             leafEmitter.Playing = true;
             leafEmitter.render(ElapsedTime);
 
-            fogata.render();
+            fogata.Render();
 
             device.EndScene();
 
@@ -1392,13 +1380,13 @@ namespace TGC.Group.Model
         /// </summary>
         public override void Dispose()
         {
-            character.dispose();
-            skyBox.dispose();
+            character.Dispose();
+            skyBox.Dispose();
 
             //Dispose de los caminos
             foreach(var path in FullLevel)
             {
-                path.dispose();
+                path.Dispose();
             }
 
             //Dispose de las torres

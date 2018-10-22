@@ -1,5 +1,6 @@
 ﻿using Microsoft.DirectX;
 using TGC.Core.Camara;
+using TGC.Core.Mathematica;
 
 namespace TGC.Examples.Camara
 {
@@ -65,7 +66,7 @@ namespace TGC.Examples.Camara
         {
             Vector3 targetCenter;
             CalculatePositionTarget(out position, out targetCenter);
-            SetCamera(position, targetCenter);
+            SetCamera(new TGCVector3(position), new TGCVector3(targetCenter));
         }
 
         /// <summary>

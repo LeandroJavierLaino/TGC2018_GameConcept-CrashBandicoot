@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TGC.Core.BoundingVolumes;
 using TGC.Core.Collision;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 
 namespace TGC.Group.Model
@@ -29,7 +30,7 @@ namespace TGC.Group.Model
         protected List<TgcMesh> columnsTops = new List<TgcMesh>();
 
         //Posicion a partir de la cual se ubica todo
-        new protected Vector3 position;
+        new protected TGCVector3 Position;
 
         public List<TgcMesh> getWalls()
         {
@@ -70,65 +71,65 @@ namespace TGC.Group.Model
             return allMeshesList;
         }
 
-        public Vector3 getPosition()
+        public TGCVector3 getPosition()
         {
-            return position;
+            return Position;
         }
 
-        public bool isInParcela(Vector3 player)
+        public bool isInParcela(TGCVector3 player)
         {
-            return position.X < player.X &&
-                position.Z < player.Z &&
-                position.X + 50 > player.X &&
-                position.Z + 50 > player.Z;
+            return Position.X < player.X &&
+                Position.Z < player.Z &&
+                Position.X + 50 > player.X &&
+                Position.Z + 50 > player.Z;
         }
 
-        public bool isInPit(Vector3 player)
+        public bool isInPit(TGCVector3 player)
         {
-            return position.X + 5 < player.X &&
-                    position.Z + 5 < player.Z &&
-                    position.X + 45 > player.X &&
-                    position.Z + 45 > player.Z &&
+            return Position.X + 5 < player.X &&
+                    Position.Z + 5 < player.Z &&
+                    Position.X + 45 > player.X &&
+                    Position.Z + 45 > player.Z &&
                     player.Y < 0;
         }
 
-        public void render()
+        public void Render()
         {
-            floor.render();
+            floor.Render();
 
             foreach(var plant in plants)
             {
-                plant.render();
+                plant.Render();
             }
 
             foreach (var column in columns)
             {
-                column.render();
+                column.Render();
             }
 
             foreach (var columnTop in columnsTops)
             {
-                columnTop.render();
+                columnTop.Render();
             }
         }
 
-        public void dispose()
+        public void Dispose()
         {
-            floor.dispose();
+            floor.Dispose();
 
             foreach (var plant in plants)
             {
-                plant.dispose();
+                plant.Dispose();
             }
 
             foreach (var column in columns)
             {
-                column.dispose();
+                column.Dispose();
             }
 
             foreach (var columnTop in columnsTops)
             {
-                columnTop.dispose();
+                columnTop.Dispose();
             }
         }
     }

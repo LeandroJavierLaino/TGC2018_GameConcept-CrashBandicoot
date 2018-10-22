@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TGC.Core.Geometry;
+using TGC.Core.Mathematica;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
@@ -14,7 +15,7 @@ namespace TGC.Group.Model
 {
     class Caja
     {
-        private TgcBox box { get; set; }
+        private TGCBox box { get; set; }
         private float OriginalPosYBox { get; set; }
         public bool BoxTaked { get; set; }
         public int boxQuantity = 0;
@@ -26,12 +27,12 @@ namespace TGC.Group.Model
         /// <param name="texturePath"></param>
         public Caja(Vector3 position, string texturePath)
         {
-            box = new TgcBox();
+            box = new TGCBox();
             box.setTexture(TgcTexture.createTexture(texturePath));
-            box.Size = new Vector3(3, 3, 3);
-            box.AutoTransformEnable = true;
+            box.Size = new TGCVector3(3, 3, 3);
+            box.AutoTransform = true;
             OriginalPosYBox = position.Y;
-            box.Position = position;
+            box.Position = new TGCVector3(position);
             BoxTaked = false;
             box.updateValues();
         }
@@ -70,7 +71,7 @@ namespace TGC.Group.Model
         /// </summary>
         public void render()
         {
-            if(!BoxTaked) box.render();
+            if(!BoxTaked) box.Render();
         }
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace TGC.Group.Model
         /// </summary>
         public void dispose()
         {
-            box.dispose();
+            box.Dispose();
         }
     }
 }

@@ -6,6 +6,7 @@ using TGC.Core.Camara;
 using TGC.Core.Direct3D;
 using TGC.Core.Input;
 using TGC.Core.Utils;
+using TGC.Core.Mathematica;
 
 namespace TGC.Group.Camera
 {
@@ -192,7 +193,7 @@ namespace TGC.Group.Camera
 
             if (collision) positionEye = lastMovPos;
 
-            base.SetCamera(positionEye, cameraFinalTarget, cameraRotatedUpVector);
+            base.SetCamera(new TGCVector3(positionEye), new TGCVector3(cameraFinalTarget), new TGCVector3(cameraRotatedUpVector));
             
         }
 
@@ -201,7 +202,7 @@ namespace TGC.Group.Camera
         /// </summary>
         /// <param name="position"></param>
         /// <param name="directionView"> debe ser normalizado.</param>
-        public override void SetCamera(Vector3 position, Vector3 directionView)
+        public override void SetCamera(TGCVector3 position, TGCVector3 directionView)
         {
             positionEye = position;
             this.directionView = directionView;

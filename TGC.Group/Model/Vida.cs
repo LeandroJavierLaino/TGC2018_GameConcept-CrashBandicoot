@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 
@@ -13,15 +14,15 @@ namespace TGC.Group.Model
     class Vida
     {
         private TgcMesh tgcBotHead { get; set; }
-        private Vector3 position { get; set; }
+        private TGCVector3 position { get; set; }
         public int liveQuantity { get; set; }
         private bool LiveTaked { get; set; }
 
-        public Vida(string modelPath, Vector3 newPosition)
+        public Vida(string modelPath, TGCVector3 newPosition)
         {
             tgcBotHead = new TgcSceneLoader().loadSceneFromFile(modelPath).Meshes[0];
             tgcBotHead.Position = newPosition;
-            tgcBotHead.Scale = new Vector3(0.15f, 0.15f, 0.15f);
+            tgcBotHead.Scale = new TGCVector3(0.15f, 0.15f, 0.15f);
             tgcBotHead.UpdateMeshTransform();
 
             liveQuantity = 0;
@@ -59,12 +60,12 @@ namespace TGC.Group.Model
 
         public void render()
         {
-           if(!LiveTaked) tgcBotHead.render();
+           if(!LiveTaked) tgcBotHead.Render();
         }
 
         public void dispose()
         {
-            tgcBotHead.dispose();
+            tgcBotHead.Dispose();
         }
     }
 }
