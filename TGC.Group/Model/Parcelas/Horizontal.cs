@@ -20,7 +20,7 @@ namespace TGC.Group.Model.Parcelas
             this.Position = Position;
 
             //Se define el terrno de la parcela
-            floor = new TgcPlane(Position, new TGCVector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4).toMesh("floor");
+            floor = new TgcPlane(Position, new TGCVector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4).toMesh("floorb");
 
             //Variable temporal que contiene el modelo
             var basePlant = new TgcSceneLoader().loadSceneFromFile(plantModel).Meshes[0];

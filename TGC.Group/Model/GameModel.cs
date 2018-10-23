@@ -25,6 +25,7 @@ using TGC.Core.Text;
 using TGC.Examples.Engine2D.Spaceship.Core;
 using TGC.Core.Particle;
 using TGC.Core.Mathematica;
+using TGC.Core.Fog;
 
 namespace TGC.Group.Model
 {
@@ -130,6 +131,10 @@ namespace TGC.Group.Model
         private ParticleEmitter fireEmitter;
         private ParticleEmitter leafEmitter;
         private TgcMesh fogata;
+
+        //Niebla
+        //private TgcFog fog;
+        //private Microsoft.DirectX.Direct3D.Effect effectFog;
 
         //Shader
         private Microsoft.DirectX.Direct3D.Effect Shader { get; set; }
@@ -946,6 +951,9 @@ namespace TGC.Group.Model
             fogata.Enabled = true;
             fogata.UpdateMeshTransform();
 
+            //Init de niebla
+            //effectFog = TgcShaders.loadEffect(ShadersDir + "TgcFogShader.fx");
+
             acumTime = 0;
         }
 
@@ -1264,7 +1272,7 @@ namespace TGC.Group.Model
                 var r = TgcCollisionUtils.classifyFrustumAABB(Frustum, path.BoundingBox);
                 var dif = path.Position - character.Position;
                 var dist = FastMath.Pow2(FastMath.Abs(dif.X)) + FastMath.Pow2(FastMath.Abs(dif.Y)) + FastMath.Pow2(FastMath.Abs(dif.Z));
-                if (r != TgcCollisionUtils.FrustumResult.OUTSIDE && dist <= 5625 )
+                if (r != TgcCollisionUtils.FrustumResult.OUTSIDE && dist <= 10000 )
                 {
                     candidatos.Add(path);
                 }
