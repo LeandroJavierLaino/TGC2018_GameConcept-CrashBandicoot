@@ -924,13 +924,14 @@ namespace TGC.Group.Model
             walkEmitter.Playing = true;
 
             fireEmitter = new ParticleEmitter(MediaDir + "fuego.png", 40);
-            fireEmitter.CreationFrecuency = 1f;
-            fireEmitter.MinSizeParticle = 46f;
-            fireEmitter.MaxSizeParticle = 56f;
+            fireEmitter.CreationFrecuency = 0.2f;
+            fireEmitter.MinSizeParticle = 0.6f;
+            fireEmitter.MaxSizeParticle = 1f;
             fireEmitter.Position = new TGCVector3(25,0,-20);
             fireEmitter.Speed = new TGCVector3(0, 20, 0);
             fireEmitter.ParticleTimeToLive = 4f;
-            fireEmitter.Dispersion = 1000;
+            fireEmitter.ParticleTimeToLive = 1f;
+            fireEmitter.Dispersion = 350;
             fireEmitter.Enabled = true;
             fireEmitter.Playing = true;
 
@@ -1122,9 +1123,14 @@ namespace TGC.Group.Model
 
             foreach(var path in FullLevel)
             {
-                foreach(var wall in path.getAllMeshes())
+                var dif = path.getPosition() - character.Position;
+                var dist = FastMath.Pow2(FastMath.Abs(dif.X)) + FastMath.Pow2(FastMath.Abs(dif.Y)) + FastMath.Pow2(FastMath.Abs(dif.Z));
+                if(dist <= 22500)
                 {
-                    walls.Add(wall);
+                    foreach (var wall in path.getAllMeshes())
+                    {
+                        walls.Add(wall);
+                    }
                 }
             }
 
@@ -1270,9 +1276,7 @@ namespace TGC.Group.Model
             {
                 //Renderizar modelo con FrustumCulling
                 var r = TgcCollisionUtils.classifyFrustumAABB(Frustum, path.BoundingBox);
-                var dif = path.Position - character.Position;
-                var dist = FastMath.Pow2(FastMath.Abs(dif.X)) + FastMath.Pow2(FastMath.Abs(dif.Y)) + FastMath.Pow2(FastMath.Abs(dif.Z));
-                if (r != TgcCollisionUtils.FrustumResult.OUTSIDE && dist <= 10000 )
+                if (r != TgcCollisionUtils.FrustumResult.OUTSIDE)
                 {
                     candidatos.Add(path);
                 }
@@ -1293,7 +1297,7 @@ namespace TGC.Group.Model
             //Sistema de particulas
             D3DDevice.Instance.ParticlesEnabled = true;
             D3DDevice.Instance.EnableParticles();
-
+            /*
             if (walk)
             {
                 walkEmitter.Enabled = true;
@@ -1309,19 +1313,10 @@ namespace TGC.Group.Model
             }
             if (!walk) walkEmitter.Playing = false;
 
-            walkEmitter.render(ElapsedTime);
-
+            walkEmitter.render(ElapsedTime);*/
             
-            fireEmitter.Enabled = true;
-            fireEmitter.CreationFrecuency = 0.2f;
-            fireEmitter.MinSizeParticle = 0.6f;
-            fireEmitter.MaxSizeParticle = 1f;
-            fireEmitter.Speed = new TGCVector3(0, 5, 0);
-            fireEmitter.ParticleTimeToLive = 1f;
-            fireEmitter.Dispersion = 350;
-            fireEmitter.Playing = true;
             fireEmitter.render(ElapsedTime);
-
+            /*
             leafEmitter.Enabled = true;
             leafEmitter.CreationFrecuency = 0.2f;
             leafEmitter.MinSizeParticle = 0.3f;
@@ -1331,7 +1326,7 @@ namespace TGC.Group.Model
             leafEmitter.Position = new TGCVector3( character.Position.X, character.Position.Y + 40, character.Position.Z);
             leafEmitter.Dispersion = 1050;
             leafEmitter.Playing = true;
-            leafEmitter.render(ElapsedTime);
+            leafEmitter.render(ElapsedTime);*/
 
             fogata.Render();
 
@@ -1357,6 +1352,9 @@ namespace TGC.Group.Model
             device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
             ShaderQuad.Begin(FX.None);
             ShaderQuad.BeginPass(0);
+            device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
+            ShaderQuad.EndPass();
+            ShaderQuad.BeginPass(1);
             device.DrawPrimitives(PrimitiveType.TriangleStrip, 0, 2);
             ShaderQuad.EndPass();
             ShaderQuad.End();
