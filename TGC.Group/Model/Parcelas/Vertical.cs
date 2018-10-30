@@ -23,7 +23,8 @@ namespace TGC.Group.Model.Parcelas
             this.Position = Position;
 
             //Se define el terrno de la parcela
-            floor = new TgcPlane(Position, new TGCVector3(50, 0, 50), TgcPlane.Orientations.XZplane, grassTexture, 4, 4).toMesh("floor");
+            var floor = new TgcPlane(Position, new TGCVector3(50, 0, 50), TgcPlane.Orientations.XZplane, grassTexture, 4, 4).toMesh("floor");
+            meshes.Add(floor);
 
             #region Plantas
             //Variable temporal que contiene el modelo
@@ -35,42 +36,42 @@ namespace TGC.Group.Model.Parcelas
             basePlant.RotateY(ran);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
-            plants.Add(basePlant);
+            meshes.Add(basePlant);
 
             basePlant = basePlant.clone("plantaizquierda2");
             basePlant.Position = new TGCVector3(Position.X + 5, Position.Y, Position.Z + 25);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            plants.Add(basePlant);
+            meshes.Add(basePlant);
 
             basePlant = basePlant.clone("plantaizquierda4");
             basePlant.Position = new TGCVector3(Position.X + 5, Position.Y, Position.Z + 5);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            plants.Add(basePlant);
+            meshes.Add(basePlant);
 
             basePlant = basePlant.clone("plantaderecha1");
             basePlant.Position = new TGCVector3(Position.X + 45, Position.Y, Position.Z + 45);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            plants.Add(basePlant);
+            meshes.Add(basePlant);
 
             basePlant = basePlant.clone("plantaderecha3");
             basePlant.Position = new TGCVector3(Position.X + 45, Position.Y, Position.Z + 25);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            plants.Add(basePlant);
+            meshes.Add(basePlant);
 
             basePlant = basePlant.clone("plantaderecha5");
             basePlant.Position = new TGCVector3(Position.X + 45, Position.Y, Position.Z + 5);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            plants.Add(basePlant);
+            meshes.Add(basePlant);
 
             #endregion
 
@@ -82,7 +83,7 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.Position = new TGCVector3(Position.X + 5, Position.Y, Position.Z);
             wallMesh.UpdateMeshTransform();
 
-            walls.Add(wallMesh);
+            meshes.Add(wallMesh);
 
             wallMesh = wallMesh.clone("WallVB");
 
@@ -90,7 +91,7 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.Position = new TGCVector3(Position.X + 45, Position.Y, Position.Z);
             wallMesh.UpdateMeshTransform();
 
-            walls.Add(wallMesh);
+            meshes.Add(wallMesh);
             #endregion
 
             #region Columnas
@@ -101,13 +102,13 @@ namespace TGC.Group.Model.Parcelas
                 Position = this.Position
             };
 
-            columns.AddRange(column.CreateColumn(columnTexture, TGCVector3.Empty));
+            meshes.AddRange(column.CreateColumn(columnTexture, TGCVector3.Empty));
 
-            columns.AddRange(column.CreateColumn(columnTexture, new TGCVector3(0, 0, 45)));
+            meshes.AddRange(column.CreateColumn(columnTexture, new TGCVector3(0, 0, 45)));
 
-            columns.AddRange(column.CreateColumn(columnTexture, new TGCVector3(45, 0, 0)));
+            meshes.AddRange(column.CreateColumn(columnTexture, new TGCVector3(45, 0, 0)));
 
-            columns.AddRange(column.CreateColumn(columnTexture, new TGCVector3(45, 0, 45)));
+            meshes.AddRange(column.CreateColumn(columnTexture, new TGCVector3(45, 0, 45)));
              #endregion
 
             //Tapas de columnas
@@ -116,22 +117,22 @@ namespace TGC.Group.Model.Parcelas
             wallMesh = baseWall.toMesh("TopColumn1");
             wallMesh.Position = new TGCVector3(Position.X, Position.Y + 20, Position.Z);
             wallMesh.UpdateMeshTransform();
-            columnsTops.Add(wallMesh);
+            meshes.Add(wallMesh);
 
             wallMesh = wallMesh.clone("TopColumn2");
             wallMesh.Position = new TGCVector3(Position.X + 45, Position.Y + 20, Position.Z);
             wallMesh.UpdateMeshTransform();
-            columnsTops.Add(wallMesh);
+            meshes.Add(wallMesh);
 
             wallMesh = wallMesh.clone("TopColumn3");
             wallMesh.Position = new TGCVector3(Position.X + 45, Position.Y + 20, Position.Z + 45);
             wallMesh.UpdateMeshTransform();
-            columnsTops.Add(wallMesh);
+            meshes.Add(wallMesh);
 
             wallMesh = wallMesh.clone("TopColumn4");
             wallMesh.Position = new TGCVector3(Position.X, Position.Y + 20, Position.Z + 45);
             wallMesh.UpdateMeshTransform();
-            columnsTops.Add(wallMesh);
+            meshes.Add(wallMesh);
 
         }
         

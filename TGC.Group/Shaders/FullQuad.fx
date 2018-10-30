@@ -166,7 +166,7 @@ float4 PSPostProcess(in float2 Tex : TEXCOORD0, in float2 vpos : VPOS) : COLOR0
     	//float cos2 = 1.0-min(sin2*sin2,1.0);
     	//float cos4 = cos2*cos2;
     	//c *= cos4;
-	float lensRadius = 1000;
+	float lensRadius = 800;
 	float2 pos = vpos - 0.5*float2(screen_dx,screen_dy);
 	pos /= lensRadius;
 
@@ -174,7 +174,7 @@ float4 PSPostProcess(in float2 Tex : TEXCOORD0, in float2 vpos : VPOS) : COLOR0
 	float cos2 = 1 - min(sin2*sin2,1);
 	float cos4 = cos2*cos2;
 	//ColorBase *= cos4 * float4(0,0.9,0,1);
-	ColorBase *= cos4;// *rand(vpos *time);
+	ColorBase *= cos4 *rand(vpos *time);
 
 	return ColorBase * 1.25;
 	
@@ -220,11 +220,6 @@ technique PostProcess
 	{
 		VertexShader = compile vs_3_0 VSCopy();
 		PixelShader = compile ps_3_0 PSPostProcess();
-	}
-	pass Pass_1
-	{
-		VertexShader = compile vs_3_0 VSCopy();
-		PixelShader = compile ps_3_0 PSPostProcessRain();
 	}
 }
 

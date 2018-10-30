@@ -14,62 +14,15 @@ namespace TGC.Group.Model
 {
     public class Parcela
     {
-        //Piso por el momento es simplemente un plano
-        protected TgcMesh floor;
-        
-        //Algo de vegetacion
-        protected List<TgcMesh> plants = new List<TgcMesh>();
-
-        //Paredes
-        protected List<TgcMesh> walls = new List<TgcMesh>();
-
-        //Columnas
-        protected List<TgcMesh> columns = new List<TgcMesh>();
-
-        //El tope de las columnas
-        protected List<TgcMesh> columnsTops = new List<TgcMesh>();
+        //guardo todos los meshes de la parcela (paredes, cajas, vegetacion, etc.)
+        protected List<TgcMesh> meshes = new List<TgcMesh>();
 
         //Posicion a partir de la cual se ubica todo
         protected TGCVector3 Position;
 
-        public List<TgcMesh> GetWalls()
-        {
-            return walls;
-        }
-
-        public List<TgcMesh> GetColumns()
-        {
-            return columns;
-        }
-
         public List<TgcMesh> GetAllMeshes()
         {
-            List<TgcMesh> allMeshesList = new List<TgcMesh>
-            {
-                floor
-            };
-
-            foreach (var plant in plants)
-            {
-                allMeshesList.Add(plant);
-            }
-
-            foreach (var wall in walls)
-            {
-                allMeshesList.Add(wall);
-            }
-
-            foreach (var column in columns)
-            {
-                allMeshesList.Add(column);
-            }
-
-            foreach (var column in columnsTops)
-            {
-                allMeshesList.Add(column);
-            }
-
-            return allMeshesList;
+            return meshes;
         }
 
         public TGCVector3 GetPosition()
@@ -96,41 +49,17 @@ namespace TGC.Group.Model
 
         public void Render()
         {
-            floor.Render();
-
-            foreach(var plant in plants)
+            foreach(var mesh in meshes)
             {
-                plant.Render();
-            }
-
-            foreach (var column in columns)
-            {
-                column.Render();
-            }
-
-            foreach (var columnTop in columnsTops)
-            {
-                columnTop.Render();
+                mesh.Render();
             }
         }
 
         public void Dispose()
         {
-            floor.Dispose();
-
-            foreach (var plant in plants)
+            foreach (var mesh in meshes)
             {
-                plant.Dispose();
-            }
-
-            foreach (var column in columns)
-            {
-                column.Dispose();
-            }
-
-            foreach (var columnTop in columnsTops)
-            {
-                columnTop.Dispose();
+                mesh.Dispose();
             }
         }
     }
