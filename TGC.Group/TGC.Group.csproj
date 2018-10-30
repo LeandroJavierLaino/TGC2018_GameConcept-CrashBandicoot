@@ -101,6 +101,7 @@
     <Compile Include="Model\Enviroment Objects\Temple.cs" />
     <Compile Include="Model\Enviroment Objects\Tower.cs" />
     <Compile Include="Model\GameModel.cs" />
+    <Compile Include="Model\Parcelas\Column.cs" />
     <Compile Include="Model\Parcelas\Fin.cs" />
     <Compile Include="Model\Parcelas\InferiorLeft.cs" />
     <Compile Include="Model\Parcelas\InferiorRight.cs" />

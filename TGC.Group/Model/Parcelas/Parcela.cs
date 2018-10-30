@@ -30,23 +30,24 @@ namespace TGC.Group.Model
         protected List<TgcMesh> columnsTops = new List<TgcMesh>();
 
         //Posicion a partir de la cual se ubica todo
-        new protected TGCVector3 Position;
+        protected TGCVector3 Position;
 
-        public List<TgcMesh> getWalls()
+        public List<TgcMesh> GetWalls()
         {
             return walls;
         }
 
-        public List<TgcMesh> getColumns()
+        public List<TgcMesh> GetColumns()
         {
             return columns;
         }
 
-        public List<TgcMesh> getAllMeshes()
+        public List<TgcMesh> GetAllMeshes()
         {
-            List<TgcMesh> allMeshesList = new List<TgcMesh>();
-
-            allMeshesList.Add(floor);
+            List<TgcMesh> allMeshesList = new List<TgcMesh>
+            {
+                floor
+            };
 
             foreach (var plant in plants)
             {
@@ -71,12 +72,12 @@ namespace TGC.Group.Model
             return allMeshesList;
         }
 
-        public TGCVector3 getPosition()
+        public TGCVector3 GetPosition()
         {
             return Position;
         }
 
-        public bool isInParcela(TGCVector3 player)
+        public bool IsInParcela(TGCVector3 player)
         {
             return Position.X < player.X &&
                 Position.Z < player.Z &&
@@ -84,7 +85,7 @@ namespace TGC.Group.Model
                 Position.Z + 50 > player.Z;
         }
 
-        public bool isInPit(TGCVector3 player)
+        public bool IsInPit(TGCVector3 player)
         {
             return Position.X + 5 < player.X &&
                     Position.Z + 5 < player.Z &&

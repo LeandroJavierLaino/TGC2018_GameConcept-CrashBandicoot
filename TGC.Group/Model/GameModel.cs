@@ -121,7 +121,7 @@ namespace TGC.Group.Model
         private float acumTime;
 
         //Skybox
-        private TgcSkyBox skyBox { get; set; }
+        private TgcSkyBox SkyBox { get; set; }
 
         //Ambiente
         private TgcSimpleTerrain terreno;
@@ -140,6 +140,8 @@ namespace TGC.Group.Model
         private Microsoft.DirectX.Direct3D.Effect Shader { get; set; }
         private List<TgcMesh> meshToShade = new List<TgcMesh>();
         private Microsoft.DirectX.Direct3D.Effect ShaderQuad { get; set; }
+        public bool Walk { get => walk; set => walk = value; }
+        public bool Walk1 { get => walk; set => walk = value; }
 
         //Full Quad 
         CustomVertex.PositionTextured[] screenQuadVertices =
@@ -299,17 +301,19 @@ namespace TGC.Group.Model
             #endregion
 
             //Crear SkyBox
-            skyBox = new TgcSkyBox();
-            skyBox.Center = new TGCVector3(0, 500, 0);
-            skyBox.Size = new TGCVector3(10000, 10000, 10000);
+            SkyBox = new TgcSkyBox
+            {
+                Center = new TGCVector3(0, 500, 0),
+                Size = new TGCVector3(10000, 10000, 10000)
+            };
             var texturesPath = MediaDir + "SkyBox1\\";
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
-            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
-            skyBox.Init();
+            SkyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "phobos_up.jpg");
+            SkyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "phobos_dn.jpg");
+            SkyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "phobos_lf.jpg");
+            SkyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "phobos_rt.jpg");
+            SkyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "phobos_bk.jpg");
+            SkyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "phobos_ft.jpg");
+            SkyBox.Init();
 
             //Shaders
             Shader = TGC.Core.Shaders.TgcShaders.loadEffect(ShadersDir + "TgcMeshShader.fx");
@@ -345,52 +349,62 @@ namespace TGC.Group.Model
             SideLeft pathSideLeft;
             PitH pathPitH;
 
+            //Modelo de planta
+            var plantModel = new TgcSceneLoader().loadSceneFromFile(MediaDir + "Planta\\Planta-TgcScene.xml").Meshes[0];
+
+            //Texturas 
+            var wallTexture = TgcTexture.createTexture(MediaDir + "azwallAmoss.jpg");
+            var grassTexture = TgcTexture.createTexture(MediaDir + "azgrss.jpg");
+            var poleTexture = TgcTexture.createTexture(MediaDir + "az_pole01.jpg");
+            var topTexture = TgcTexture.createTexture(MediaDir + "AzStatB.jpg");
+
             //Paths horizontales
-            pathHorizontal = new Horizontal(new TGCVector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new TGCVector3(50,0,50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new TGCVector3(100, 20, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathHorizontal = new Horizontal(new TGCVector3(100, 20, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathHorizontal);
 
-            //Paths verticales
-            pathVertical = new Vertical(new TGCVector3(0, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            //Paths verticales            
+
+            pathVertical = new Vertical(new TGCVector3(0, 0, 0), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new TGCVector3(150, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(150, 0, 50), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new TGCVector3(150, 0, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(150, 0, 150), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new TGCVector3(0, 20, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(0, 20, 100), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new TGCVector3(150, 0, 400), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(150, 0, 400), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new TGCVector3(50, 20, 400), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathVertical = new Vertical(new TGCVector3(50, 20, 400), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
             FullLevel.Add(pathVertical);
             
             //Paths superior izquierdo
-            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(0, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(0, 0, 50), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathSuperiorLeft);
 
-            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(0, 20, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(0, 20, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathSuperiorLeft);
 
-            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(50, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(50, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathSuperiorLeft);
 
-            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(50, 20, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(50, 20, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathSuperiorLeft);
 
             //Paths superior derecho
@@ -401,26 +415,26 @@ namespace TGC.Group.Model
             FullLevel.Add(pathSuperiorRight);
 
             //Paths inferior izquierdo
-            pathInferiorLeft = new InferiorLeft(new TGCVector3(100, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorLeft = new InferiorLeft(new TGCVector3(100, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathInferiorLeft);
 
-            pathInferiorLeft = new InferiorLeft(new TGCVector3(50, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorLeft = new InferiorLeft(new TGCVector3(50, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathInferiorLeft);
 
             //Paths inferior derecho
-            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 0), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new TGCVector3(50, 20, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new TGCVector3(50, 20, 150), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new TGCVector3(200, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new TGCVector3(200, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 350), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathInferiorRight);
 
             //Path inicio
@@ -453,16 +467,16 @@ namespace TGC.Group.Model
             Pits.Add(pathPitH);
 
             //Path lado izquierdo
-            pathSideLeft = new SideLeft(new TGCVector3(50, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSideLeft = new SideLeft(new TGCVector3(50, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathSideLeft);
 
-            pathSideLeft = new SideLeft(new TGCVector3(100, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", MediaDir + "Planta\\Planta-TgcScene.xml");
+            pathSideLeft = new SideLeft(new TGCVector3(100, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg", plantModel);
             FullLevel.Add(pathSideLeft);
 #endregion
 
             foreach (var path in FullLevel)
             {
-                foreach(var wall in path.getAllMeshes())
+                foreach(var wall in path.GetAllMeshes())
                 {
                     meshToShade.Add(wall);
                 }
@@ -813,8 +827,10 @@ namespace TGC.Group.Model
             jumpSound.dispose();
             jumpSound.loadSound(MediaDir + "Mario_Jumping.wav", DirectSound.DsDevice);
 
-            jungleAmbience = new Tgc3dSound(MediaDir + "jungle.wav", new TGCVector3( 100, 100, 100) , DirectSound.DsDevice);
-            jungleAmbience.MinDistance = 120;
+            jungleAmbience = new Tgc3dSound(MediaDir + "jungle.wav", new TGCVector3(100, 100, 100), DirectSound.DsDevice)
+            {
+                MinDistance = 120
+            };
 
             walkSound = new TgcStaticSound();
             walkSound.dispose();
@@ -824,8 +840,10 @@ namespace TGC.Group.Model
             takeBox.dispose();
             takeBox.loadSound(MediaDir + "door_wood_shake1.wav", DirectSound.DsDevice);//TODO: cambiar este sonido por uno mejor
 
-            cricketsSound = new Tgc3dSound(MediaDir + "crickets.wav", new TGCVector3(200, 0, 100), DirectSound.DsDevice);
-            cricketsSound.MinDistance = 20;
+            cricketsSound = new Tgc3dSound(MediaDir + "crickets.wav", new TGCVector3(200, 0, 100), DirectSound.DsDevice)
+            {
+                MinDistance = 20
+            };
 
             getalife = new TgcStaticSound();
             getalife.dispose();
@@ -881,8 +899,10 @@ namespace TGC.Group.Model
             drawer2D = new Drawer2D();
 
             //Head
-            headHUD = new CustomSprite();
-            headHUD.Bitmap = new CustomBitmap(MediaDir + "\\head.png", D3DDevice.Instance.Device);
+            headHUD = new CustomSprite
+            {
+                Bitmap = new CustomBitmap(MediaDir + "\\head.png", D3DDevice.Instance.Device)
+            };
 
             livesText = new TgcText2D();
             livesText.changeFont(new System.Drawing.Font(Fonts.Families[1], 55));
@@ -891,8 +911,10 @@ namespace TGC.Group.Model
             livesText.Position = new Point((int) (D3DDevice.Instance.Width * 0.35f) , (int)(D3DDevice.Instance.Height * 0.75f) );
 
             //Box
-            boxHUD = new CustomSprite();
-            boxHUD.Bitmap = new CustomBitmap(MediaDir + "\\box.png", D3DDevice.Instance.Device);
+            boxHUD = new CustomSprite
+            {
+                Bitmap = new CustomBitmap(MediaDir + "\\box.png", D3DDevice.Instance.Device)
+            };
 
             boxesText = new TgcText2D();
             boxesText.changeFont(new System.Drawing.Font(Fonts.Families[1], 55));
@@ -912,39 +934,45 @@ namespace TGC.Group.Model
             Lives.Add(live);
 
             //Particulas del personaje
-            walkEmitter = new ParticleEmitter(MediaDir + "pisada.png", 40);
-            walkEmitter.CreationFrecuency = 1f;
-            walkEmitter.MinSizeParticle = 46f;
-            walkEmitter.MaxSizeParticle = 56f;
-            walkEmitter.Position = character.Position;
-            walkEmitter.Speed = new TGCVector3(0, 20, 0);
-            walkEmitter.ParticleTimeToLive = 4f;
-            walkEmitter.Dispersion = 1000;
-            walkEmitter.Enabled = true;
-            walkEmitter.Playing = true;
+            walkEmitter = new ParticleEmitter(MediaDir + "pisada.png", 40)
+            {
+                CreationFrecuency = 1f,
+                MinSizeParticle = 46f,
+                MaxSizeParticle = 56f,
+                Position = character.Position,
+                Speed = new TGCVector3(0, 20, 0),
+                ParticleTimeToLive = 4f,
+                Dispersion = 1000,
+                Enabled = true,
+                Playing = true
+            };
 
-            fireEmitter = new ParticleEmitter(MediaDir + "fuego.png", 40);
-            fireEmitter.CreationFrecuency = 0.2f;
-            fireEmitter.MinSizeParticle = 0.6f;
-            fireEmitter.MaxSizeParticle = 1f;
-            fireEmitter.Position = new TGCVector3(25,0,-20);
-            fireEmitter.Speed = new TGCVector3(0, 20, 0);
-            fireEmitter.ParticleTimeToLive = 4f;
+            fireEmitter = new ParticleEmitter(MediaDir + "fuego.png", 40)
+            {
+                CreationFrecuency = 0.2f,
+                MinSizeParticle = 0.6f,
+                MaxSizeParticle = 1f,
+                Position = new TGCVector3(25, 0, -20),
+                Speed = new TGCVector3(0, 20, 0),
+                ParticleTimeToLive = 4f
+            };
             fireEmitter.ParticleTimeToLive = 1f;
             fireEmitter.Dispersion = 350;
             fireEmitter.Enabled = true;
             fireEmitter.Playing = true;
 
-            leafEmitter = new ParticleEmitter(MediaDir + "hoja.png", 140);
-            leafEmitter.CreationFrecuency = 1f;
-            leafEmitter.MinSizeParticle = 46f;
-            leafEmitter.MaxSizeParticle = 56f;
-            leafEmitter.Position = new TGCVector3(25, 200, -30);
-            leafEmitter.Speed = new TGCVector3(0, -20, 0);
-            leafEmitter.ParticleTimeToLive = 4f;
-            leafEmitter.Dispersion = 1000;
-            leafEmitter.Enabled = true;
-            leafEmitter.Playing = true;
+            leafEmitter = new ParticleEmitter(MediaDir + "hoja.png", 140)
+            {
+                CreationFrecuency = 1f,
+                MinSizeParticle = 46f,
+                MaxSizeParticle = 56f,
+                Position = new TGCVector3(25, 200, -30),
+                Speed = new TGCVector3(0, -20, 0),
+                ParticleTimeToLive = 4f,
+                Dispersion = 1000,
+                Enabled = true,
+                Playing = true
+            };
 
             fogata = new TgcSceneLoader().loadSceneFromFile(MediaDir + "\\Tripode\\Tripode-TgcScene.xml").Meshes[0];
             fogata.Position = new TGCVector3(22, 0, -20);
@@ -983,7 +1011,7 @@ namespace TGC.Group.Model
             float rotate = 0;
             bool moving = false;
             bool rotating = false;
-            walk = false;
+            Walk = false;
             
             float jump = 0;
 
@@ -997,7 +1025,7 @@ namespace TGC.Group.Model
             if (Input.keyDown(Key.W))
             {
                 moveForward = -velocity;
-                walk = true;
+                Walk = true;
                 moving = true;
             }
 
@@ -1005,7 +1033,7 @@ namespace TGC.Group.Model
             if (Input.keyDown(Key.S))
             {
                 moveForward = velocity;
-                walk = true;
+                Walk = true;
                 moving = true;
             }
 
@@ -1027,13 +1055,13 @@ namespace TGC.Group.Model
             //Jump
             foreach(var path in FullLevel)
             {
-                if (path.isInParcela(character.Position))
+                if (path.IsInParcela(character.Position))
                 {
                     parcelaCol = path;
                 }
             }
 
-            positionY = parcelaCol.getPosition().Y;
+            positionY = parcelaCol.GetPosition().Y;
 
             if (Input.keyPressed(Key.Space) && jump == 0)
             {
@@ -1110,7 +1138,7 @@ namespace TGC.Group.Model
             //Vemos si cae en algun pozo
             foreach (var pit in Pits)
             {
-                if (pit.isInPit(character.Position))
+                if (pit.IsInPit(character.Position))
                 {
                     lives -= 1;
                     character.Move(0, 0, -50);
@@ -1123,11 +1151,11 @@ namespace TGC.Group.Model
 
             foreach(var path in FullLevel)
             {
-                var dif = path.getPosition() - character.Position;
+                var dif = path.GetPosition() - character.Position;
                 var dist = FastMath.Pow2(FastMath.Abs(dif.X)) + FastMath.Pow2(FastMath.Abs(dif.Y)) + FastMath.Pow2(FastMath.Abs(dif.Z));
                 if(dist <= 22500)
                 {
-                    foreach (var wall in path.getAllMeshes())
+                    foreach (var wall in path.GetAllMeshes())
                     {
                         walls.Add(wall);
                     }
@@ -1159,8 +1187,7 @@ namespace TGC.Group.Model
             objectsBack.Clear();
             foreach(var mesh in walls)
             {
-                TGCVector3 q;
-                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new TGCVector3( character.Position.X, character.Position.Y + 5, character.Position.Z), mesh.BoundingBox, out q) || 
+                if (TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new TGCVector3(character.Position.X, character.Position.Y + 5, character.Position.Z), mesh.BoundingBox, out TGCVector3 q) ||
                     TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new TGCVector3(character.Position.X, character.Position.Y + 50, character.Position.Z), mesh.BoundingBox, out q) ||
                     TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new TGCVector3(character.Position.X + 5, character.Position.Y + 25, character.Position.Z + 5), mesh.BoundingBox, out q) ||
                     TgcCollisionUtils.intersectSegmentAABB(Camara.Position, new TGCVector3(character.Position.X - 5, character.Position.Y + 25, character.Position.Z - 5), mesh.BoundingBox, out q))
@@ -1232,7 +1259,7 @@ namespace TGC.Group.Model
             boxesText.render();
 
             //Renderizo cielo
-            skyBox.Render();
+            SkyBox.Render();
 
             //Cajas renderizadas
             foreach (var box in Boxes)
@@ -1387,7 +1414,7 @@ namespace TGC.Group.Model
         public override void Dispose()
         {
             character.Dispose();
-            skyBox.Dispose();
+            SkyBox.Dispose();
 
             //Dispose de los caminos
             foreach(var path in FullLevel)
