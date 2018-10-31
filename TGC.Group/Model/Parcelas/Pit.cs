@@ -14,13 +14,15 @@ namespace TGC.Group.Model.Parcelas
     public class Pit : Parcela
     {
         
-        public Pit(TGCVector3 newPosition, string grassTexture, string wallTexture, string columnTexture, string topTexture)
+        public Pit(TGCVector3 newPosition, TgcPlane grassPlane, string wallTexture, string columnTexture, string topTexture)
         {
             this.Position = newPosition;
 
             //Se define el terrno de la parcela
-            var floor = new TgcPlane(new TGCVector3(newPosition.X, newPosition.Y - 20, newPosition.Z), new TGCVector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4).toMesh("floor");
-            meshes.Add(floor);
+            var grassMesh = grassPlane.toMesh("floor");
+            grassMesh.Position = new TGCVector3(this.Position.X, this.Position.Y - 20, this.Position.Z) ;
+            grassMesh.Transform = TGCMatrix.Translation(grassMesh.Position);
+            meshes.Add(grassMesh);
 
             //Armamos muros a partir de un Plano y lo convertimos a Mesh
             var baseTriangleWallH = new TgcPlane(new TGCVector3(), new TGCVector3(50, 20.62f, 0), TgcPlane.Orientations.XYplane, TgcTexture.createTexture(wallTexture), 2, 1);

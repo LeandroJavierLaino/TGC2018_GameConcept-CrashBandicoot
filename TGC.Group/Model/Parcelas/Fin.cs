@@ -13,13 +13,15 @@ namespace TGC.Group.Model.Parcelas
 {
     class Fin : Parcela
     {
-        public Fin(TGCVector3 Position, string grassTexture, string wallTexture, string columnTexture, string topTexture)
+        public Fin(TGCVector3 Position, TgcPlane grassPlane, string wallTexture, string columnTexture, string topTexture)
         {
             this.Position = Position;
 
             //Se define el terrno de la parcela
-            var floor = new TgcPlane(Position, new TGCVector3(50, 0, 50), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(grassTexture), 4, 4).toMesh("floor");
-            meshes.Add(floor);
+            var grassMesh = grassPlane.toMesh("floor");
+            grassMesh.Position = this.Position;
+            grassMesh.Transform = TGCMatrix.Translation(grassMesh.Position);
+            meshes.Add(grassMesh);
 
             #region Paredes
             var baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20f, 50), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(wallTexture), 2, 1);

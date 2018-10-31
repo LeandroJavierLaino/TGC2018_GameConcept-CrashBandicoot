@@ -357,119 +357,127 @@ namespace TGC.Group.Model
             var poleTexture = TgcTexture.createTexture(MediaDir + "az_pole01.jpg");
             var topTexture = TgcTexture.createTexture(MediaDir + "AzStatB.jpg");
 
+            //Planos
+            var top = new TgcPlane(TGCVector3.Empty, new TGCVector3(5, 0, 5), TgcPlane.Orientations.XZplane, topTexture, 1, 1);
+            var wallPlaneX = new TgcPlane(TGCVector3.Empty, new TGCVector3(0, 20.62f, 50), TgcPlane.Orientations.YZplane, wallTexture, 2, 1);
+            var wallPlaneZ = new TgcPlane(TGCVector3.Empty, new TGCVector3(50, 20.62f, 0), TgcPlane.Orientations.XYplane, wallTexture, 2, 1);
+            var grassPlane = new TgcPlane(TGCVector3.Empty, new TGCVector3(50, 0, 50), TgcPlane.Orientations.XZplane, grassTexture, 4, 4);
+            var columnPlaneX = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20, 5), TgcPlane.Orientations.YZplane, poleTexture, 1, 1);
+            var columnPlaneZ = new TgcPlane(new TGCVector3(), new TGCVector3(5, 20, 0), TgcPlane.Orientations.XYplane, poleTexture, 1, 1);
+
             //Paths horizontales
-            pathHorizontal = new Horizontal(new TGCVector3(50,0,50), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathHorizontal = new Horizontal(new TGCVector3(50,0,50), grassPlane, wallPlaneZ, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 200), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 200), grassPlane, wallPlaneZ, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 300), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 300), grassPlane, wallPlaneZ, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 350), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathHorizontal = new Horizontal(new TGCVector3(100, 0, 350), grassPlane, wallPlaneZ, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathHorizontal);
 
-            pathHorizontal = new Horizontal(new TGCVector3(100, 20, 450), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathHorizontal = new Horizontal(new TGCVector3(100, 20, 450), grassPlane, wallPlaneZ, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathHorizontal);
 
             //Paths verticales            
 
-            pathVertical = new Vertical(new TGCVector3(0, 0, 0), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathVertical = new Vertical(new TGCVector3(0, 0, 0), grassPlane, wallPlaneX, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new TGCVector3(150, 0, 50), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathVertical = new Vertical(new TGCVector3(150, 0, 50), grassPlane, wallPlaneX, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new TGCVector3(150, 0, 150), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathVertical = new Vertical(new TGCVector3(150, 0, 150), grassPlane, wallPlaneX, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new TGCVector3(0, 20, 100), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathVertical = new Vertical(new TGCVector3(0, 20, 100), grassPlane, wallPlaneX, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new TGCVector3(150, 0, 400), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathVertical = new Vertical(new TGCVector3(150, 0, 400), grassPlane, wallPlaneX, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathVertical);
 
-            pathVertical = new Vertical(new TGCVector3(50, 20, 400), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathVertical = new Vertical(new TGCVector3(50, 20, 400), grassPlane, wallPlaneX, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathVertical);
             
             //Paths superior izquierdo
-            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(0, 0, 50), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(0, 0, 50), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathSuperiorLeft);
 
-            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(0, 20, 150), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(0, 20, 150), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathSuperiorLeft);
 
-            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(50, 0, 350), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(50, 0, 350), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathSuperiorLeft);
 
-            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(50, 20, 450), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathSuperiorLeft = new SuperiorLeft(new TGCVector3(50, 20, 450), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathSuperiorLeft);
 
             //Paths superior derecho
-            pathSuperiorRight = new SuperiorRight(new TGCVector3(100, 0, 50), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathSuperiorRight = new SuperiorRight(new TGCVector3(100, 0, 50), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathSuperiorRight);
 
-            pathSuperiorRight = new SuperiorRight(new TGCVector3(200, 0, 300), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathSuperiorRight = new SuperiorRight(new TGCVector3(200, 0, 300), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathSuperiorRight);
 
             //Paths inferior izquierdo
-            pathInferiorLeft = new InferiorLeft(new TGCVector3(100, 0, 0), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathInferiorLeft = new InferiorLeft(new TGCVector3(100, 0, 0), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathInferiorLeft);
 
-            pathInferiorLeft = new InferiorLeft(new TGCVector3(50, 0, 300), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathInferiorLeft = new InferiorLeft(new TGCVector3(50, 0, 300), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathInferiorLeft);
 
             //Paths inferior derecho
-            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 0), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 0), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new TGCVector3(50, 20, 150), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathInferiorRight = new InferiorRight(new TGCVector3(50, 20, 150), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new TGCVector3(200, 0, 200), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathInferiorRight = new InferiorRight(new TGCVector3(200, 0, 200), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 250), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 250), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathInferiorRight);
 
-            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 350), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathInferiorRight = new InferiorRight(new TGCVector3(150, 0, 350), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathInferiorRight);
 
             //Path inicio
-            pathInicio = new Inicio(new TGCVector3(0, 0, -50), grassTexture, wallTexture, poleTexture, topTexture);
+            pathInicio = new Inicio(new TGCVector3(0, 0, -50), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top);
             FullLevel.Add(pathInicio);
 
             //Path fin
-            pathFin = new Fin(new TGCVector3(150, 0, 500), MediaDir + "azgrss.jpg", MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathFin = new Fin(new TGCVector3(150, 0, 500), grassPlane, MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathFin);
 
             //Paths que son fozas
-            pathPit = new Pit(new TGCVector3(150, 0, 100), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPit = new Pit(new TGCVector3(150, 0, 100), grassPlane, MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPit = new Pit(new TGCVector3(200, 0, 250), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPit = new Pit(new TGCVector3(200, 0, 250), grassPlane, MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPit = new Pit(new TGCVector3(150, 0, 450), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPit = new Pit(new TGCVector3(150, 0, 450), grassPlane, MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPitH = new PitH(new TGCVector3(150, 0, 200), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPitH = new PitH(new TGCVector3(150, 0, 200), grassPlane, MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPitH);
             Pits.Add(pathPitH);
 
-            pathPitH = new PitH(new TGCVector3(150, 0, 300), MediaDir + "azgrss.jpg", MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPitH = new PitH(new TGCVector3(150, 0, 300), grassPlane, MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
             FullLevel.Add(pathPitH);
             Pits.Add(pathPitH);
 
             //Path lado izquierdo
-            pathSideLeft = new SideLeft(new TGCVector3(50, 0, 200), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathSideLeft = new SideLeft(new TGCVector3(50, 0, 200), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathSideLeft);
 
-            pathSideLeft = new SideLeft(new TGCVector3(100, 0, 250), grassTexture, wallTexture, poleTexture, topTexture, plantModel);
+            pathSideLeft = new SideLeft(new TGCVector3(100, 0, 250), grassPlane, wallTexture, columnPlaneX, columnPlaneZ, top, plantModel);
             FullLevel.Add(pathSideLeft);
 #endregion
 

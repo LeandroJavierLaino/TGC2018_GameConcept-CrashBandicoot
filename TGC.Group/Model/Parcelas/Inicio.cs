@@ -14,13 +14,15 @@ namespace TGC.Group.Model.Parcelas
 {
     class Inicio : Parcela
     {
-        public Inicio(TGCVector3 Position, TgcTexture grassTexture, TgcTexture wallTexture, TgcTexture columnTexture, TgcTexture topTexture)
+        public Inicio(TGCVector3 Position, TgcPlane grassPlane, TgcTexture wallTexture, TgcPlane columnPlaneX, TgcPlane columnPlaneZ, TgcPlane topPlane)
         {
             this.Position = Position;
 
             //Se define el terrno de la parcela
-            var floor = new TgcPlane(Position, new TGCVector3(50, 0, 50), TgcPlane.Orientations.XZplane, grassTexture, 4, 4).toMesh("floor");
-            meshes.Add(floor);
+            var grassMesh = grassPlane.toMesh("floor");
+            grassMesh.Position = this.Position;
+            grassMesh.Transform = TGCMatrix.Translation(grassMesh.Position);
+            meshes.Add(grassMesh);
 
             #region Paredes
             var baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20f, 50), TgcPlane.Orientations.YZplane, wallTexture, 2, 1);
@@ -62,18 +64,18 @@ namespace TGC.Group.Model.Parcelas
                 Position = this.Position
             };
 
-            meshes.AddRange(column.CreateColumn(columnTexture, TGCVector3.Empty));
+            meshes.AddRange(column.CreateColumn(columnPlaneX, columnPlaneZ, TGCVector3.Empty));
 
-            meshes.AddRange(column.CreateColumn(columnTexture, new TGCVector3(0, 0, 45)));
+            meshes.AddRange(column.CreateColumn(columnPlaneX, columnPlaneZ, new TGCVector3(0, 0, 45)));
 
-            meshes.AddRange(column.CreateColumn(columnTexture, new TGCVector3(45, 0, 0)));
+            meshes.AddRange(column.CreateColumn(columnPlaneX, columnPlaneZ, new TGCVector3(45, 0, 0)));
 
-            meshes.AddRange(column.CreateColumn(columnTexture, new TGCVector3(45, 0, 45)));
+            meshes.AddRange(column.CreateColumn(columnPlaneX, columnPlaneZ, new TGCVector3(45, 0, 45)));
             #endregion
 
             //Tapas de columnas
-            baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(5, 0, 5), TgcPlane.Orientations.XZplane, topTexture, 1, 1);
-            
+            baseWall = topPlane;
+
             wallMesh = baseWall.toMesh("TopColumn3");
             wallMesh.Position = new TGCVector3(Position.X + 45, Position.Y + 20, Position.Z + 45);
             wallMesh.UpdateMeshTransform();
