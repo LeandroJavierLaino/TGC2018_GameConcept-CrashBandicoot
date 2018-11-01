@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TGC.Core.Geometry;
 using TGC.Core.Mathematica;
+using TGC.Core.SceneLoader;
 using TGC.Core.Shaders;
 using TGC.Core.Textures;
 using TGC.Core.Utils;
@@ -15,7 +16,7 @@ namespace TGC.Group.Model
 {
     class Caja
     {
-        private TGCBox box { get; set; }
+        private TgcMesh Box { get; set; }
         private float OriginalPosYBox { get; set; }
         public bool BoxTaked { get; set; }
         public int boxQuantity = 0;
@@ -25,31 +26,26 @@ namespace TGC.Group.Model
         /// </summary>
         /// <param name="position"></param>
         /// <param name="texturePath"></param>
-        public Caja(Vector3 position, string texturePath)
+        public Caja(TGCVector3 position, TgcMesh boxMesh)
         {
-            box = new TGCBox();
-            box.setTexture(TgcTexture.createTexture(texturePath));
-            box.Size = new TGCVector3(3, 3, 3);
-            box.AutoTransform = true;
-            OriginalPosYBox = position.Y;
-            box.Position = new TGCVector3(position);
-            BoxTaked = false;
-            box.updateValues();
+            Box = boxMesh.clone("boxClone");
+            Box.Position = position;
+            Box.Transform = TGCMatrix.Translation(Box.Position);
         }
 
-        public void applyEffect(Effect effect)
+        public void ApplyEffect(Effect effect)
         {
-            box.Effect = effect;
-            box.Technique = "BOX_DIFFUSE_MAP";
+            Box.Effect = effect;
+            Box.Technique = "BOX_DIFFUSE_MAP";
         }
 
         /// <summary>
         ///     Verifica si el jugador tomo o no la caja y modifica el atributo BoxTaked
         /// </summary>
         /// <param name="characterBoundingbox"></param>
-        public void takeBox(TGC.Core.BoundingVolumes.TgcBoundingAxisAlignBox characterBoundingbox)
+        public void TakeBox(TGC.Core.BoundingVolumes.TgcBoundingAxisAlignBox characterBoundingbox)
         {
-            if (isColliding(characterBoundingbox) && boxQuantity == 0)
+            if (IsColliding(characterBoundingbox) && boxQuantity == 0)
             {
                 boxQuantity = 1;
                 BoxTaked = true;
@@ -61,25 +57,25 @@ namespace TGC.Group.Model
         /// </summary>
         /// <param name="characterBoundingbox"></param>
         /// <returns></returns>
-        public bool isColliding(TGC.Core.BoundingVolumes.TgcBoundingAxisAlignBox characterBoundingbox)
+        public bool IsColliding(TGC.Core.BoundingVolumes.TgcBoundingAxisAlignBox characterBoundingbox)
         {
-            return TGC.Core.Collision.TgcCollisionUtils.testAABBAABB(characterBoundingbox, box.BoundingBox);
+            return TGC.Core.Collision.TgcCollisionUtils.testAABBAABB(characterBoundingbox, Box.BoundingBox);
         }
 
         /// <summary>
         ///     Renderiza la caja 
         /// </summary>
-        public void render()
+        public void Render()
         {
-            if(!BoxTaked) box.Render();
+            if(!BoxTaked) Box.Render();
         }
 
         /// <summary>
         ///     Libera los recursos asociados a Caja
         /// </summary>
-        public void dispose()
+        public void Dispose()
         {
-            box.Dispose();
+            Box.Dispose();
         }
     }
 }

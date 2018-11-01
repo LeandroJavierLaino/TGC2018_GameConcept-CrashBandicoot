@@ -13,14 +13,14 @@ namespace TGC.Group.Model.Parcelas
 {
     public class Pit : Parcela
     {
-        
-        public Pit(TGCVector3 newPosition, TgcPlane grassPlane, TgcPlane wallPlaneX, TgcPlane wallPlaneZ, TgcPlane wallPlaneVertX, TgcPlane wallPlaneVertZ, string columnTexture, string topTexture)
+
+        public Pit(TGCVector3 newPosition, TgcPlane grassPlane, TgcPlane wallPlaneX, TgcPlane wallPlaneZ, TgcPlane wallPlaneVertX, TgcPlane wallPlaneVertZ, TgcPlane columnPlaneX, TgcPlane columnPlaneZ, TgcPlane topPlane)
         {
             this.Position = newPosition;
 
             //Se define el terrno de la parcela
             var grassMesh = grassPlane.toMesh("floor");
-            grassMesh.Position = new TGCVector3(this.Position.X, this.Position.Y - 20, this.Position.Z) ;
+            grassMesh.Position = new TGCVector3(this.Position.X, this.Position.Y - 20, this.Position.Z);
             grassMesh.Transform = TGCMatrix.Translation(grassMesh.Position);
             meshes.Add(grassMesh);
 
@@ -29,7 +29,7 @@ namespace TGC.Group.Model.Parcelas
 
             var wallMesh = baseTriangleWallH.toMesh("WallHA");
             wallMesh.RotateX(-FastMath.ToRad(2 * 7.125f));
-            wallMesh.Position = new TGCVector3(newPosition.X, newPosition.Y-20, newPosition.Z + 5);
+            wallMesh.Position = new TGCVector3(newPosition.X, newPosition.Y - 20, newPosition.Z + 5);
             wallMesh.UpdateMeshTransform();
             meshes.Add(wallMesh);
 
@@ -58,17 +58,18 @@ namespace TGC.Group.Model.Parcelas
 
             wallMesh = baseWall.toMesh("WallVA");
             wallMesh.Position = new TGCVector3(newPosition.X, newPosition.Y, newPosition.Z);
-            wallMesh.UpdateMeshTransform();
+            wallMesh.Transform = TGCMatrix.Translation(wallMesh.Position);
             meshes.Add(wallMesh);
 
             baseWall = wallPlaneVertZ;
 
             wallMesh = baseWall.toMesh("WallVA");
             wallMesh.Position = new TGCVector3(newPosition.X + 50, newPosition.Y, newPosition.Z);
-            wallMesh.UpdateMeshTransform();
+            wallMesh.Transform = TGCMatrix.Translation(wallMesh.Position);
             meshes.Add(wallMesh);
 
             //Columnas 
+            /*
             baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(0, 40, 5), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(columnTexture), 1, 2);
 
             wallMesh = baseWall.toMesh("Column1V1");
@@ -151,10 +152,23 @@ namespace TGC.Group.Model.Parcelas
             wallMesh = baseWall.toMesh("Column4H2");
             wallMesh.Position = new TGCVector3(newPosition.X + 45, newPosition.Y - 20, newPosition.Z + 50);
             wallMesh.UpdateMeshTransform();
-            meshes.Add(wallMesh);
+            meshes.Add(wallMesh);*/
+
+            var column = new Column
+            {
+                Position = new TGCVector3(this.Position.X, this.Position.Y - 20, this.Position.Z) 
+            };
+
+            meshes.AddRange(column.CreateColumn(columnPlaneX, columnPlaneZ, TGCVector3.Empty));
+
+            meshes.AddRange(column.CreateColumn(columnPlaneX, columnPlaneZ, new TGCVector3(0, 0, 45)));
+
+            meshes.AddRange(column.CreateColumn(columnPlaneX, columnPlaneZ, new TGCVector3(45, 0, 0)));
+
+            meshes.AddRange(column.CreateColumn(columnPlaneX, columnPlaneZ, new TGCVector3(45, 0, 45)));
 
             //Tapas de columnas
-            baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(5, 0, 5), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(topTexture), 1, 1);
+            baseWall = topPlane;
 
             wallMesh = baseWall.toMesh("TopColumn1");
             wallMesh.Position = new TGCVector3(newPosition.X, newPosition.Y + 20, newPosition.Z);

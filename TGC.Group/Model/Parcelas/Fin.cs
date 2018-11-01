@@ -13,7 +13,7 @@ namespace TGC.Group.Model.Parcelas
 {
     class Fin : Parcela
     {
-        public Fin(TGCVector3 Position, TgcPlane grassPlane, string wallTexture, string columnTexture, string topTexture)
+        public Fin(TGCVector3 Position, TgcPlane grassPlane, string wallTexture, string columnTexture, TgcPlane topPlane)
         {
             this.Position = Position;
 
@@ -102,7 +102,7 @@ namespace TGC.Group.Model.Parcelas
             #endregion
 
             //Tapas de columnas
-            baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(5, 0, 5), TgcPlane.Orientations.XZplane, TgcTexture.createTexture(topTexture), 1, 1);
+            baseWall = topPlane;
 
             wallMesh = baseWall.toMesh("TopColumn3");
             wallMesh.Position = new TGCVector3(Position.X + 45, Position.Y + 20, Position.Z);

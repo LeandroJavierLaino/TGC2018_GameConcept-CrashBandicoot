@@ -212,90 +212,97 @@ namespace TGC.Group.Model
             #region Cajas
             //Cajas| objetivo es juntar una serie de cajas
             var boxTexture = MediaDir + "cajaMadera2.jpg";
+            var box = new TGCBox
+            {
+                Size = new TGCVector3(5, 5, 5)
+            };
+            box.setTexture(TgcTexture.createTexture(boxTexture));
+            box.updateValues();
+            var boxMesh = box.ToMesh("box");
             var posYBox = 5;
 
-            BoxClass = new Caja(new Vector3(30,posYBox,30),boxTexture);
+            BoxClass = new Caja(new TGCVector3(30,posYBox,30), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(20, posYBox, 80), boxTexture);
+            BoxClass = new Caja(new TGCVector3(20, posYBox, 80), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(60, posYBox, 70), boxTexture);
+            BoxClass = new Caja(new TGCVector3(60, posYBox, 70), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(80, posYBox, 70), boxTexture);
+            BoxClass = new Caja(new TGCVector3(80, posYBox, 70), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(30, 25, 120), boxTexture);
+            BoxClass = new Caja(new TGCVector3(30, 25, 120), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(25, 25, 145), boxTexture);
+            BoxClass = new Caja(new TGCVector3(25, 25, 145), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(35, 25, 165), boxTexture);
+            BoxClass = new Caja(new TGCVector3(35, 25, 165), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(68, 25, 165), boxTexture);
+            BoxClass = new Caja(new TGCVector3(68, 25, 165), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(78, 25, 185), boxTexture);
+            BoxClass = new Caja(new TGCVector3(78, 25, 185), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(110, posYBox, 65), boxTexture);
+            BoxClass = new Caja(new TGCVector3(110, posYBox, 65), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(120, posYBox, 85), boxTexture);
+            BoxClass = new Caja(new TGCVector3(120, posYBox, 85), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(130, posYBox, 45), boxTexture);
+            BoxClass = new Caja(new TGCVector3(130, posYBox, 45), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(225, posYBox, 215), boxTexture);
+            BoxClass = new Caja(new TGCVector3(225, posYBox, 215), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(75, posYBox, 225), boxTexture);
+            BoxClass = new Caja(new TGCVector3(75, posYBox, 225), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(130, posYBox, 235), boxTexture);
+            BoxClass = new Caja(new TGCVector3(130, posYBox, 235), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(165, posYBox, 265), boxTexture);
+            BoxClass = new Caja(new TGCVector3(165, posYBox, 265), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(180, posYBox, 35), boxTexture);
+            BoxClass = new Caja(new TGCVector3(180, posYBox, 35), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(170, posYBox, 70), boxTexture);
+            BoxClass = new Caja(new TGCVector3(170, posYBox, 70), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(150, posYBox, 30), boxTexture);
+            BoxClass = new Caja(new TGCVector3(150, posYBox, 30), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(120, posYBox, 280), boxTexture);
+            BoxClass = new Caja(new TGCVector3(120, posYBox, 280), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(220, posYBox, 325), boxTexture);
+            BoxClass = new Caja(new TGCVector3(220, posYBox, 325), boxMesh);
             Boxes.Add(BoxClass);
             
-            BoxClass = new Caja(new Vector3(130, posYBox, 330), boxTexture);
+            BoxClass = new Caja(new TGCVector3(130, posYBox, 330), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(80, posYBox, 365), boxTexture);
+            BoxClass = new Caja(new TGCVector3(80, posYBox, 365), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(120, posYBox, 380), boxTexture);
+            BoxClass = new Caja(new TGCVector3(120, posYBox, 380), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(180, posYBox, 365), boxTexture);
+            BoxClass = new Caja(new TGCVector3(180, posYBox, 365), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(170, posYBox, 420), boxTexture);
+            BoxClass = new Caja(new TGCVector3(170, posYBox, 420), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(130, 25, 480), boxTexture);
+            BoxClass = new Caja(new TGCVector3(130, 25, 480), boxMesh);
             Boxes.Add(BoxClass);
 
-            BoxClass = new Caja(new Vector3(80, 25, 420), boxTexture);
+            BoxClass = new Caja(new TGCVector3(80, 25, 420), boxMesh);
             Boxes.Add(BoxClass);
             #endregion
 
@@ -367,7 +374,8 @@ namespace TGC.Group.Model
             var grassPlane = new TgcPlane(TGCVector3.Empty, new TGCVector3(50, 0, 50), TgcPlane.Orientations.XZplane, grassTexture, 4, 4);
             var columnPlaneX = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20, 5), TgcPlane.Orientations.YZplane, poleTexture, 1, 1);
             var columnPlaneZ = new TgcPlane(new TGCVector3(), new TGCVector3(5, 20, 0), TgcPlane.Orientations.XYplane, poleTexture, 1, 1);
-
+            var columnDoublePlaneX = new TgcPlane(new TGCVector3(), new TGCVector3(0, 40, 5), TgcPlane.Orientations.YZplane, poleTexture, 1, 2);
+            var columnDoublePlaneZ = new TgcPlane(new TGCVector3(), new TGCVector3(5, 40, 0), TgcPlane.Orientations.XYplane, poleTexture, 1, 2);
 
             //Paths horizontales
             pathHorizontal = new Horizontal(new TGCVector3(50,0,50), grassPlane, wallPlaneZ, columnPlaneX, columnPlaneZ, top, plantModel);
@@ -453,19 +461,19 @@ namespace TGC.Group.Model
             FullLevel.Add(pathInicio);
 
             //Path fin
-            pathFin = new Fin(new TGCVector3(150, 0, 500), grassPlane, MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathFin = new Fin(new TGCVector3(150, 0, 500), grassPlane, MediaDir + "azwallAmoss.jpg", MediaDir + "az_pole01.jpg", top);
             FullLevel.Add(pathFin);
 
             //Paths que son fozas
-            pathPit = new Pit(new TGCVector3(150, 0, 100), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, wallPlaneVertZ, MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPit = new Pit(new TGCVector3(150, 0, 100), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, wallPlaneVertZ, columnDoublePlaneX, columnDoublePlaneZ, top);
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPit = new Pit(new TGCVector3(200, 0, 250), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, wallPlaneVertZ, MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPit = new Pit(new TGCVector3(200, 0, 250), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, wallPlaneVertZ, columnDoublePlaneX, columnDoublePlaneZ, top);
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPit = new Pit(new TGCVector3(150, 0, 450), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, wallPlaneVertZ, MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPit = new Pit(new TGCVector3(150, 0, 450), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, wallPlaneVertZ, columnDoublePlaneX, columnDoublePlaneZ, top);
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
@@ -931,13 +939,14 @@ namespace TGC.Group.Model
             #endregion
 
             //Logos de vida
-            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new TGCVector3(175,10,170));
+            var vidaModel = new TgcSceneLoader().loadSceneFromFile(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml").Meshes[0];
+            live = new Vida(vidaModel, new TGCVector3(175,10,170));
             Lives.Add(live);
 
-            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new TGCVector3(80, 10, 335));
+            live = new Vida(vidaModel, new TGCVector3(80, 10, 335));
             Lives.Add(live);
 
-            live = new Vida(MediaDir + "\\LogoTGC\\LogoTGC-TgcScene.xml", new TGCVector3(75, 30, 475));
+            live = new Vida(vidaModel, new TGCVector3(75, 30, 475));
             Lives.Add(live);
 
             //Particulas del personaje
@@ -1249,7 +1258,7 @@ namespace TGC.Group.Model
 
             foreach(var box in Boxes)
             {
-                box.applyEffect(Shader);
+                box.ApplyEffect(Shader);
             }
             
             if (gameOver)
@@ -1271,13 +1280,13 @@ namespace TGC.Group.Model
             //Cajas renderizadas
             foreach (var box in Boxes)
             {
-                if (box.isColliding(character.BoundingBox) && box.boxQuantity == 0)
+                if (box.IsColliding(character.BoundingBox) && box.boxQuantity == 0)
                 {
                     takeBox.play(false);
                     boxesTaked += 1;
                 }
-                box.takeBox(character.BoundingBox);
-                box.render();
+                box.TakeBox(character.BoundingBox);
+                box.Render();
             }
 
             foreach (var live in Lives)
@@ -1434,7 +1443,7 @@ namespace TGC.Group.Model
             //Dispose de las Cajas
             foreach (var box in Boxes)
             {
-                box.dispose();
+                box.Dispose();
             }
 
             //Dispose de los Templos

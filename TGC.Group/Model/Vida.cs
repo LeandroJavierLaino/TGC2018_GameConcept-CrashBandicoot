@@ -18,9 +18,9 @@ namespace TGC.Group.Model
         public int liveQuantity { get; set; }
         private bool LiveTaked { get; set; }
 
-        public Vida(string modelPath, TGCVector3 newPosition)
+        public Vida(TgcMesh vidaModel, TGCVector3 newPosition)
         {
-            tgcBotHead = new TgcSceneLoader().loadSceneFromFile(modelPath).Meshes[0];
+            tgcBotHead = vidaModel.clone("vida");
             tgcBotHead.Position = newPosition;
             tgcBotHead.Scale = new TGCVector3(0.15f, 0.15f, 0.15f);
             tgcBotHead.UpdateMeshTransform();
