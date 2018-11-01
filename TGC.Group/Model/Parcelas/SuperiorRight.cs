@@ -15,7 +15,7 @@ namespace TGC.Group.Model.Parcelas
     class SuperiorRight : Parcela
     {
         //TODO: manejar todos los mesh de cada parcela en una una coleccion
-        public SuperiorRight(TGCVector3 Position, TgcPlane grassPlane, TgcTexture wallTexture, TgcPlane columnPlaneX, TgcPlane columnPlaneZ, TgcPlane topPlane, TgcMesh plantModel)
+        public SuperiorRight(TGCVector3 Position, TgcPlane grassPlane, TgcPlane wallPlaneX, TgcPlane wallPlaneZ, TgcPlane columnPlaneX, TgcPlane columnPlaneZ, TgcPlane topPlane, TgcMesh plantModel)
         {
             this.Position = Position;
 
@@ -67,7 +67,7 @@ namespace TGC.Group.Model.Parcelas
             basePlant.RotateY(ran);
             meshes.Add(basePlant);
 
-            var baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20.62f, 50), TgcPlane.Orientations.YZplane, wallTexture, 2, 1);
+            var baseWall = wallPlaneX;
 
             var wallMesh = baseWall.toMesh("WallVA");
             wallMesh.RotateZ(-FastMath.ToRad(2 * 7.125f));
@@ -75,7 +75,7 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.UpdateMeshTransform();
             meshes.Add(wallMesh);
 
-            baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(50, 20.62f, 0), TgcPlane.Orientations.XYplane, wallTexture, 2, 1);
+            baseWall = wallPlaneZ;
             wallMesh = baseWall.toMesh("WallB");
             wallMesh.RotateX(FastMath.ToRad(2 * 7.125f));
             wallMesh.Position = new TGCVector3(Position.X, Position.Y, Position.Z + 45);

@@ -14,7 +14,7 @@ namespace TGC.Group.Model.Parcelas
     public class Pit : Parcela
     {
         
-        public Pit(TGCVector3 newPosition, TgcPlane grassPlane, string wallTexture, string columnTexture, string topTexture)
+        public Pit(TGCVector3 newPosition, TgcPlane grassPlane, TgcPlane wallPlaneX, TgcPlane wallPlaneZ, TgcPlane wallPlaneVertX, TgcPlane wallPlaneVertZ, string columnTexture, string topTexture)
         {
             this.Position = newPosition;
 
@@ -25,7 +25,7 @@ namespace TGC.Group.Model.Parcelas
             meshes.Add(grassMesh);
 
             //Armamos muros a partir de un Plano y lo convertimos a Mesh
-            var baseTriangleWallH = new TgcPlane(new TGCVector3(), new TGCVector3(50, 20.62f, 0), TgcPlane.Orientations.XYplane, TgcTexture.createTexture(wallTexture), 2, 1);
+            var baseTriangleWallH = wallPlaneZ;
 
             var wallMesh = baseTriangleWallH.toMesh("WallHA");
             wallMesh.RotateX(-FastMath.ToRad(2 * 7.125f));
@@ -39,7 +39,7 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.UpdateMeshTransform();
             meshes.Add(wallMesh);
 
-            var baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20.62f, 50), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(wallTexture), 2, 1);
+            var baseWall = wallPlaneX;
 
             wallMesh = baseWall.toMesh("WallVA");
             wallMesh.RotateZ(FastMath.ToRad(2 * 7.125f));
@@ -54,14 +54,14 @@ namespace TGC.Group.Model.Parcelas
             wallMesh.UpdateMeshTransform();
             meshes.Add(wallMesh);
 
-            baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20, 50), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(wallTexture), 2, 1);
+            baseWall = wallPlaneVertX;
 
             wallMesh = baseWall.toMesh("WallVA");
             wallMesh.Position = new TGCVector3(newPosition.X, newPosition.Y, newPosition.Z);
             wallMesh.UpdateMeshTransform();
             meshes.Add(wallMesh);
 
-            baseWall = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20, 50), TgcPlane.Orientations.YZplane, TgcTexture.createTexture(wallTexture), 2, 1);
+            baseWall = wallPlaneVertZ;
 
             wallMesh = baseWall.toMesh("WallVA");
             wallMesh.Position = new TGCVector3(newPosition.X + 50, newPosition.Y, newPosition.Z);
