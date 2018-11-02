@@ -173,7 +173,7 @@ namespace TGC.Group.Model
         {
             //Device de DirectX para crear primitivas.
             var d3dDevice = D3DDevice.Instance.Device;
-
+            
             //Cargar personaje con animaciones
             var skeletalLoader = new TgcSkeletalLoader();
             //RobotTGC ok; Hunter ok; BasicHuman ok; Samus nope; Trooper nope;
@@ -369,7 +369,7 @@ namespace TGC.Group.Model
             var top = new TgcPlane(TGCVector3.Empty, new TGCVector3(5, 0, 5), TgcPlane.Orientations.XZplane, topTexture, 1, 1);
             var wallPlaneX = new TgcPlane(TGCVector3.Empty, new TGCVector3(0, 20.62f, 50), TgcPlane.Orientations.YZplane, wallTexture, 2, 1);
             var wallPlaneVertX = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20, 50), TgcPlane.Orientations.YZplane, wallBTexture, 2, 1);
-            var wallPlaneVertZ = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20, 50), TgcPlane.Orientations.YZplane, wallBTexture, 2, 1);
+            var wallPlaneVertZ = new TgcPlane(new TGCVector3(), new TGCVector3(50, 20, 0), TgcPlane.Orientations.XYplane, wallBTexture, 2, 1);
             var wallPlaneZ = new TgcPlane(TGCVector3.Empty, new TGCVector3(50, 20.62f, 0), TgcPlane.Orientations.XYplane, wallTexture, 2, 1);
             var grassPlane = new TgcPlane(TGCVector3.Empty, new TGCVector3(50, 0, 50), TgcPlane.Orientations.XZplane, grassTexture, 4, 4);
             var columnPlaneX = new TgcPlane(new TGCVector3(), new TGCVector3(0, 20, 5), TgcPlane.Orientations.YZplane, poleTexture, 1, 1);
@@ -465,23 +465,23 @@ namespace TGC.Group.Model
             FullLevel.Add(pathFin);
 
             //Paths que son fozas
-            pathPit = new Pit(new TGCVector3(150, 0, 100), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, wallPlaneVertZ, columnDoublePlaneX, columnDoublePlaneZ, top);
+            pathPit = new Pit(new TGCVector3(150, 0, 100), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, columnDoublePlaneX, columnDoublePlaneZ, top);
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPit = new Pit(new TGCVector3(200, 0, 250), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, wallPlaneVertZ, columnDoublePlaneX, columnDoublePlaneZ, top);
+            pathPit = new Pit(new TGCVector3(200, 0, 250), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, columnDoublePlaneX, columnDoublePlaneZ, top);
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPit = new Pit(new TGCVector3(150, 0, 450), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, wallPlaneVertZ, columnDoublePlaneX, columnDoublePlaneZ, top);
+            pathPit = new Pit(new TGCVector3(150, 0, 450), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertX, columnDoublePlaneX, columnDoublePlaneZ, top);
             FullLevel.Add(pathPit);
             Pits.Add(pathPit);
 
-            pathPitH = new PitH(new TGCVector3(150, 0, 200), grassPlane, MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPitH = new PitH(new TGCVector3(150, 0, 200), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertZ, columnDoublePlaneX, columnDoublePlaneZ, top);
             FullLevel.Add(pathPitH);
             Pits.Add(pathPitH);
 
-            pathPitH = new PitH(new TGCVector3(150, 0, 300), grassPlane, MediaDir + "azwallAd2moss.jpg", MediaDir + "az_pole01.jpg", MediaDir + "AzStatB.jpg");
+            pathPitH = new PitH(new TGCVector3(150, 0, 300), grassPlane, wallPlaneX, wallPlaneZ, wallPlaneVertZ, columnDoublePlaneX, columnDoublePlaneZ, top);
             FullLevel.Add(pathPitH);
             Pits.Add(pathPitH);
 
@@ -1165,7 +1165,19 @@ namespace TGC.Group.Model
             //Vemos que se interpone a la camara
             var walls = new List<TgcMesh>();
 
-            foreach(var path in FullLevel)
+            foreach (var templo in templos)
+            {
+                walls.AddRange(templo.getWalls());
+            }
+
+            foreach (var torre in torres)
+            {
+                walls.AddRange(torre.getWalls());
+            }
+
+            walls.AddRange(plantas);
+
+            foreach (var path in FullLevel)
             {
                 var dif = path.GetPosition() - character.Position;
                 var dist = FastMath.Pow2(FastMath.Abs(dif.X)) + FastMath.Pow2(FastMath.Abs(dif.Y)) + FastMath.Pow2(FastMath.Abs(dif.Z));
@@ -1176,27 +1188,6 @@ namespace TGC.Group.Model
                         walls.Add(wall);
                     }
                 }
-            }
-
-            foreach (var templo in templos)
-            {
-                foreach (var wall in templo.getWalls())
-                {
-                    walls.Add(wall);
-                }
-            }
-
-            foreach (var torre in torres)
-            {
-                foreach (var wall in torre.getWalls())
-                {
-                    walls.Add(wall);
-                }
-            }
-
-            foreach (var plant in plantas)
-            {
-                walls.Add(plant);
             }
 
             objectsFront.Clear();
