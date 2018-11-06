@@ -163,6 +163,9 @@ namespace TGC.Group.Model
         private TgcText2D gameOverMessage;
         private TgcText2D winGameMessage;
 
+        //Modelo de Física
+        private PhysicModel physicModel;
+
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
         ///     Escribir aquí todo el código de inicialización: cargar modelos, texturas, estructuras de optimización, todo
@@ -196,7 +199,7 @@ namespace TGC.Group.Model
             //Escalarlo porque es muy grande
             character.Scale = new TGCVector3(0.1f, 0.1f, 0.1f);
             //Lo ubicamos 
-            character.Position = new TGCVector3(10, -0.5f, 10);
+            character.Position = new TGCVector3(50, 25f, 20);
             character.UpdateMeshTransform();
             
             //BoundingSphere que va a usar el personaje
@@ -999,6 +1002,17 @@ namespace TGC.Group.Model
             //Init de niebla
             //effectFog = TgcShaders.loadEffect(ShadersDir + "TgcFogShader.fx");
 
+            //se recalculan las normales
+            foreach (var mesh in meshToShade)
+            {
+                int[] adj = new int[mesh.D3dMesh.NumberFaces * 3];
+                mesh.D3dMesh.GenerateAdjacency(0, adj);
+                mesh.D3dMesh.ComputeNormals(adj);
+            }
+
+            physicModel = new PhysicModel(meshToShade);
+            physicModel.Init(character);
+
             acumTime = 0;
         }
 
@@ -1023,13 +1037,13 @@ namespace TGC.Group.Model
             walkEmitter.Position = character.Position;
 
             //Calcular proxima posicion de personaje segun Input
-            var moveForward = 0f;
-            float rotate = 0;
+            //var moveForward = 0f;
+            float rotate = 1;
             bool moving = false;
             bool rotating = false;
             Walk = false;
             
-            float jump = 0;
+            //float jump = 0;
 
             //Capturar Input teclado
             if (Input.keyPressed(Key.F))
@@ -1040,7 +1054,7 @@ namespace TGC.Group.Model
             //Move forward
             if (Input.keyDown(Key.W))
             {
-                moveForward = -velocity;
+                //moveForward = -velocity;
                 Walk = true;
                 moving = true;
             }
@@ -1048,7 +1062,7 @@ namespace TGC.Group.Model
             //Move backwards
             if (Input.keyDown(Key.S))
             {
-                moveForward = velocity;
+                //moveForward = velocity;
                 Walk = true;
                 moving = true;
             }
@@ -1066,7 +1080,7 @@ namespace TGC.Group.Model
                 rotate = rotationVelocity;
                 rotating = true;
             }
-
+            /*
             Parcela parcelaCol = new Parcela();
             //Jump
             foreach(var path in FullLevel)
@@ -1105,15 +1119,15 @@ namespace TGC.Group.Model
             if (character.Position.Y < positionY - 20)
             {
                 character.Move(new TGCVector3(character.Position.X, 0, character.Position.Z) - character.Position);
-            }            
+            }      */      
             
             if (rotating)
             {
                 character.playAnimation("Caminando", true);
                 var rotAngle = rotate * ElapsedTime;
-                camara3rdPerson.rotateY(rotAngle);
+                camara3rdPerson.rotateY(rotate*5*ElapsedTime);
                 Camara = camara3rdPerson;
-                character.RotateY(rotAngle);
+                //character.RotateY(rotAngle);
             }
             
             //Condiciones de derrota y victoria
@@ -1138,7 +1152,7 @@ namespace TGC.Group.Model
             {
                 character.playAnimation("Caminando", true);
                 //Colision mocha TODO: arregla esto hermano, ahora solo deja caminar en un rango hay que analizar dentro de cada tipo de parcela.
-                movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f, jump, FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
+                //movementVector = new Vector3(FastMath.Sin(character.Rotation.Y) * moveForward * 0.1f, jump, FastMath.Cos(character.Rotation.Y) * moveForward * 0.1f);
             }
             else
             {
@@ -1147,9 +1161,9 @@ namespace TGC.Group.Model
 
             //Acumuolamos tiempo para distintas tareas
             acumTime += ElapsedTime;
-
+            /*
             character.Move(new TGCVector3(movementVector));
-            character.UpdateMeshTransform();
+            character.UpdateMeshTransform();*/
             
             //Vemos si cae en algun pozo
             foreach (var pit in Pits)
@@ -1209,7 +1223,9 @@ namespace TGC.Group.Model
 
             jungleAmbience.play(true);
 
-            camara3rdPerson.Target = character.Position;
+            physicModel.Update(Input, ElapsedTime);
+
+            camara3rdPerson.Target = physicModel.GetCenterMassPosition();
 
             PostUpdate();
         }
@@ -1300,7 +1316,8 @@ namespace TGC.Group.Model
             }
 
             //renderizo y animo el personaje
-            character.animateAndRender(ElapsedTime);
+            physicModel.Render(ElapsedTime);
+            //character.animateAndRender(ElapsedTime);
 
             candidatos.Clear();
 
@@ -1339,7 +1356,7 @@ namespace TGC.Group.Model
                 walkEmitter.Speed = new TGCVector3(0, 5, 0);
                 walkEmitter.ParticleTimeToLive = 1f;
                 walkEmitter.Dispersion = 350;
-                walkEmitter.Position = character.Position;
+                walkEmitter.Position = physicModel.GetCenterMassPosition();
                 walkEmitter.Playing = true;
                 walkEmitter.render(ElapsedTime);
             }
@@ -1355,7 +1372,8 @@ namespace TGC.Group.Model
             leafEmitter.MaxSizeParticle = 0.8f;
             leafEmitter.Speed = new TGCVector3(2, -20, 4);
             leafEmitter.ParticleTimeToLive = 1f;
-            leafEmitter.Position = new TGCVector3( character.Position.X, character.Position.Y + 40, character.Position.Z);
+            var tempPos = physicModel.GetCenterMassPosition();
+            leafEmitter.Position = new TGCVector3(tempPos.X, tempPos.Y + 40, tempPos.Z);
             leafEmitter.Dispersion = 850;
             leafEmitter.Playing = true;
             leafEmitter.render(ElapsedTime);

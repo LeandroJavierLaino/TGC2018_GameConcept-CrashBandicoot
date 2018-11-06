@@ -10,6 +10,7 @@ using TGC.Core.BulletPhysics;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
+using TGC.Core.SkeletalAnimation;
 
 namespace TGC.Group.Model
 {
@@ -25,12 +26,13 @@ namespace TGC.Group.Model
 
         //Capsula del Personaje
         private RigidBody capsuleRigidBody;
+        private TgcSkeletalMesh character;
         private TGCVector3 director;
 
         //Meshes del escenario
         private List<TgcMesh> meshes = new List<TgcMesh>();
 
-        void Init()
+        public PhysicModel(List<TgcMesh> meshes)
         {
             #region Configuracion Basica de World
 
@@ -48,10 +50,16 @@ namespace TGC.Group.Model
 
             #endregion Configuracion Basica de World
 
+            this.meshes = meshes;
+        }
+
+        public void Init(TgcSkeletalMesh character)
+        {
+            this.character = character;
             #region Capsula
 
             //Cuerpo rigido de una capsula basica
-            capsuleRigidBody = BulletRigidBodyConstructor.CreateCapsule(10, 50, new TGCVector3(200, 500, 200), 10, false);
+            capsuleRigidBody = BulletRigidBodyConstructor.CreateCapsule(10, 30, character.Position, 10, false);
 
             //Valores que podemos modificar a partir del RigidBody base
             capsuleRigidBody.SetDamping(0.1f, 0f);
@@ -63,9 +71,17 @@ namespace TGC.Group.Model
 
             director = new TGCVector3(0, 0, 1);
             #endregion Capsula
+
+            #region Meshes
+            foreach(var mesh in meshes)
+            {
+                var meshRigidBody = BulletRigidBodyConstructor.CreateBox(mesh.BoundingBox.calculateSize(),0,mesh.BoundingBox.Position,0,0,0,0.5f,false);
+                dynamicsWorld.AddRigidBody(meshRigidBody);
+            }
+            #endregion
         }
 
-        void Update(TgcD3dInput input, TGCMatrix matrixPersonaje)
+        public void Update(TgcD3dInput input, float time)
         {
             dynamicsWorld.StepSimulation(1 / 60f, 100);
             var strength = 10.30f;
@@ -91,16 +107,16 @@ namespace TGC.Group.Model
 
             if (input.keyDown(Key.A))
             {
-                director.TransformCoordinate(TGCMatrix.RotationY(-angle * 0.01f));
-                matrixPersonaje = TGCMatrix.Translation(TGCVector3.Empty) * TGCMatrix.RotationY(-angle * 0.01f) * new TGCMatrix(capsuleRigidBody.InterpolationWorldTransform);
-                capsuleRigidBody.WorldTransform = matrixPersonaje.ToBsMatrix;
+                director.TransformCoordinate(TGCMatrix.RotationY(-angle * time));
+                character.Transform = TGCMatrix.Translation(TGCVector3.Empty) * TGCMatrix.RotationY(-angle * time) * new TGCMatrix(capsuleRigidBody.InterpolationWorldTransform);
+                capsuleRigidBody.WorldTransform = character.Transform.ToBsMatrix;
             }
 
             if (input.keyDown(Key.D))
             {
-                director.TransformCoordinate(TGCMatrix.RotationY(angle * 0.01f));
-                matrixPersonaje = TGCMatrix.Translation(TGCVector3.Empty) * TGCMatrix.RotationY(angle * 0.01f) * new TGCMatrix(capsuleRigidBody.InterpolationWorldTransform);
-                capsuleRigidBody.WorldTransform = matrixPersonaje.ToBsMatrix;
+                director.TransformCoordinate(TGCMatrix.RotationY(angle * time));
+                character.Transform = TGCMatrix.Translation(TGCVector3.Empty) * TGCMatrix.RotationY(angle * time) * new TGCMatrix(capsuleRigidBody.InterpolationWorldTransform);
+                capsuleRigidBody.WorldTransform = character.Transform.ToBsMatrix;
             }
 
             if (input.keyPressed(Key.Space))
@@ -113,12 +129,23 @@ namespace TGC.Group.Model
             #endregion Comoportamiento
         }
 
-        Matrix GetWorldInterpolationTransform()
+        public void Render(float time)
+        {
+            character.Transform = TGCMatrix.Scaling(new TGCVector3(0.1f, 0.1f, 0.1f)) * new TGCMatrix(capsuleRigidBody.InterpolationWorldTransform) * TGCMatrix.Translation(0,-20,0);
+            character.animateAndRender(time);
+        }
+
+        public Matrix GetWorldInterpolationTransform()
         {
             return capsuleRigidBody.InterpolationWorldTransform;
         }
 
-        void Dispose()
+        public TGCVector3 GetCenterMassPosition()
+        {
+            return new TGCVector3(capsuleRigidBody.CenterOfMassPosition);
+        }
+
+        public void Dispose()
         {
             //Se hace dispose del modelo fisico.
             dynamicsWorld.Dispose();
