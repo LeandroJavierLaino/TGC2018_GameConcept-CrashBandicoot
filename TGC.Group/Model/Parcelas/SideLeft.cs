@@ -34,42 +34,42 @@ namespace TGC.Group.Model.Parcelas
             basePlant.RotateY(ran);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             basePlant = basePlant.clone("plantaabajo2");
             basePlant.Position = new TGCVector3(Position.X + 25, Position.Y, Position.Z + 5);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             basePlant = basePlant.clone("plantaabajo4");
             basePlant.Position = new TGCVector3(Position.X + 5, Position.Y, Position.Z + 5);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             basePlant = basePlant.clone("plantaarriba1");
             basePlant.Position = new TGCVector3(Position.X + 45, Position.Y, Position.Z + 45);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             basePlant = basePlant.clone("plantaarriba3");
             basePlant.Position = new TGCVector3(Position.X + 25, Position.Y, Position.Z + 45);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             basePlant = basePlant.clone("plantaarriba5");
             basePlant.Position = new TGCVector3(Position.X + 5, Position.Y, Position.Z + 45);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             //Armamos muros a partir de un Plano y lo convertimos a Mesh
             var baseTriangleWallH = new TgcPlane(new TGCVector3(), new TGCVector3(50, 20.62f, 0), TgcPlane.Orientations.XYplane, wallTexture, 2, 1);

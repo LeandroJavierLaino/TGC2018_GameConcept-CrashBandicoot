@@ -16,6 +16,7 @@ namespace TGC.Group.Model
     {
         //guardo todos los meshes de la parcela (paredes, cajas, vegetacion, etc.)
         protected List<TgcMesh> meshes = new List<TgcMesh>();
+        protected List<TgcMesh> plantas = new List<TgcMesh>();
 
         //Posicion a partir de la cual se ubica todo
         protected TGCVector3 Position;
@@ -23,6 +24,11 @@ namespace TGC.Group.Model
         public List<TgcMesh> GetAllMeshes()
         {
             return meshes;
+        }
+
+        public List<TgcMesh> GetPlantas()
+        {
+            return plantas;
         }
 
         public TGCVector3 GetPosition()
@@ -53,11 +59,21 @@ namespace TGC.Group.Model
             {
                 mesh.Render();
             }
+
+            foreach (var mesh in plantas)
+            {
+                mesh.Render();
+            }
         }
 
         public void Dispose()
         {
             foreach (var mesh in meshes)
+            {
+                mesh.Dispose();
+            }
+
+            foreach (var mesh in plantas)
             {
                 mesh.Dispose();
             }

@@ -34,42 +34,42 @@ namespace TGC.Group.Model.Parcelas
             basePlant.RotateY(ran);
             basePlant.Enabled = true;
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             basePlant = basePlant.clone("plantaizquierda2");
             basePlant.Position = new TGCVector3(Position.X + 5, Position.Y, Position.Z + 25);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             basePlant = basePlant.clone("plantaizquierda4");
             basePlant.Position = new TGCVector3(Position.X + 5, Position.Y, Position.Z + 5);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             basePlant = basePlant.clone("plantaabajo0");
             basePlant.Position = new TGCVector3(Position.X + 40, Position.Y, Position.Z + 5);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             basePlant = basePlant.clone("plantaabajo2");
             basePlant.Position = new TGCVector3(Position.X + 20, Position.Y, Position.Z + 5);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             basePlant = basePlant.clone("plantaabajo4");
             basePlant.Position = new TGCVector3(Position.X, Position.Y, Position.Z + 5);
             ran = random.Next(0, 100);
             basePlant.RotateY(ran);
             basePlant.UpdateMeshTransform();
-            meshes.Add(basePlant);
+            plantas.Add(basePlant);
 
             var baseWall = wallPlaneX;
             var wallMesh = baseWall.toMesh("WallVA");

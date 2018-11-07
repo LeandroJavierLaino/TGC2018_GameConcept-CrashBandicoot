@@ -1125,7 +1125,7 @@ namespace TGC.Group.Model
             {
                 character.playAnimation("Caminando", true);
                 var rotAngle = rotate * ElapsedTime;
-                camara3rdPerson.rotateY(rotate*5*ElapsedTime);
+                camara3rdPerson.rotateY(rotate*2.5f*ElapsedTime);
                 Camara = camara3rdPerson;
                 //character.RotateY(rotAngle);
             }
@@ -1220,6 +1220,8 @@ namespace TGC.Group.Model
                     objectsFront.Add(mesh);
                 }
             }
+
+            foreach (var parcela in FullLevel) objectsFront.AddRange(parcela.GetPlantas());
 
             jungleAmbience.play(true);
 
@@ -1346,7 +1348,7 @@ namespace TGC.Group.Model
             //Sistema de particulas
             D3DDevice.Instance.ParticlesEnabled = true;
             D3DDevice.Instance.EnableParticles();
-            
+            var tempPos = physicModel.GetCenterMassPosition();
             if (walk)
             {
                 walkEmitter.Enabled = true;
@@ -1356,7 +1358,7 @@ namespace TGC.Group.Model
                 walkEmitter.Speed = new TGCVector3(0, 5, 0);
                 walkEmitter.ParticleTimeToLive = 1f;
                 walkEmitter.Dispersion = 350;
-                walkEmitter.Position = physicModel.GetCenterMassPosition();
+                walkEmitter.Position = new TGCVector3(tempPos.X, tempPos.Y -20, tempPos.Z);
                 walkEmitter.Playing = true;
                 walkEmitter.render(ElapsedTime);
             }
@@ -1372,7 +1374,6 @@ namespace TGC.Group.Model
             leafEmitter.MaxSizeParticle = 0.8f;
             leafEmitter.Speed = new TGCVector3(2, -20, 4);
             leafEmitter.ParticleTimeToLive = 1f;
-            var tempPos = physicModel.GetCenterMassPosition();
             leafEmitter.Position = new TGCVector3(tempPos.X, tempPos.Y + 40, tempPos.Z);
             leafEmitter.Dispersion = 850;
             leafEmitter.Playing = true;

@@ -75,7 +75,8 @@ namespace TGC.Group.Model
             #region Meshes
             foreach(var mesh in meshes)
             {
-                var meshRigidBody = BulletRigidBodyConstructor.CreateBox(mesh.BoundingBox.calculateSize(),0,mesh.BoundingBox.Position,0,0,0,0.5f,false);
+                var meshRigidBody = BulletRigidBodyConstructor.CreateRigidBodyFromTgcMesh(mesh);
+                //var meshRigidBody = BulletRigidBodyConstructor.CreateBox(mesh.BoundingBox.calculateSize(),0,mesh.BoundingBox.Position,0,0,0,0.5f,false);
                 dynamicsWorld.AddRigidBody(meshRigidBody);
             }
             #endregion
